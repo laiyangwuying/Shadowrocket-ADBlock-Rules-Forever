@@ -1,4 +1,3 @@
-#DOMAIN-SUFFIX,liwuying.org,Direct
 #
 # 黑名单中包含了 GFWList 中定义的无法访问的网站，剩下的网站直连。
 # 未包含广告过滤
@@ -7,6 +6,7 @@
 
 {{manual_proxy}}
 {{gfwlist}}
+DOMAIN-SUFFIX,liwuying.org,Direct
 
 RULE-SET,https://raw.githubusercontent.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever/build/sr_top500_banlist.conf,PROXY
 
