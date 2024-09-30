@@ -9,8 +9,8 @@ bypass-tun = 100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24
 # 私有IP应答。如果不启用此选项，域名解析返回私有IP，Shadowrocket会认为该域名被劫持而强制使用代理。
 private-ip-answer = true
 # DNS覆写。使用普通DNS或加密DNS（如doh、doq、dot等）覆盖默认的系统DNS。有些dns over https支持http3，所以尝试查询，如果支持就切换到http3，可在doh链接后面加上#no-h3关闭。doh强制通过h3查询的写法是将“https”改成“h3”，如h3://dns.alidns.com/dns-query。
-#dns-server = https://dns.minhui-inc.com:18053/dns-query
-dns-server = tcp://dns.minhui-inc.com:53
+dns-server = https://ythome.minhui-inc.com:18053/dns-query
+#dns-server = tcp://dns.minhui-inc.com:53
 # DNS劫持。有些设备或软件总是使用硬编码的DNS服务器，例如Netflix通过Google DNS(8.8.8.8或8.8.4.4)发送请求，您可以使用此选项来劫持查询。
 hijack-dns = 8.8.8.8:53,8.8.4.4:53
 # 直连域名解析失败后使用代理。false表示不启用。
