@@ -35,6 +35,19 @@ dns-server = quic://office.minhui-inc.com:18784
 
 # dns-server = https://doh.pub/dns-query,https://dns.alidns.com/dns-query,223.5.5.5,119.29.29.29
 
+[Host]
+# 域名指定本地值：
+# example.com = 1.2.3.4
+
+# 域名指定 DNS 服务器：
+# example.com = server:1.2.3.4
+
+# wifi名称指定 DNS 服务器，如需指定多个 DNS，可用逗号分隔：
+# ssid:wifi名称 = server:1.2.3.4
+
+*.apple.com = server:system
+*.icloud.com = server:system
+localhost = 127.0.0.1
 
 # DNS劫持。有些设备或软件总是使用硬编码的DNS服务器，例如Netflix通过Google DNS(8.8.8.8或8.8.4.4)发送请求，您可以使用此选项来劫持查询。
 hijack-dns = 8.8.8.8:53,8.8.4.4:53
