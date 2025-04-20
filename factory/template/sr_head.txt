@@ -71,3 +71,5 @@ udp-policy-not-supported-behaviour = DIRECT
 localhost = 127.0.0.1
 
 [Rule]
+AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
+AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
