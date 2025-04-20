@@ -11,5 +11,6 @@
 ^https?:\/\/\s.youtube.com/api/stats/qoe?.*adformat= - reject
 
 [MITM]
-hostname =  %APPEND% *.googlevideo.com, youtubei.googleapis.com, s.youtube.com
+enable = true
+hostname =  *.googlevideo.com, youtubei.googleapis.com, s.youtube.com
 # Made with Love from https://github.com/Johnshall/Shadowrocket-ADBlock-Rules-Forever
