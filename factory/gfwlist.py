@@ -36,8 +36,8 @@ def get_rule(rules_url, ruleType='raw'):
 
     if ruleType == 'base64':
         rule = base64.b64decode(r.text) \
-                .decode("utf-8") \
-                .replace('\\n', '\n')
+                。decode("utf-8") \
+                。replace('\\n', '\n')
     else:
         rule = r.text
 
@@ -52,13 +52,16 @@ def clear_format(rule):
         row = row.strip()
 
         # 注释 直接跳过
-        if row == '' or row.startswith('!') or row.startswith('@@') or row.startswith('[AutoProxy'):
+        if row == '' or row.startswith('!') or row.startswith('@@') or row.startswith('[AutoProxy') or row.startswith('regexp:'):
             continue
 
         # 清除前缀
         row = re.sub(r'^\|?https?://', '', row)
         row = re.sub(r'^\|\|', '', row)
+        row = re.sub(r'^full:', '', row)
+        row = re.sub(r'^domain:', '', row)
         row = row.lstrip('.*')
+        
 
         # 清除后缀
         row = row.rstrip('/^*')
@@ -102,6 +105,7 @@ def getURLs(url):
 rule = get_rule(rules_url='https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt', ruleType='base64')
 # 从 https://github.com/Johnshall/cn-blocked-domain 中获取GFWList的补充
 rule += get_rule('https://raw.githubusercontent.com/Johnshall/cn-blocked-domain/release/domains.txt')
+rule += get_rule('https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/proxy-list.txt')
 
 rules = clear_format(rule)
 
