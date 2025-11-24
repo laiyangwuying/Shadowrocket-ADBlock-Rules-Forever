@@ -36,8 +36,8 @@ def get_rule(rules_url, ruleType='raw'):
 
     if ruleType == 'base64':
         rule = base64.b64decode(r.text) \
-                。decode("utf-8") \
-                。replace('\\n', '\n')
+                .decode("utf-8") \
+                .replace('\\n', '\n')
     else:
         rule = r.text
 
