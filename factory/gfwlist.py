@@ -88,8 +88,8 @@ def filtrate_rules(rules, excludes=[]):
 
         if rule in excludes:
             continue
-
         ret.append(rule)
+
 
     ret = list( set(ret) )
     ret.sort()
