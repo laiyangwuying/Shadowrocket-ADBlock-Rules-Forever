@@ -90,7 +90,7 @@ def filtrate_rules(rules, excludes=[]):
             continue
         skip_flag=0
         for exclude in excludes:
-            if re.match(exclude, rule):
+            if re.search(exclude, rule):
                 skip_flag=1
                 break
         if skip_flag==0:        
