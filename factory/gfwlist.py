@@ -88,11 +88,19 @@ def filtrate_rules(rules, excludes=[]):
 
         if rule in excludes:
             continue
-        ret.append(rule)
+        skip_flag=0
+        for exclude in excludes:
+            if re.match(exclude, rule):
+                skip_flag=1
+                break
+        if skip_flag==0:        
+            ret.append(rule)
+        
 
 
     ret = list( set(ret) )
     ret.sort()
+    
 
     return ret
 
