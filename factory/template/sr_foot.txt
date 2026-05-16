@@ -12,5 +12,7 @@
 
 [MITM]
 enable = true
+h2 = true
+ca-passphrase = shandong@123
 hostname =  *.googlevideo.com,*.googlevideo.com,www.youtube.com,s.youtube.com,youtubei.googleapis.com
 # Made with Love from https://github.com/Johnshall/Shadowrocket-ADBlock-Rules-Forever
