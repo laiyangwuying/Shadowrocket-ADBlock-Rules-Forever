@@ -16,13 +16,14 @@
 [MITM]
 enable = true
 h2 = true
-# 修正说明：含 Maasea 所需 *.googlevideo.com / youtubei；`-redirector*.googlevideo.com` 为排除解密重定向 CDN
-hostname = -redirector*.googlevideo.com,*.googlevideo.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com,api.twitter.com,*.twitter.com,api.x.com,*.x.com,mp.weixin.qq.com
+# Maasea YouTube / 微信；不包含 X/Twitter（避免对已失效脚本做 MITM；X 多以 GraphQL/proto，占位脚本易把时间线响应改坏）
+hostname = -redirector*.googlevideo.com,*.googlevideo.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com,mp.weixin.qq.com
 
 [Script]
-# === Twitter/X 去广告 ===
-# 若此行 script-path 的 raw 链接返回 404（blackmatrix7 已不再提供该脚本），请将脚本改为本地或其它可用源后再试
-twitter-ads = type=http-response,pattern=^https?:\/\/api\.(twitter\.com|x\.com)\/(1\.1|2)\/(timeline|search|guide|page|status|tweets|graphql),requires-body=1,max-size=-1,script-path=https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/script/twitter/twitter.js,argument=line
+# === Twitter/X（已禁用）===
+# blackberry ios_rule_script 的 twitter.js 已从仓库移除(raw 404)；旧脚本或错误响应会导致时间线/graphql 空白。
+# 需要时请自行填入可用的本地/自建 script-path 后再取消下行注释：
+# twitter-ads = type=http-response,pattern=^https?:\/\/api\.(twitter\.com|x\.com)\/(1\.1|2)\/(timeline|search|guide|page|status|tweets|graphql),requires-body=1,max-size=-1,script-path=...,argument=line
 
 # === 微信公众号去广告 ===
 微信公众号去广告 = type=http-response,pattern=^https?:\/\/mp\.weixin\.qq\.com\/mp\/getappmsgad,requires-body=1,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Wechat.js
