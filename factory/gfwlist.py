@@ -82,7 +82,7 @@ def filtrate_rules(rules, excludes=[]):
             split_ret = rule.split('/')
             rule = split_ret[0]
 
-        if not re.match('^[\w.-]+$', rule):
+        if not re.match(r'^[\w.-]+$', rule):
             unhandle_rules.append(rule0)
             continue
 
