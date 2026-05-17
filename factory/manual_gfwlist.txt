@@ -1,4 +1,5 @@
 # GFWList 不能无损转换为 SR 规则，所以这里是对 GFWList 的补充
+# 后缀匹配默认 DOMAIN-SUFFIX；需要「仅在完整主机名匹配」时请写前缀 FULL: 例如 FULL:www.example.com
 
 tampermonkey.net
 greasyfork.org

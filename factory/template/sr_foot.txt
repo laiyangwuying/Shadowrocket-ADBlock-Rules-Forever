@@ -3,22 +3,9 @@
 ^https?:\/\/(www.)?(g|google)\.cn https://www.google.com 302
 # Redirect Google Maps Service
 ^https?:\/\/(ditu|maps).google\.cn https://maps.google.com 302
-# youtube（与 Maasea YouTube.Enhance.sgmodule 中 [URL Rewrite] / Map Local 语义对齐，便于 SR）
-(^https?:\/\/[\w-]+\.googlevideo\.com\/(?!dclk_video_ads).+?)&ctier=L(&.+?),ctier,(.+) $1$2$3 302
-^https?:\/\/[\w-]+\.googlevideo\.com\/(?!(dclk_video_ads|videoplayback\?)).+&oad _ reject-200
-# 对应上游 [Map Local] initplayback：阻断带 oad 的初始化播放请求
-^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad _ reject-200
-^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads _ reject-200
-^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) _ reject-200
-^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?adcontext _ reject-200
-^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?.*adformat= _ reject-200
 
 [MITM]
 enable = true
 h2 = true
-# YouTube（含 *.youtube 等解密范围）
-hostname = -redirector*.googlevideo.com,*.googlevideo.com,*.youtube.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com
-
-[Script]
-# === YouTube — pattern 对齐 Maasea YouTube.Enhance.sgmodule；engine=jsc 为小火箭可用的脚本引擎字面量 ===
-youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$,requires-body=1,max-size=-1,binary-body-mode=1,engine=jsc,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{"lyricLang":"off","captionLang":"off","blockUpload":true,"blockImmersive":true,"blockShorts":false,"debug":false}"
+# YouTube/googlevideo/youtubei 等由外挂模块提供；hostname 可按需手写或通过模块追加。
+hostname = 

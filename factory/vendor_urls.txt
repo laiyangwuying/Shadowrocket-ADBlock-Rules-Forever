@@ -1,0 +1,16 @@
+# 构建时自动下载远端模块写入 factory/vendor/<路径>。
+# 任一条下载失败时不覆盖本地已有同名文件。
+#
+# 格式（每行一条，制表符或多个空格皆可）：
+#   <vendor 目录内相对路径>  <http(s) URL>
+#
+# 路径禁止含 .. ，仅允许写入 factory/vendor/ 之下。
+#
+# ---- 按需取消注释或添加你的地址 ----
+# AdBlock.module     https://yfamilys.com/module/AdBlock.module
+# YouTubeAd.sgmodule https://yfamilys.com/module/YouTubeAd.sgmodule
+xmlyad.module https://yfamilys.com/module/xmlyad.module
+aqc.module https://yfamilys.com/module/aqc.module
+caiyun.module https://yfamilys.com/module/caiyun.module
+YouTubeAd.sgmodule https://yfamilys.com/module/YouTubeAd.sgmodule
+AdBlock.module https://yfamilys.com/module/AdBlock.module

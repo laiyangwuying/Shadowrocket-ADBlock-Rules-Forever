@@ -4,8 +4,8 @@
 # 下载并解析最新版本的 GFWList
 # 对于混合性质的网站，尽量走代理（忽略了所有的@@指令）
 #
-# 从 https://github.com/Johnshall/cn-blocked-domain 中获取GFWList的补充
-# 感谢 https://github.com/Loyalsoldier/cn-blocked-domain
+# resultant/gfw.list：full: 导出为 FULL:主机名 → build_confs 生成 DOMAIN（完整匹配）；其余为后缀 → DOMAIN-SUFFIX
+# 数据源：github.com/Loyalsoldier/v2ray-rules-dat
 #
 
 
@@ -44,29 +44,48 @@ def get_rule(rules_url, ruleType='raw'):
     return rule
 
 
+# 导出到 resultant/gfw.list：full: 前缀保留为条目 FULL:<hostname>，供生成 DOMAIN（精确）；否则为后缀 DOMAIN-SUFFIX。
+_FULL_MARK = 'FULL:'
+
+
 def clear_format(rule):
     rules = []
 
-    rule = rule.split('\n')
-    for row in rule:
-        row = row.strip()
+    for raw in rule.split('\n'):
+        row = raw.strip()
 
-        # 注释 直接跳过
-        if row == '' or row.startswith('!') or row.startswith('@@') or row.startswith('[AutoProxy') or row.startswith('regexp:'):
+        # 注释 / 例外 / GFWList 类规则：不导入为 SR 域名
+        if (
+            row == ''
+            or row.startswith('!')
+            or row.startswith('@@')
+            or row.startswith('[AutoProxy')
+            or row.lower().startswith('regexp:')
+        ):
             continue
 
         # 清除前缀
         row = re.sub(r'^\|?https?://', '', row)
         row = re.sub(r'^\|\|', '', row)
-        row = re.sub(r'^full:', '', row)
-        row = re.sub(r'^domain:', '', row)
-        row = row.lstrip('.*')
-        
+
+        is_full_host = bool(re.match(r'(?i)^full:', row))
+        if is_full_host:
+            row = re.sub(r'(?i)^full:', '', row)
+        elif re.match(r'(?i)^domain:', row):
+            row = re.sub(r'(?i)^domain:', '', row)
+
+        # 后缀类规则才去前导 .*；full 精确主机名保持不变
+        if not is_full_host:
+            row = row.lstrip('.*')
 
         # 清除后缀
         row = row.rstrip('/^*')
 
-        rules.append(row)
+        # 去掉前缀后若以 regexp: 开头则丢弃（SR 无此类型）
+        if row == '' or row.lower().startswith('regexp:'):
+            continue
+
+        rules.append(_FULL_MARK + row if is_full_host else row)
 
     return rules
 
@@ -77,30 +96,33 @@ def filtrate_rules(rules, excludes=[]):
     for rule in rules:
         rule0 = rule
 
-        # only hostname
-        if '/' in rule:
-            split_ret = rule.split('/')
-            rule = split_ret[0]
+        body = rule[len(_FULL_MARK) :] if rule.startswith(_FULL_MARK) else rule
 
-        if not re.match(r'^[\w.-]+$', rule):
+        # only hostname
+        if '/' in body:
+            split_ret = body.split('/')
+            body = split_ret[0]
+
+        if not re.match(r'^[\w.-]+$', body):
             unhandle_rules.append(rule0)
             continue
 
-        if rule in excludes:
+        is_full_match = rule.startswith(_FULL_MARK)
+        canonical = _FULL_MARK + body if is_full_match else body
+
+        if body in excludes:
             continue
-        skip_flag=0
+        skip_flag = 0
         for exclude in excludes:
-            if re.search(exclude, rule):
-                skip_flag=1
+            if re.search(exclude, body):
+                skip_flag = 1
                 break
-        if skip_flag==0:        
-            ret.append(rule)
-        
+        if skip_flag == 0:
+            ret.append(canonical)
 
 
-    ret = list( set(ret) )
+    ret = list(set(ret))
     ret.sort()
-    
 
     return ret
 
@@ -126,7 +148,8 @@ with open('manual_gfwlist_excludes.txt', 'r', encoding='utf-8') as f:
 
 rules = filtrate_rules(rules, excludes)
 
-rules = list( set(rules) )
+# 双源合并后再去重；sorted 保证输出稳定（filtrate_rules 内已 set 一次，此处覆盖两文件合并后的重复项）
+rules = sorted(set(rules))
 
 open('resultant/gfw.list', 'w', encoding='utf-8') \
     .write('\n'.join(rules))
