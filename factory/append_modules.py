@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 读取 append_urls.txt 中的 URL，按顺序抓取 Surge 风格模块；失败则使用 append_cache 下缓存。
+同时将 factory/vendor 目录下 *.module（字母序、且未被 append_urls 的 local: 条目覆盖）并入。
 将 [URL Rewrite] / [MITM] hostname / [Script] 合并进 Shadowrocket 的 sr_foot；sr_ad_only 在末尾追加等价块。
 """
 
@@ -24,7 +25,8 @@ USER_AGENT = (
 )
 
 SECTION_HEADER = re.compile(r'^\[([^\]]+)\]\s*$')
-_RE_HOSTNAME = re.compile(r'^(\s*hostname\s*=\s*)(.+?)\s*$', re.MULTILINE | re.IGNORECASE)
+# 使用贪婪匹配并在代码里 strip；避免极小概率下惰性 .+? 在多段 hostname / 补丁工具中的歧义。
+_RE_HOSTNAME = re.compile(r'^(\s*hostname\s*=\s*)(.+)\s*$', re.MULTILINE | re.IGNORECASE)
 
 
 def strip_bom(s: str) -> str:
@@ -53,6 +55,7 @@ def read_append_urls(path: str) -> list[str]:
 
 
 FACTORY_ROOT = os.path.realpath(os.path.dirname(APPEND_LIST))
+VENDOR_DIR = os.path.join(FACTORY_ROOT, 'vendor')
 
 
 def load_local(spec_path: str, logger: Callable[[str], None]) -> str | None:
@@ -110,6 +113,38 @@ def fetch_or_cache(url: str, logger: Callable[[str], None]) -> str | None:
         return body
     logger(f'append_modules: no cache for {url!r}, skipped')
     return None
+
+
+def list_auto_vendor_specs(logger: Callable[[str], None], listed_local_realpaths: set[str]) -> list[str]:
+    """
+    factory/vendor 下 *.module（字母序），若未被 append_urls.txt 的 local: 条目覆盖则自动参与合并。
+    解决：仅靠 append_urls.txt 易漏配置、或 CI 未提交 vendor 时需本地即合并。
+    """
+    if not os.path.isdir(VENDOR_DIR):
+        return []
+    specs: list[str] = []
+    for name in sorted(os.listdir(VENDOR_DIR)):
+        if not name.endswith('.module'):
+            continue
+        p = os.path.realpath(os.path.join(VENDOR_DIR, name))
+        if not os.path.isfile(p):
+            continue
+        if p in listed_local_realpaths:
+            logger(f'append_modules: vendor/{name} already listed in append_urls.txt')
+            continue
+        specs.append(f'local:vendor/{name}')
+        logger(f'append_modules: auto-merge vendor/{name}')
+    return specs
+
+
+def realpath_for_local_spec(spec: str) -> str | None:
+    if not spec.strip().lower().startswith('local:'):
+        return None
+    rel = spec.split(':', 1)[1].strip().lstrip('/')
+    cand = os.path.realpath(os.path.join(FACTORY_ROOT, rel))
+    if cand != FACTORY_ROOT and not cand.startswith(FACTORY_ROOT + os.sep):
+        return None
+    return cand if os.path.isfile(cand) else None
 
 
 def load_append_source(spec: str, logger: Callable[[str], None]) -> str | None:
@@ -237,7 +272,7 @@ def inject_into_sr_foot(foot_text: str, rewrite_extra: str, hostname_extra: str,
     ft = foot_text
     if rewrite_extra:
         insertion = (
-            '\n# === Appended from remote modules (append_urls.txt) ===\n'
+            '\n# === Appended from modules (append_urls.txt + factory/vendor/*.module) ===\n'
             + rewrite_extra
             + '\n'
         )
@@ -258,7 +293,7 @@ def inject_into_sr_foot(foot_text: str, rewrite_extra: str, hostname_extra: str,
     if script_extra:
         ft = (
             ft.rstrip()
-            + '\n\n# === Appended scripts (remote modules, append_urls.txt) ===\n'
+            + '\n\n# === Appended scripts (append_urls.txt + vendor) ===\n'
             + script_extra.rstrip()
             + '\n'
         )
@@ -273,7 +308,7 @@ def trailing_block_sr_ad_only(rewrite_extra: str, hostname_extra: str, script_ex
     if rewrite_extra:
         chunks.append(
             '[URL Rewrite]\n'
-            '# === From append_urls.txt ===\n'
+            '# === From append_urls / vendor ===\n'
             + rewrite_extra
         )
     if hostname_extra:
@@ -296,23 +331,32 @@ def gather_appended(logger: Callable[[str], None]) -> tuple[str, str, str, str]:
     sr_ad_only_suffix 含可选统计注释行。
     """
     urls = read_append_urls(APPEND_LIST)
-    if not urls:
-        logger('append_modules: append_urls.txt empty — skip')
+    listed_local: set[str] = set()
+    for u in urls:
+        rp = realpath_for_local_spec(u.strip())
+        if rp:
+            listed_local.add(rp)
+
+    specs: list[str] = list(urls)
+    specs.extend(list_auto_vendor_specs(logger, listed_local))
+
+    if not specs:
+        logger('append_modules: append_urls.txt has no usable lines AND factory/vendor/*.module absent — skip')
         return '', '', '', ''
 
     bodies: list[str] = []
-    for u in urls:
-        chunk = load_append_source(u.strip(), logger)
+    for spec in specs:
+        chunk = load_append_source(spec.strip(), logger)
         if chunk:
             bodies.append(chunk)
 
-    logger(f'append_modules: resolved {len(bodies)} / {len(urls)} source(s)')
+    logger(f'append_modules: resolved {len(bodies)} / {len(specs)} source(s)')
 
     if not bodies:
         logger(
-            'append_modules: WARNING — append_urls.txt has entries but NOTHING was loaded '
-            '(remote blocked + no append_cache/*.cached). Merge skipped. '
-            'Fix: add `local:vendor/xxx.module` under factory/, or commit a .cached snapshot.'
+            'append_modules: WARNING — URLs/local entries present but NOTHING was loaded '
+            '(network blocked / wrong path / no vendor file). Merge skipped. '
+            'Fix: place `factory/vendor/*.module` or add `local:vendor/xxx.module`; for https add append_cache/*.cached.'
         )
         return '', '', '', ''
 

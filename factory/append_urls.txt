@@ -1,4 +1,4 @@
-# 每行一个来源，自上而下依次合并：
+# 每行一个来源，自上而下依次合并；此外会自动合并 factory/vendor/*.module（字母序，且本条未重复的 local）。
 #   - https://…   （网络失败则用 append_cache/<host>-<hash>.cached）
 #   - local:vendor/文件名.module （相对 factory 目录；适合源站 RST/防火墙、CI 拉不到时使用）
 #
