@@ -47,8 +47,8 @@ DOMAIN, crashlytics.com, REJECT
 
 # === 3. YouTube 专属特殊拦截 ===
 # 拦截 YouTube 走 UDP 协议的广告流量（强迫其降级到 TCP 从而触发去广告脚本）
-DOMAIN-SUFFIX, googlevideo.com, REJECT, protocol=udp
-DOMAIN, youtubei.googleapis.com, REJECT, protocol=udp
+AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
+AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
 
 # === 4. 苹果推送服务（APNS）优化 ===
 DOMAIN-SUFFIX,push.apple.com,PROXY
