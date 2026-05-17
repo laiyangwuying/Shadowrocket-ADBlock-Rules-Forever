@@ -17,6 +17,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # 敦促基于 Node20 的旧版 JS Action 改用 Node24（与其它步骤一致）
+    # 参见 https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
       # v3 使用已弃用的 Node 20 runner；升级到 v6 以适配 Node.js 24
       # 参见 https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/

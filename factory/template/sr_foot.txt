@@ -3,18 +3,21 @@
 ^https?:\/\/(www.)?(g|google)\.cn https://www.google.com 302
 # Redirect Google Maps Service
 ^https?:\/\/(ditu|maps).google\.cn https://maps.google.com 302
-# youtube
+# youtube（与 Maasea YouTube.Enhance.sgmodule 中 [URL Rewrite] / Map Local 语义对齐，便于 SR）
 (^https?:\/\/[\w-]+\.googlevideo\.com\/(?!dclk_video_ads).+?)&ctier=L(&.+?),ctier,(.+) $1$2$3 302
 ^https?:\/\/[\w-]+\.googlevideo\.com\/(?!(dclk_video_ads|videoplayback\?)).+&oad _ reject-200
+# 对应上游 [Map Local] initplayback：阻断带 oad 的初始化播放请求
+^https?:\/\/[\w-]+\.googlevideo\.com\/initplayback.+&oad _ reject-200
 ^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads _ reject-200
 ^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) _ reject-200
 ^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?adcontext _ reject-200
+^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?.*adformat= _ reject-200
 
 [MITM]
 enable = true
 h2 = true
-# 修正说明：移除了所有空格、去除了重复域名、规范了小火箭的解密主机列表
-hostname = *.googlevideo.com,www.youtube.com,s.youtube.com,youtubei.googleapis.com,api.twitter.com,*.twitter.com,api.x.com,*.x.com,mp.weixin.qq.com,-redirector*.googlevideo.com
+# 修正说明：含 Maasea 所需 *.googlevideo.com / youtubei；`-redirector*.googlevideo.com` 为排除解密重定向 CDN
+hostname = -redirector*.googlevideo.com,*.googlevideo.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com,api.twitter.com,*.twitter.com,api.x.com,*.x.com,mp.weixin.qq.com
 
 [Script]
 # === Twitter/X 去广告 ===
@@ -24,5 +27,5 @@ twitter-ads = type=http-response,pattern=^https?:\/\/api\.(twitter\.com|x\.com)\
 # === 微信公众号去广告 ===
 微信公众号去广告 = type=http-response,pattern=^https?:\/\/mp\.weixin\.qq\.com\/mp\/getappmsgad,requires-body=1,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Wechat.js
 
-# === YouTube 净化（Maasea；Surge 的 {{{ }}} 占位在 Shadowrocket 中不会被替换——且 engine 占位会导致整行无效，故写死参数）===
+# === YouTube（Maasea youtube.response.js；pattern/参数对齐 YouTube.Enhance.sgmodule，不使用 Surge 的 {{{ }}} / engine 占位）===
 youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{"lyricLang":"off","captionLang":"off","blockUpload":true,"blockImmersive":true,"blockShorts":false,"debug":false}"
