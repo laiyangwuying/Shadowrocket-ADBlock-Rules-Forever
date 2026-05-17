@@ -83,7 +83,15 @@ values['gfwlist'] = getRulesStringFromFile('resultant/gfw.list', 'Proxy') \
 
 
 # make confs
+# release 分支上的 raw（与 Actions 发布的 Pages/默认下载一致）
+RELEASE_RAW_BASE = (
+    'https://raw.githubusercontent.com/laiyangwuying/'
+    'Shadowrocket-ADBlock-Rules-Forever/refs/heads/release/'
+)
+
 for conf_name in confs_names:
+    values['release_update_url'] = RELEASE_RAW_BASE + conf_name + '.conf'
+
     file_template = open('template/'+conf_name+'.txt', 'r', encoding='utf-8')
     template = file_template.read()
   

@@ -1,5 +1,6 @@
 [General]
-update-url = https://raw.githubusercontent.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever/refs/heads/release/sr_top500_banlist.conf
+# 须与本次生成的文件名一致（由 build_confs 填入）。若固定成别的 conf（如仅 banlist），小火箭会自动更新成那份文件——YouTube 脚本/MITM 会整段丢失。
+update-url = {{release_update_url}}
 stun-response-ip = 1.1.1.1
 stun-response-ipv6 = ::1
 ipv6 = true
