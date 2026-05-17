@@ -1,0 +1,9 @@
+# 每行一个远端模块或其它纯文本配置的 URL（将按从上到下顺序抓取并依次合并）。
+# 以 # 开头的行会被忽略；空行忽略。
+#
+# 若某 URL 抓取失败：使用 factory/append_cache/ 目录下同名缓存文件的上一份内容；
+# 若该 URL 从未成功缓存过：跳过该条目（其它 URL 仍会合并）。
+#
+# https://example.com/other.module
+
+https://yfamilys.com/module/AdBlock.module

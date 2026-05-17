@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 
 import re
+import sys
 import time
+
+from append_modules import apply_append_to_foot
 
 
 # confs names in template/ and ../
@@ -50,9 +53,15 @@ def getRulesStringFromFile(path, kind):
     return ret
 
 
-# get head and foot
+def _append_log(message: str) -> None:
+    print(message, file=sys.stderr)
+
+
+# get head and foot（sr_foot 合并 append_urls.txt 抓取的远端模块片段）
 str_head = open('template/sr_head.txt', 'r', encoding='utf-8').read()
-str_foot = open('template/sr_foot.txt', 'r', encoding='utf-8').read()
+with open('template/sr_foot.txt', 'r', encoding='utf-8') as _ff:
+    _foot_src = _ff.read()
+str_foot, sr_ad_only_extra = apply_append_to_foot(_foot_src, _append_log)
 
 
 # make values
@@ -80,6 +89,10 @@ for conf_name in confs_names:
   
     if conf_name != 'sr_ad_only':
         template = str_head + template + str_foot
+    else:
+        extra = sr_ad_only_extra.strip('\n')
+        if extra:
+            template = template.rstrip('\n') + '\n\n' + extra + '\n'
 
     file_output = open('../'+conf_name+'.conf', 'w', encoding='utf-8')
 

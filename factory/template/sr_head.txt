@@ -47,7 +47,8 @@ IP-CIDR,::1/128,DIRECT
 #DOMAIN-SUFFIX,twimg.com,REJECT,protocol=udp
 #DOMAIN-SUFFIX,x.com,REJECT,protocol=udp
 AND,((DOMAIN-SUFFIX,twimg.com), (PROTOCOL,UDP)),REJECT
-AND,((DOMAIN-SUFFIX,twitter), (PROTOCOL,UDP)),REJECT
+# DOMAIN-SUFFIX 需写成完整后缀：twitter.com 不会匹配后缀「twitter」
+AND,((DOMAIN-SUFFIX,twitter.com), (PROTOCOL,UDP)),REJECT
 AND,((DOMAIN-SUFFIX,x.com), (PROTOCOL,UDP)),REJECT
 
 

@@ -18,7 +18,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      # v3 使用已弃用的 Node 20 runner；升级到 v6 以适配 Node.js 24
+      # 参见 https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+      - uses: actions/checkout@v6
 
       - name: Install requirements
         run: pip3 install -r requirements.txt
@@ -33,9 +35,9 @@ jobs:
           curl -O https://raw.githubusercontent.com/wlxuf/Shadowrocket/main/lazy_group.conf
         
       - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
           BRANCH: build
           FOLDER: .
-          commit-message : 'Nightly build'
-          
+          commit-message: 'Nightly build'
+
