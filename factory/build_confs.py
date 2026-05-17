@@ -83,9 +83,12 @@ for conf_name in confs_names:
 
     file_output = open('../'+conf_name+'.conf', 'w', encoding='utf-8')
 
-    marks = re.findall(r'{{(.+)}}', template)
+    # 【修正 1】改为非贪婪匹配 `.+?`，防止多变量同行时串行
+    marks = re.findall(r'{{(.+?)}}', template)
 
     for mark in marks:
-        template = template.replace('{{'+mark+'}}', values[mark])
+        # 【修正 2】安全检查：只有当标记存在于 values 字典中才执行替换，否则静默保留，彻底避免 KeyError 崩溃
+        if mark in values:
+            template = template.replace('{{'+mark+'}}', values[mark])
 
     file_output.write(template)
