@@ -16,16 +16,15 @@
 [MITM]
 enable = true
 h2 = true
-# MITM：仅 YouTube + 微信脚本所需；不写 api.twitter / api.x（X 微调：避免对部分 GraphQL/证书链解密导致刷不出）
-hostname = -redirector*.googlevideo.com,*.googlevideo.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com,mp.weixin.qq.com
+# YouTube（含 *.youtube）+ 微信 + X（twitter 脚本需解密 api host；若脚本不兼容可把下方 api.twitter/api.x 两行删掉试）
+hostname = -redirector*.googlevideo.com,*.googlevideo.com,*.youtube.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com,api.twitter.com,*.twitter.com,api.x.com,*.x.com,mp.weixin.qq.com
 
 [Script]
-# === Twitter/X：默认关闭（仅 X 微调，不动全局 UDP / block-quic）===
-# blackberry `script/twitter/twitter.js` raw 多为 404 或与现行 X API 不符，易出现时间线空白；需要时换本地脚本后取消注释。
-# twitter-ads = type=http-response,pattern=^https?:\/\/api\.(twitter\.com|x\.com)\/(1\.1|2)\/(timeline|search|guide|page|status|tweets|graphql),requires-body=1,max-size=-1,script-path=https://...,argument=line
+# === Twitter/X（小火箭需在 [Script] 里看到有效脚本行 URL 才有入口；上游 raw 常为 404 时需换自备链接）===
+twitter-ads = type=http-response,pattern=^https?:\/\/api\.(twitter\.com|x\.com)\/(1\.1|2)\/(timeline|search|guide|page|status|tweets|graphql),requires-body=1,max-size=-1,script-path=https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/script/twitter/twitter.js,argument=line
 
 # === 微信公众号去广告 ===
 微信公众号去广告 = type=http-response,pattern=^https?:\/\/mp\.weixin\.qq\.com\/mp\/getappmsgad,requires-body=1,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Wechat.js
 
-# === YouTube（Maasea youtube.response.js；pattern 扁平写法与同仓库常见 Surge 模块一致，末尾允许 ?query）===
-youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch)(\?(.*))?$,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{"lyricLang":"off","captionLang":"off","blockUpload":true,"blockImmersive":true,"blockShorts":false,"debug":false}"
+# === YouTube — pattern 对齐 Maasea YouTube.Enhance.sgmodule（2025）；argument 必须为 SR 字面量 JSON，不可用 Surge {{{ }}}===
+youtube.response = type=http-response,pattern=^https:\/\/youtubei\.googleapis\.com\/(youtubei\/v1\/(browse|next|player|search|reel\/reel_watch_sequence|guide|account\/get_setting|get_watch))(\?(.*))?$,requires-body=1,max-size=-1,binary-body-mode=1,script-path=https://raw.githubusercontent.com/Maasea/sgmodule/master/Script/Youtube/youtube.response.js,argument="{"lyricLang":"off","captionLang":"off","blockUpload":true,"blockImmersive":true,"blockShorts":false,"debug":false}"
