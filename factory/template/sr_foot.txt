@@ -16,13 +16,10 @@
 [MITM]
 enable = true
 h2 = true
-# YouTube（含 *.youtube）+ 微信 + X（twitter 脚本需解密 api host；若脚本不兼容可把下方 api.twitter/api.x 两行删掉试）
-hostname = -redirector*.googlevideo.com,*.googlevideo.com,*.youtube.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com,api.twitter.com,*.twitter.com,api.x.com,*.x.com,mp.weixin.qq.com
+# YouTube（含 *.youtube）+ 微信公众号去广告
+hostname = -redirector*.googlevideo.com,*.googlevideo.com,*.youtube.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com,mp.weixin.qq.com
 
 [Script]
-# === Twitter/X（小火箭需在 [Script] 里看到有效脚本行 URL 才有入口；上游 raw 常为 404 时需换自备链接）===
-twitter-ads = type=http-response,pattern=^https?:\/\/api\.(twitter\.com|x\.com)\/(1\.1|2)\/(timeline|search|guide|page|status|tweets|graphql),requires-body=1,max-size=-1,script-path=https://raw.githubusercontent.com/blackmatrix7/ios_rule_script/master/script/twitter/twitter.js,argument=line
-
 # === 微信公众号去广告 ===
 微信公众号去广告 = type=http-response,pattern=^https?:\/\/mp\.weixin\.qq\.com\/mp\/getappmsgad,requires-body=1,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Wechat.js
 

@@ -42,9 +42,7 @@ IP-CIDR,fe80::/10,DIRECT
 IP-CIDR,fc00::/7,DIRECT
 IP-CIDR,::1/128,DIRECT
 
-# === 2. X/Twitter UDP（不写单独 REJECT）：首条已对「走 PROXY 的 UDP」统一处理；
-#    单列 twimg/twitter/x 与全局重复，易产生「可单独关 X UDP」误解；不改变全局 QUIC/UDP 逻辑 ===
-# === 3. YouTube 专属特殊拦截 ===
+# === 2. YouTube 专属特殊拦截 ===
 # 拦截 YouTube 走 UDP 协议的广告流量（强迫其降级到 TCP 从而触发去广告脚本）
 AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
