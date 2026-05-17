@@ -4,8 +4,6 @@ stun-response-ip = 1.1.1.1
 stun-response-ipv6 = ::1
 ipv6 = true
 prefer-ipv6 = true
-# QUIC协议策略（设置为仅在代理连接中干预，直连不干预，配合 Rule 的 UDP 拦截实现完美去广告）
-block-quic = all-proxy
 icmp-auto-reply = true
 # 允许在其他全局路由模式下重写 REJECT 生效
 always-reject-url-rewrite = true
@@ -15,6 +13,8 @@ private-ip-answer = true
 dns-direct-system = false
 dns-direct-fallback-proxy = false
 udp-policy-not-supported-behaviour = REJECT
+# QUIC协议策略（设置为仅在代理连接中干预，直连不干预，配合 Rule 的 UDP 拦截实现完美去广告）
+block-quic = all-proxy
 
 # DNS 覆写配置（加密 DoH / DoQ）
 dns-server = https://www.minhui-inc.cn:18053/dns-query,quic://www.minhui-inc.cn:18784
@@ -41,16 +41,21 @@ IP-CIDR,fe80::/10,DIRECT
 IP-CIDR,fc00::/7,DIRECT
 IP-CIDR,::1/128,DIRECT
 
-# === 2. 广告与追踪域名拦截 ===
-# Twitter 追踪与广告分析
-DOMAIN, analytics.twitter.com, REJECT
-DOMAIN, ads-api.twitter.com, REJECT
-DOMAIN, crashlytics.com, REJECT
+# === 2. 核心 App 强行降级 TCP 缓存区（防止刷不出帖子） ===
+# 显式拒绝 Twitter 的 UDP 流量，促使其客户端立刻闪退回 TCP 握手
+DOMAIN-KEYWORD,twitter,REJECT,protocol=udp
+DOMAIN-SUFFIX,twimg.com,REJECT,protocol=udp
+DOMAIN-SUFFIX,x.com,REJECT,protocol=udp
+
+
 
 # === 3. YouTube 专属特殊拦截 ===
 # 拦截 YouTube 走 UDP 协议的广告流量（强迫其降级到 TCP 从而触发去广告脚本）
 AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
+
+# === 3. 兜底：拦截其他所有走代理的全局 UDP ===
+AND,((FINAL,PROXY), (PROTOCOL,UDP)),REJECT
 
 # === 4. 苹果推送服务（APNS）优化 ===
 DOMAIN-SUFFIX,push.apple.com,PROXY
