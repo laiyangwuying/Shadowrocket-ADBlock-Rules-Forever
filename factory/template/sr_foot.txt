@@ -16,14 +16,13 @@
 [MITM]
 enable = true
 h2 = true
-# Maasea YouTube / 微信；不包含 X/Twitter（避免对已失效脚本做 MITM；X 多以 GraphQL/proto，占位脚本易把时间线响应改坏）
+# MITM：仅 YouTube + 微信脚本所需；不写 api.twitter / api.x（X 微调：避免对部分 GraphQL/证书链解密导致刷不出）
 hostname = -redirector*.googlevideo.com,*.googlevideo.com,www.youtube.com,s.youtube.com,m.youtube.com,youtubei.googleapis.com,mp.weixin.qq.com
 
 [Script]
-# === Twitter/X（已禁用）===
-# blackberry ios_rule_script 的 twitter.js 已从仓库移除(raw 404)；旧脚本或错误响应会导致时间线/graphql 空白。
-# 需要时请自行填入可用的本地/自建 script-path 后再取消下行注释：
-# twitter-ads = type=http-response,pattern=^https?:\/\/api\.(twitter\.com|x\.com)\/(1\.1|2)\/(timeline|search|guide|page|status|tweets|graphql),requires-body=1,max-size=-1,script-path=...,argument=line
+# === Twitter/X：默认关闭（仅 X 微调，不动全局 UDP / block-quic）===
+# blackberry `script/twitter/twitter.js` raw 多为 404 或与现行 X API 不符，易出现时间线空白；需要时换本地脚本后取消注释。
+# twitter-ads = type=http-response,pattern=^https?:\/\/api\.(twitter\.com|x\.com)\/(1\.1|2)\/(timeline|search|guide|page|status|tweets|graphql),requires-body=1,max-size=-1,script-path=https://...,argument=line
 
 # === 微信公众号去广告 ===
 微信公众号去广告 = type=http-response,pattern=^https?:\/\/mp\.weixin\.qq\.com\/mp\/getappmsgad,requires-body=1,script-path=https://raw.githubusercontent.com/NobyDa/Script/master/QuantumultX/File/Wechat.js

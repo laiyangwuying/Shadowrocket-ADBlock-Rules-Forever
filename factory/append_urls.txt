@@ -1,9 +1,12 @@
-# 每行一个远端模块或其它纯文本配置的 URL（将按从上到下顺序抓取并依次合并）。
+# 每行一个来源，自上而下依次合并：
+#   - https://…   （网络失败则用 append_cache/<host>-<hash>.cached）
+#   - local:vendor/文件名.module （相对 factory 目录；适合源站 RST/防火墙、CI 拉不到时使用）
+#
 # 以 # 开头的行会被忽略；空行忽略。
 #
-# 若某 URL 抓取失败：使用 factory/append_cache/ 目录下同名缓存文件的上一份内容；
-# 若该 URL 从未成功缓存过：跳过该条目（其它 URL 仍会合并）。
+# 若 https 全部被墙且又无缓存 → 脚本会打印 WARNING，不会合并任何东西。
 #
-# https://example.com/other.module
-
+# --- 任选其一兜底（推荐自建 vendor 副本）：---
+# local:vendor/AdBlock.module
+#
 https://yfamilys.com/module/AdBlock.module

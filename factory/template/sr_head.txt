@@ -14,9 +14,8 @@ private-ip-answer = true
 dns-direct-system = false
 dns-direct-fallback-proxy = false
 udp-policy-not-supported-behaviour = REJECT
-# QUIC：all-proxy 会干预「走代理链路」上的 QUIC / HTTP3（含 X）；易与仅靠 UDP Rule 裁剪 YouTube 的策略冲突，
-# X 刷新异常时请先保持 off，仅靠下方针对 googlevideo / youtubei 的 UDP REJECT。
-block-quic = off
+# QUIC协议策略（设置为仅在代理连接中干预，直连不干预，配合 Rule 的 UDP 拦截实现完美去广告）
+block-quic = all-proxy
 
 # DNS 覆写配置（加密 DoH / DoQ）
 dns-server = https://www.minhui-inc.cn:18053/dns-query,quic://www.minhui-inc.cn:18784
@@ -32,9 +31,8 @@ bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,1
 localhost = 127.0.0.1
 
 [Rule]
-# === 请勿使用「对所有 PROXY 的 UDP 一律 REJECT」：YouTube/X 等均可能走 QUIC，会导致时间线加载失败===
-# （YouTube UDP 仅用下面两段针对性拦截）
-
+# === 屏蔽所有走 PROXY 节点的 UDP 流量 ===
+AND,((FINAL,PROXY), (PROTOCOL,UDP)),REJECT
 # === 1. 局域网与本地回环（直接连接） ===
 IP-CIDR,192.168.0.0/16,DIRECT
 IP-CIDR,10.0.0.0/8,DIRECT
@@ -44,15 +42,17 @@ IP-CIDR,fe80::/10,DIRECT
 IP-CIDR,fc00::/7,DIRECT
 IP-CIDR,::1/128,DIRECT
 
-# === 2. YouTube UDP（仅此拦截；勿对全域 PROXY-UDP REJECT，否则 X QUIC 会刷不出帖）===
-# 拦截 YouTube 走 UDP 的广告/QUIC，促使部分流量走 TCP 以便 URL 重写与脚本生效
+# === 2. X/Twitter UDP（不写单独 REJECT）：首条已对「走 PROXY 的 UDP」统一处理；
+#    单列 twimg/twitter/x 与全局重复，易产生「可单独关 X UDP」误解；不改变全局 QUIC/UDP 逻辑 ===
+# === 3. YouTube 专属特殊拦截 ===
+# 拦截 YouTube 走 UDP 协议的广告流量（强迫其降级到 TCP 从而触发去广告脚本）
 AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
 
-# === （已弃用）全局 PROXY UDP 拉黑 & Twitter 域名 UDP 拉黑：易与 X HTTP/3 冲突 ===
+# === 3. 兜底：拦截其他所有走代理的全局 UDP ===
 #AND,((FINAL,PROXY), (PROTOCOL,UDP)),REJECT
 
-# === 3. 苹果推送服务（APNS）优化 ===
+# === 4. 苹果推送服务（APNS）优化 ===
 DOMAIN-SUFFIX,push.apple.com,PROXY
 DOMAIN-SUFFIX,akadns.net,PROXY
 DOMAIN-KEYWORD,apple.com.edgekey.net,PROXY
@@ -66,6 +66,6 @@ IP-CIDR6,2403:300:a42::/48,PROXY,no-resolve
 IP-CIDR6,2403:300:a51::/48,PROXY,no-resolve
 IP-CIDR6,2a01:b740:a42::/48,PROXY,no-resolve
 
-# === 4. 其他国外常规代理规则 ===
+# === 5. 其他国外常规代理规则 ===
 # Google AMP
 DOMAIN-SUFFIX,ampproject.org,PROXY

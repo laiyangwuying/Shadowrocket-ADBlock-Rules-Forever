@@ -52,33 +52,78 @@ def read_append_urls(path: str) -> list[str]:
     return out
 
 
+FACTORY_ROOT = os.path.realpath(os.path.dirname(APPEND_LIST))
+
+
+def load_local(spec_path: str, logger: Callable[[str], None]) -> str | None:
+    """local:vendor/foo.module → 相对于 factory 目录。"""
+    rel = spec_path.split(':', 1)[1].strip().lstrip('/')
+    cand = os.path.realpath(os.path.join(FACTORY_ROOT, rel))
+    if cand != FACTORY_ROOT and not cand.startswith(FACTORY_ROOT + os.sep):
+        logger(f'append_modules: local: path escapes factory/: {spec_path!r}')
+        return None
+    if not os.path.isfile(cand):
+        logger(f'append_modules: local: file not found: {cand}')
+        return None
+    with open(cand, encoding='utf-8', errors='replace') as lf:
+        body = strip_bom(lf.read())
+    logger(f'append_modules: loaded local:{rel} ({len(body)} chars)')
+    return body
+
+
 def fetch_or_cache(url: str, logger: Callable[[str], None]) -> str | None:
     os.makedirs(CACHE_DIR, exist_ok=True)
     cache_path = url_cache_path(url)
-    try:
-        r = requests.get(
-            url,
-            headers={'User-Agent': USER_AGENT},
-            timeout=45,
-            allow_redirects=True,
-        )
-        r.raise_for_status()
-        body = strip_bom(r.text)
-        tmp = cache_path + '.tmp'
-        with open(tmp, 'w', encoding='utf-8') as wf:
-            wf.write(body)
-        os.replace(tmp, cache_path)
-        logger(f'append_modules: fetched OK → {url} (cache {cache_path})')
-        return body
-    except Exception as exc:
-        logger(f'append_modules: fetch FAILED {url!r}: {exc}')
-        if os.path.isfile(cache_path):
-            with open(cache_path, 'r', encoding='utf-8') as cf:
-                body = cf.read()
-            logger(f'append_modules: using cache → {cache_path}')
+    headers = {'User-Agent': USER_AGENT, 'Accept': 'text/plain,text/*,*/*;q=0.8'}
+    last_exc: Exception | None = None
+
+    for attempt in range(1, 3):
+        try:
+            r = requests.get(
+                url,
+                headers=headers,
+                timeout=(8, 22),
+                allow_redirects=True,
+            )
+            r.raise_for_status()
+            body = strip_bom(r.text)
+            tmp = cache_path + '.tmp'
+            with open(tmp, 'w', encoding='utf-8') as wf:
+                wf.write(body)
+            os.replace(tmp, cache_path)
+            if attempt > 1:
+                logger(f'append_modules: fetch OK after retry → {url}')
+            else:
+                logger(f'append_modules: fetched OK → {url} (cache {cache_path})')
             return body
-        logger(f'append_modules: no cache for {url!r}, skipped')
-        return None
+        except Exception as exc:
+            last_exc = exc
+            logger(f'append_modules: fetch attempt {attempt}/2 failed {url!r}: {exc}')
+            if attempt < 2:
+                time.sleep(5)
+
+    logger(f'append_modules: fetch gave up ({last_exc}); checking cache...')
+    if os.path.isfile(cache_path):
+        with open(cache_path, 'r', encoding='utf-8') as cf:
+            body = cf.read()
+        logger(f'append_modules: using cache → {cache_path}')
+        return body
+    logger(f'append_modules: no cache for {url!r}, skipped')
+    return None
+
+
+def load_append_source(spec: str, logger: Callable[[str], None]) -> str | None:
+    s = spec.strip()
+    scheme = s.split(':', 1)[0].lower().strip()
+
+    if scheme == 'local':
+        return load_local(s, logger)
+
+    if scheme in ('http', 'https'):
+        return fetch_or_cache(s, logger)
+
+    logger(f'append_modules: unknown entry (need https:// URL or local:path under factory/) → {s!r}')
+    return None
 
 
 def discard_shebang(text: str) -> str:
@@ -257,12 +302,18 @@ def gather_appended(logger: Callable[[str], None]) -> tuple[str, str, str, str]:
 
     bodies: list[str] = []
     for u in urls:
-        t = fetch_or_cache(u.strip(), logger)
-        if t:
-            bodies.append(t)
+        chunk = load_append_source(u.strip(), logger)
+        if chunk:
+            bodies.append(chunk)
+
+    logger(f'append_modules: resolved {len(bodies)} / {len(urls)} source(s)')
 
     if not bodies:
-        logger('append_modules: no fetchable content — skip')
+        logger(
+            'append_modules: WARNING — append_urls.txt has entries but NOTHING was loaded '
+            '(remote blocked + no append_cache/*.cached). Merge skipped. '
+            'Fix: add `local:vendor/xxx.module` under factory/, or commit a .cached snapshot.'
+        )
         return '', '', '', ''
 
     rew, host, scr = collect_from_modules(bodies, logger)
