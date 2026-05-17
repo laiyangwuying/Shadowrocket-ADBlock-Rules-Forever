@@ -30,6 +30,8 @@ bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,1
 localhost = 127.0.0.1
 
 [Rule]
+# === 屏蔽所有走 PROXY 节点的 UDP 流量 ===
+AND,((FINAL,PROXY), (PROTOCOL,UDP)),REJECT
 # === 1. 局域网与本地回环（直接连接） ===
 IP-CIDR,192.168.0.0/16,DIRECT
 IP-CIDR,10.0.0.0/8,DIRECT
