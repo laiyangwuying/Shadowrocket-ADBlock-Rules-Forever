@@ -1,0 +1,8 @@
+# === YouTube：UDP 广告流量降级为 TCP，以触发 URL Rewrite 拦截 ===
+AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
+AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
+
+# === Twitter/X：UDP 降级，避免客户端刷不出时间线 ===
+AND,((DOMAIN-SUFFIX,twimg.com), (PROTOCOL,UDP)),REJECT
+AND,((DOMAIN-SUFFIX,twitter.com), (PROTOCOL,UDP)),REJECT
+AND,((DOMAIN-SUFFIX,x.com), (PROTOCOL,UDP)),REJECT

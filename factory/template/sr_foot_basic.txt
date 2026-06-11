@@ -1,0 +1,9 @@
+[URL Rewrite]
+# Redirect Google Search Service
+^https?:\/\/(www\.)?google\.cn https://www.google.com 302
+# Redirect Google Maps Service
+^https?:\/\/(ditu|maps)\.google\.cn https://maps.google.com 302
+
+[MITM]
+enable = false
+h2 = true

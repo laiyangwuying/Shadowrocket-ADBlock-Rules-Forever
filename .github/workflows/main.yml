@@ -2,46 +2,57 @@ name: Build Shadowrocket Rules
 
 on:
   schedule:
-    # 每日8时开始
-    - cron:  '0 23 * * *'
-  
+    # 每日北京时间 8:00（UTC 23:00）
+    - cron: '0 23 * * *'
+
   push:
     branches:
       - build
-    paths-ignore: 
+    paths-ignore:
       - '**.md'
       - 'LICENSE'
 
   workflow_dispatch:
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    # 敦促基于 Node20 的旧版 JS Action 改用 Node24（与其它步骤一致）
-    # 参见 https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      # v3 使用已弃用的 Node 20 runner；升级到 v6 以适配 Node.js 24
-      # 参见 https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
       - uses: actions/checkout@v6
 
       - name: Install requirements
         run: pip3 install -r requirements.txt
 
-      - name: Run auto-build.sh
+      - name: Run build
         run: ./factory/auto_build.sh
-      
-      - name: Update lazy rules
+
+      - name: Fetch lazy rules
         run: |
-          rm lazy.conf lazy_group.conf
-          curl -O https://raw.githubusercontent.com/wlxuf/Shadowrocket/main/lazy.conf
-          curl -O https://raw.githubusercontent.com/wlxuf/Shadowrocket/main/lazy_group.conf
-        
+          set -euo pipefail
+          fetch() {
+            local name="$1" url="$2"
+            local tmp="${name}.dl"
+            if curl -fsSL --retry 3 --retry-delay 2 -o "$tmp" "$url" && [ -s "$tmp" ]; then
+              mv "$tmp" "$name"
+              echo "OK $name"
+            else
+              rm -f "$tmp"
+              if [ -s "$name" ] && ! grep -q 'Not Found' "$name"; then
+                echo "WARN: keep existing $name" >&2
+              else
+                echo "ERROR: cannot fetch $name and no valid local copy" >&2
+                exit 1
+              fi
+            fi
+          }
+          fetch lazy.conf 'https://raw.githubusercontent.com/wlxuf/Shadowrocket/main/lazy.conf'
+          fetch lazy_group.conf 'https://raw.githubusercontent.com/wlxuf/Shadowrocket/main/lazy_group.conf'
+
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
           BRANCH: build
           FOLDER: .
           commit-message: 'Nightly build'
-

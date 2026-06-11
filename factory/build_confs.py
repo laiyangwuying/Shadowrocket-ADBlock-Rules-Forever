@@ -1,11 +1,19 @@
 # -*- coding: utf-8 -*-
 
+from __future__ import annotations
+
 import re
 import time
+from functools import lru_cache
+from pathlib import Path
 
-# confs names in template/ and ../
-# except sr_head and sr_foot
-confs_names = [
+from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log, read_entries
+from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
+
+REPO_ROOT = FACTORY_ROOT.parent
+TEMPLATE_DIR = FACTORY_ROOT / 'template'
+
+CONFS_NAMES = [
     'sr_top500_banlist_ad',
     'sr_top500_banlist',
     'sr_top500_whitelist_ad',
@@ -15,143 +23,183 @@ confs_names = [
     'sr_proxy_banad',
     'sr_cnip', 'sr_cnip_ad',
     'sr_backcn', 'sr_backcn_ad',
-    'sr_ad_only'
+    'sr_ad_only',
 ]
+
+# 走代理为主的分流策略：启用「代理 UDP 拦截」与 APNS 优化
+PROXY_ORIENTED_CONFS = frozenset({
+    'sr_top500_banlist_ad',
+    'sr_top500_banlist',
+    'sr_top500_whitelist_ad',
+    'sr_top500_whitelist',
+    'sr_adb',
+    'sr_proxy_banad',
+    'sr_cnip',
+    'sr_cnip_ad',
+})
+
+# 含去广告 / 流媒体 UDP 降级 / YouTube MITM 重写
+AD_STREAMING_CONFS = frozenset(
+    n for n in CONFS_NAMES if n.endswith('_ad') or n in ('sr_adb', 'sr_proxy_banad', 'sr_direct_banad')
+)
+
+RELEASE_RAW_BASE = (
+    'https://raw.githubusercontent.com/laiyangwuying/'
+    'Shadowrocket-ADBlock-Rules-Forever/refs/heads/build/'
+)
+
+
+@lru_cache(maxsize=16)
+def _tpl(name: str) -> str:
+    return (TEMPLATE_DIR / name).read_text(encoding='utf-8')
+
+
+def _assemble_prefix(conf_name: str) -> str:
+    if conf_name == 'sr_ad_only':
+        return ''
+    parts = [_tpl('sr_head.txt')]
+    if conf_name in PROXY_ORIENTED_CONFS:
+        parts.append(_tpl('sr_head_rules_proxy_udp.txt'))
+    if conf_name in AD_STREAMING_CONFS:
+        parts.append(_tpl('sr_head_rules_streaming.txt'))
+    if conf_name in PROXY_ORIENTED_CONFS:
+        parts.append(_tpl('sr_head_rules_apns.txt'))
+    return ''.join(parts)
+
+
+def _assemble_suffix(conf_name: str) -> str:
+    if conf_name == 'sr_ad_only':
+        return ''
+    if conf_name in AD_STREAMING_CONFS:
+        return _tpl('sr_foot_ad.txt')
+    return _tpl('sr_foot_basic.txt')
 
 
 def _rule_line_from_plain_entry(content: str, kind: str) -> str | None:
-    """
-    将 gfw.manual 列表中的一条（可无 FULL: 前缀）转为一条 SR 规则行。
-    FULL:主机名 → DOMAIN（先于 DOMAIN-SUFFIX 匹配更稳妥）。
-    """
     if not content:
         return None
+
     prefix = 'DOMAIN-SUFFIX'
     if content.startswith('FULL:'):
         prefix = 'DOMAIN'
-        content = content[5:]
+        content = content[5:].strip()
     if not content:
         return None
 
-    if re.match(r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}', content):
+    if not is_ip_host(content) and ('.' in content or not content.isascii()):
+        normalized = normalize_hostname(content, source='build_confs')
+        if normalized is None:
+            return None
+        content = normalized
+
+    if is_ip_host(content):
         prefix = 'IP-CIDR'
-        if '/' not in content:
+        host = content.split('/')[0]
+        if ':' in host:
+            if '/' not in content:
+                content += '/128'
+        elif '/' not in content:
             content += '/32'
-    elif re.match(
-        r'((([0-9A-Fa-f]{1,4}:){7}([0-9A-Fa-f]{1,4}|:))|(([0-9A-Fa-f]{1,4}:){6}(:[0-9A-Fa-f]{1,4}|((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){5}(((:[0-9A-Fa-f]{1,4}){1,2})|:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3})|:))|(([0-9A-Fa-f]{1,4}:){4}(((:[0-9A-Fa-f]{1,4}){1,3})|((:[0-9A-Fa-f]{1,4})?:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){3}(((:[0-9A-Fa-f]{1,4}){1,4})|((:[0-9A-Fa-f]{1,4}){0,2}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){2}(((:[0-9A-Fa-f]{1,4}){1,5})|((:[0-9A-Fa-f]{1,4}){0,3}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(([0-9A-Fa-f]{1,4}:){1}(((:[0-9A-Fa-f]{1,4}){1,6})|((:[0-9A-Fa-f]{1,4}){0,4}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:))|(:(((:[0-9A-Fa-f]{1,4}){1,7})|((:[0-9A-Fa-f]{1,4}){0,5}:((25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d\d|[1-9]?\d)){3}))|:)))(%.+)?',
-        content,
-    ):
-        prefix = 'IP-CIDR'
-        if '/' not in content:
-            content += '/128'
     elif '.' not in content and len(content) > 1:
         prefix = 'DOMAIN-KEYWORD'
 
-    return prefix + ',%s,%s\n' % (content, kind)
+    return f'{prefix},{content},{kind}\n'
 
 
-def getRulesStringFromFile(path, kind):
-    file = open(path, 'r', encoding='utf-8')
-    contents = file.readlines()
-    ret = ''
-
-    for content in contents:
-        content = content.strip('\r\n')
-        if not len(content):
+def _rules_string_from_file(path: str | Path, kind: str) -> str:
+    lines_out: list[str] = []
+    for raw in Path(path).read_text(encoding='utf-8').splitlines():
+        line = raw.strip()
+        if not line:
             continue
-
-        if content.startswith('#'):
-            ret += content + '\n'
-        else:
-            ln = _rule_line_from_plain_entry(content, kind)
-            if ln:
-                ret += ln
-
-    return ret
+        if line.startswith('#'):
+            lines_out.append(line + '\n')
+            continue
+        rule = _rule_line_from_plain_entry(line, kind)
+        if rule:
+            lines_out.append(rule)
+    return ''.join(lines_out)
 
 
-def getMergedGfwRulesString(kind: str) -> str:
-    """
-    合并 gfw.list 与 manual_gfwlist：注释按文件顺序保留；
-    规则先输出全部 FULL:（生成 DOMAIN），再输出其余（多为 DOMAIN-SUFFIX），便于优先匹配精确主机名。
-    """
-    ret = ''
+def _merged_gfw_rules_string(kind: str) -> str:
+    ret: list[str] = []
     full_hosts: set[str] = set()
-    suffix_raw: list[str] = []
-    for path in ('resultant/gfw.list', 'manual_gfwlist.txt'):
-        with open(path, 'r', encoding='utf-8') as fp:
-            for raw in fp:
-                line = raw.strip('\r\n')
-                if not line:
-                    continue
-                if line.startswith('#'):
-                    ret += line + '\n'
-                    continue
-                if line.startswith('FULL:'):
-                    h = line[5:].strip()
-                    if h:
-                        full_hosts.add(h)
-                else:
-                    suffix_raw.append(line)
+    suffix_raw: set[str] = set()
+
+    for rel in ('resultant/gfw.list', 'manual_gfwlist.txt'):
+        path = FACTORY_ROOT / rel
+        for raw in path.read_text(encoding='utf-8').splitlines():
+            line = raw.strip()
+            if not line:
+                continue
+            if line.startswith('#'):
+                ret.append(line + '\n')
+                continue
+            if line.startswith('FULL:'):
+                h = line[5:].strip()
+                if h:
+                    full_hosts.add(h)
+            else:
+                suffix_raw.add(line)
 
     for h in sorted(full_hosts):
-        ln = _rule_line_from_plain_entry('FULL:' + h, kind)
-        if ln:
-            ret += ln
-    for line in sorted(set(suffix_raw)):
-        ln = _rule_line_from_plain_entry(line, kind)
-        if ln:
-            ret += ln
-    return ret
+        rule = _rule_line_from_plain_entry('FULL:' + h, kind)
+        if rule:
+            ret.append(rule)
+    for line in sorted(suffix_raw):
+        rule = _rule_line_from_plain_entry(line, kind)
+        if rule:
+            ret.append(rule)
+    return ''.join(ret)
 
 
-# get head / foot（直接使用模板，不再合并 append_urls / vendor 模块）
-str_head = open('template/sr_head.txt', 'r', encoding='utf-8').read()
-with open('template/sr_foot.txt', 'r', encoding='utf-8') as _ff:
-    str_foot = _ff.read()
+def build() -> dict:
+    values = {
+        'build_time': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'top500_proxy': _rules_string_from_file(RESULTANT_DIR / 'top500_proxy.list', 'Proxy'),
+        'top500_direct': _rules_string_from_file(RESULTANT_DIR / 'top500_direct.list', 'Direct'),
+        'ad': _rules_string_from_file(RESULTANT_DIR / 'ad.list', 'Reject'),
+        'manual_direct': _rules_string_from_file(FACTORY_ROOT / 'manual_direct.txt', 'Direct'),
+        'manual_proxy': _rules_string_from_file(FACTORY_ROOT / 'manual_proxy.txt', 'Proxy'),
+        'manual_reject': _rules_string_from_file(FACTORY_ROOT / 'manual_reject.txt', 'Reject'),
+        'gfwlist': _merged_gfw_rules_string('Proxy'),
+    }
+
+    written: list[str] = []
+    for conf_name in CONFS_NAMES:
+        values['release_update_url'] = RELEASE_RAW_BASE + conf_name + '.conf'
+        body = (TEMPLATE_DIR / f'{conf_name}.txt').read_text(encoding='utf-8')
+        template = _assemble_prefix(conf_name) + body + _assemble_suffix(conf_name)
+
+        for mark in set(re.findall(r'{{(.+?)}}', template)):
+            if mark in values:
+                template = template.replace('{{' + mark + '}}', values[mark])
+
+        atomic_write(REPO_ROOT / f'{conf_name}.conf', template)
+        written.append(conf_name)
+
+    write_corrections_log(
+        str(RESULTANT_DIR / 'idna_corrections.log'),
+        drain_corrections(),
+        append=True,
+    )
+
+    summary = (
+        f'# build time: {values["build_time"]}\n'
+        f'confs: {len(written)}\n'
+        f'ad entries: {len(read_entries(RESULTANT_DIR / "ad.list"))}\n'
+        f'gfw entries: {len(read_entries(RESULTANT_DIR / "gfw.list"))}\n'
+    )
+    atomic_write(RESULTANT_DIR / 'build_summary.txt', summary)
+
+    log(f'build_confs: wrote {len(written)} conf files')
+    return {'confs': len(written)}
 
 
-# make values
-values = {}
-
-values['build_time'] = time.strftime("%Y-%m-%d %H:%M:%S")
-
-values['top500_proxy']  = getRulesStringFromFile('resultant/top500_proxy.list', 'Proxy')
-values['top500_direct'] = getRulesStringFromFile('resultant/top500_direct.list', 'Direct')
-
-values['ad'] = getRulesStringFromFile('resultant/ad.list', 'Reject')
-
-values['manual_direct'] = getRulesStringFromFile('manual_direct.txt', 'Direct')
-values['manual_proxy']  = getRulesStringFromFile('manual_proxy.txt', 'Proxy')
-values['manual_reject'] = getRulesStringFromFile('manual_reject.txt', 'Reject')
-
-values['gfwlist'] = getMergedGfwRulesString('Proxy')
+def main() -> int:
+    build()
+    return 0
 
 
-# make confs
-# release 分支上的 raw（与 Actions 发布的 Pages/默认下载一致）
-RELEASE_RAW_BASE = (
-    'https://raw.githubusercontent.com/laiyangwuying/'
-    'Shadowrocket-ADBlock-Rules-Forever/refs/heads/release/'
-)
-
-for conf_name in confs_names:
-    values['release_update_url'] = RELEASE_RAW_BASE + conf_name + '.conf'
-
-    file_template = open('template/'+conf_name+'.txt', 'r', encoding='utf-8')
-    template = file_template.read()
-  
-    if conf_name != 'sr_ad_only':
-        template = str_head + template + str_foot
-    # sr_ad_only：仅规则段（template/sr_ad_only.txt），不带 head/foot
-    file_output = open('../'+conf_name+'.conf', 'w', encoding='utf-8')
-
-    # 【修正 1】改为非贪婪匹配 `.+?`，防止多变量同行时串行
-    marks = re.findall(r'{{(.+?)}}', template)
-
-    for mark in marks:
-        # 【修正 2】安全检查：只有当标记存在于 values 字典中才执行替换，否则静默保留，彻底避免 KeyError 崩溃
-        if mark in values:
-            template = template.replace('{{'+mark+'}}', values[mark])
-
-    file_output.write(template)
+if __name__ == '__main__':
+    raise SystemExit(main())

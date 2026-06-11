@@ -1,0 +1,2 @@
+# === 走代理流量的 UDP 拦截（配合 block-quic 与去广告） ===
+AND,((FINAL,PROXY), (PROTOCOL,UDP)),REJECT

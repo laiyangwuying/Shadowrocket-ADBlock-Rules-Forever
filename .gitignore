@@ -1,6 +1,9 @@
 /.idea
+.venv/
 test.py
 __pycache__/
+*.tmp
+factory/resultant/idna_corrections.log
 factory/vendor/*
 !factory/vendor/.gitkeep
 !factory/vendor/*.module

@@ -1,62 +1,33 @@
 # -*- coding: utf-8 -*-
-
 #
-# 下载并解析最新版本的 GFWList
-# 对于混合性质的网站，尽量走代理（忽略了所有的@@指令）
-#
-# resultant/gfw.list：full: 导出为 FULL:主机名 → build_confs 生成 DOMAIN（完整匹配）；其余为后缀 → DOMAIN-SUFFIX
+# 下载并解析 GFW / 代理域名列表
+# resultant/gfw.list：FULL: → DOMAIN；其余 → DOMAIN-SUFFIX
 # 数据源：github.com/Loyalsoldier/v2ray-rules-dat
 #
 
+from __future__ import annotations
 
-import time
-import requests
 import re
-import base64
+from typing import List, Set
 
+from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, fetch_text_parallel, log, read_entries
+from idna_util import drain_corrections, normalize_list_entry, write_corrections_log
 
-unhandle_rules = []
+GFW_URLS = [
+    'https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/gfw.txt',
+    'https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/proxy-list.txt',
+]
 
-# ruleType for raw or base64
-def get_rule(rules_url, ruleType='raw'):
-    success = False
-    try_times = 0
-    r = None
-    while try_times < 5 and not success:
-        r = requests.get(rules_url)
-        if r.status_code != 200:
-            time.sleep(1)
-            try_times = try_times + 1
-        else:
-            success = True
-            break
-
-    if not success:
-        raise Exception('error in request %s\n\treturn code: %d' % (rules_url, r.status_code) )
-
-    if ruleType == 'base64':
-        rule = base64.b64decode(r.text) \
-                .decode("utf-8") \
-                .replace('\\n', '\n')
-    else:
-        rule = r.text
-
-    return rule
-
-
-# 导出到 resultant/gfw.list：full: 前缀保留为条目 FULL:<hostname>，供生成 DOMAIN（精确）；否则为后缀 DOMAIN-SUFFIX。
 _FULL_MARK = 'FULL:'
+unhandle_rules: List[str] = []
 
 
-def clear_format(rule):
-    rules = []
-
-    for raw in rule.split('\n'):
+def clear_format(rule: str) -> list[str]:
+    rules: list[str] = []
+    for raw in rule.splitlines():
         row = raw.strip()
-
-        # 注释 / 例外 / GFWList 类规则：不导入为 SR 域名
         if (
-            row == ''
+            not row
             or row.startswith('!')
             or row.startswith('@@')
             or row.startswith('[AutoProxy')
@@ -64,7 +35,6 @@ def clear_format(rule):
         ):
             continue
 
-        # 清除前缀
         row = re.sub(r'^\|?https?://', '', row)
         row = re.sub(r'^\|\|', '', row)
 
@@ -74,85 +44,64 @@ def clear_format(rule):
         elif re.match(r'(?i)^domain:', row):
             row = re.sub(r'(?i)^domain:', '', row)
 
-        # 后缀类规则才去前导 .*；full 精确主机名保持不变
         if not is_full_host:
             row = row.lstrip('.*')
 
-        # 清除后缀
         row = row.rstrip('/^*')
-
-        # 去掉前缀后若以 regexp: 开头则丢弃（SR 无此类型）
-        if row == '' or row.lower().startswith('regexp:'):
+        if not row or row.lower().startswith('regexp:'):
             continue
 
         rules.append(_FULL_MARK + row if is_full_host else row)
-
     return rules
 
 
-def filtrate_rules(rules, excludes=[]):
-    ret = []
+def filtrate_rules(rules: list[str], excludes: list[str]) -> list[str]:
+    ret: Set[str] = set()
 
     for rule in rules:
-        rule0 = rule
-
-        body = rule[len(_FULL_MARK) :] if rule.startswith(_FULL_MARK) else rule
-
-        # only hostname
-        if '/' in body:
-            split_ret = body.split('/')
-            body = split_ret[0]
-
-        if not re.match(r'^[\w.-]+$', body):
-            unhandle_rules.append(rule0)
+        canonical = normalize_list_entry(rule, full_mark=_FULL_MARK, source='gfwlist')
+        if canonical is None:
+            unhandle_rules.append(rule)
             continue
 
-        is_full_match = rule.startswith(_FULL_MARK)
-        canonical = _FULL_MARK + body if is_full_match else body
-
+        body = canonical[len(_FULL_MARK):] if canonical.startswith(_FULL_MARK) else canonical
         if body in excludes:
             continue
-        skip_flag = 0
-        for exclude in excludes:
-            if re.search(exclude, body):
-                skip_flag = 1
-                break
-        if skip_flag == 0:
-            ret.append(canonical)
-
-
-    ret = list(set(ret))
-    ret.sort()
-
-    return ret
-
-def getURLs(url):
-    r = requests.get(url)
-    return r.text.split("\n")[:-1]
-
-# main
-#rule = get_rule(rules_url='https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt', ruleType='base64')
-# 从 https://github.com/Johnshall/cn-blocked-domain 中获取GFWList的补充
-# rule += get_rule('https://raw.githubusercontent.com/Johnshall/cn-blocked-domain/release/domains.txt')
-rule = get_rule('https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/gfw.txt')
-rule += get_rule('https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/proxy-list.txt')
-
-rules = clear_format(rule)
-
-excludes = []
-with open('manual_gfwlist_excludes.txt', 'r', encoding='utf-8') as f:
-    for line in f.readlines():
-        if line[0] == "#" or line == "\n":
+        if any(re.search(pat, body) for pat in excludes):
             continue
-        excludes.append(line.strip())
+        ret.add(canonical)
 
-rules = filtrate_rules(rules, excludes)
+    return sorted(ret)
 
-# 双源合并后再去重；sorted 保证输出稳定（filtrate_rules 内已 set 一次，此处覆盖两文件合并后的重复项）
-rules = sorted(set(rules))
 
-open('resultant/gfw.list', 'w', encoding='utf-8') \
-    .write('\n'.join(rules))
+def build() -> dict:
+    global unhandle_rules
+    unhandle_rules = []
 
-open('resultant/gfw_unhandle.log', 'w', encoding='utf-8') \
-    .write('\n'.join(unhandle_rules))
+    texts = fetch_text_parallel(GFW_URLS)
+    merged = ''.join(texts[u] for u in GFW_URLS)
+    rules = clear_format(merged)
+
+    excludes = read_entries(FACTORY_ROOT / 'manual_gfwlist_excludes.txt')
+    rules = filtrate_rules(rules, excludes)
+    rules = sorted(set(rules))
+
+    atomic_write(RESULTANT_DIR / 'gfw.list', '\n'.join(rules) + '\n')
+    atomic_write(RESULTANT_DIR / 'gfw_unhandle.log', '\n'.join(unhandle_rules) + '\n')
+    write_corrections_log(
+        str(RESULTANT_DIR / 'idna_corrections.log'),
+        drain_corrections(),
+        append=True,
+    )
+
+    log(f'gfwlist: {len(rules)} rules, {len(unhandle_rules)} unhandled')
+    return {'rules': len(rules), 'unhandled': len(unhandle_rules)}
+
+
+def main() -> int:
+    build()
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

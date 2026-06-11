@@ -1,20 +1,21 @@
 [General]
-# 须与本次生成的文件名一致（由 build_confs 填入）。若固定成别的 conf（如仅 banlist），小火箭会自动更新成那份文件——YouTube 脚本/MITM 会整段丢失。
+# 须与本次生成的文件名一致（由 build_confs 填入）。若固定成别的 conf，小火箭会自动更新成那份文件——MITM/重写会整段丢失。
 update-url = {{release_update_url}}
 stun-response-ip = 1.1.1.1
 stun-response-ipv6 = ::1
 ipv6 = true
 prefer-ipv6 = true
 icmp-auto-reply = true
-# 允许在其他全局路由模式下重写 REJECT 生效
-always-reject-url-rewrite = false
+# 允许在其他全局路由模式下重写 REJECT 生效（去广告）
+always-reject-url-rewrite = true
 # 旁路系统，防止通知推送延迟
 bypass-system = true
-private-ip-answer = false
+# 局域网域名返回真实 IP，避免 NAS/路由器管理页解析异常
+private-ip-answer = true
 dns-direct-system = false
 dns-direct-fallback-proxy = false
 udp-policy-not-supported-behaviour = REJECT
-# QUIC协议策略（设置为仅在代理连接中干预，直连不干预，配合 Rule 的 UDP 拦截实现完美去广告）
+# QUIC 仅在代理连接中干预，配合 Rule UDP 拦截去广告
 block-quic = all-proxy
 
 # DNS 覆写配置（加密 DoH / DoQ）
@@ -25,7 +26,6 @@ fallback-dns-server = system
 # 跳过代理与 Bypass 路由（规避苹果系统服务与局域网回环兼容性问题）
 skip-proxy = 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12, fe80::/10, fc00::/7, localhost, *.local, *.lan, *.internal, e.crashlytics.com, captive.apple.com, sequoia.apple.com, seed-sequoia.siri.apple.com, *.ls.apple.com
 bypass-tun = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.168.0.0/16,198.18.0.0/15,224.0.0.0/4,255.255.255.255/32,::1/128,fc00::/7,fe80::/10,ff00::/8
-# Tun 不参与上述 IPv4 段（RFC1918/链路本地与保留网、RFC 5737 TEST-NET、6to4 任播、以太组播与本机 SSDP）
 tun-excluded-routes = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16.0.0/12,192.0.0.0/24,192.0.2.0/24,192.88.99.0/24,192.168.0.0/16,198.51.100.0/24,203.0.113.0/24,224.0.0.0/4,255.255.255.255/32,239.255.255.250/32
 
 [Host]
@@ -34,9 +34,7 @@ tun-excluded-routes = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16
 localhost = 127.0.0.1
 
 [Rule]
-# === 屏蔽所有走 PROXY 节点的 UDP 流量 ===
-AND,((FINAL,PROXY), (PROTOCOL,UDP)),REJECT
-# === 1. 局域网与本地回环（直接连接） ===
+# === 局域网与本地回环（直接连接） ===
 IP-CIDR,192.168.0.0/16,DIRECT
 IP-CIDR,10.0.0.0/8,DIRECT
 IP-CIDR,172.16.0.0/12,DIRECT
@@ -44,29 +42,3 @@ IP-CIDR,127.0.0.0/8,DIRECT
 IP-CIDR,fe80::/10,DIRECT
 IP-CIDR,fc00::/7,DIRECT
 IP-CIDR,::1/128,DIRECT
-
-# === 2. YouTube 专属特殊拦截 ===
-# 拦截 YouTube 走 UDP 协议的广告流量（强迫其降级到 TCP 从而触发去广告脚本）
-AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
-AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
-
-# === 3. 兜底：拦截其他所有走代理的全局 UDP ===
-#AND,((FINAL,PROXY), (PROTOCOL,UDP)),REJECT
-
-# === 4. 苹果推送服务（APNS）优化 ===
-DOMAIN-SUFFIX,push.apple.com,PROXY
-DOMAIN-SUFFIX,akadns.net,PROXY
-DOMAIN-KEYWORD,apple.com.edgekey.net,PROXY
-IP-CIDR,17.249.0.0/16,PROXY,no-resolve
-IP-CIDR,17.252.0.0/16,PROXY,no-resolve
-IP-CIDR,17.57.144.0/22,PROXY,no-resolve
-IP-CIDR,17.188.128.0/18,PROXY,no-resolve
-IP-CIDR,17.188.20.0/23,PROXY,no-resolve
-IP-CIDR6,2620:149:a44::/48,PROXY,no-resolve
-IP-CIDR6,2403:300:a42::/48,PROXY,no-resolve
-IP-CIDR6,2403:300:a51::/48,PROXY,no-resolve
-IP-CIDR6,2a01:b740:a42::/48,PROXY,no-resolve
-
-# === 5. 其他国外常规代理规则 ===
-# Google AMP
-DOMAIN-SUFFIX,ampproject.org,PROXY
