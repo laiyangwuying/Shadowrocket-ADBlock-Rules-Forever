@@ -31,24 +31,34 @@ jobs:
       - name: Fetch lazy rules
         run: |
           set -euo pipefail
-          fetch() {
-            local name="$1" url="$2"
-            local tmp="${name}.dl"
-            if curl -fsSL --retry 3 --retry-delay 2 -o "$tmp" "$url" && [ -s "$tmp" ]; then
-              mv "$tmp" "$name"
-              echo "OK $name"
-            else
-              rm -f "$tmp"
-              if [ -s "$name" ] && ! grep -q 'Not Found' "$name"; then
-                echo "WARN: keep existing $name" >&2
-              else
-                echo "ERROR: cannot fetch $name and no valid local copy" >&2
-                exit 1
-              fi
-            fi
+          valid_lazy() {
+            [ -s "$1" ] && ! grep -q '404: Not Found' "$1" && grep -q '^\[General\]' "$1"
           }
-          fetch lazy.conf 'https://raw.githubusercontent.com/wlxuf/Shadowrocket/main/lazy.conf'
-          fetch lazy_group.conf 'https://raw.githubusercontent.com/wlxuf/Shadowrocket/main/lazy_group.conf'
+          fetch() {
+            local name="$1"
+            shift
+            local tmp="${name}.dl"
+            for url in "$@"; do
+              if curl -fsSL --retry 3 --retry-delay 2 -o "$tmp" "$url" && valid_lazy "$tmp"; then
+                mv "$tmp" "$name"
+                echo "OK $name ← $url"
+                return 0
+              fi
+              rm -f "$tmp"
+              echo "WARN: skip $url" >&2
+            done
+            if valid_lazy "$name"; then
+              echo "WARN: keep existing $name" >&2
+              return 0
+            fi
+            echo "ERROR: cannot fetch $name (no valid remote or local copy)" >&2
+            exit 1
+          }
+          LAZY_BASE='https://raw.githubusercontent.com/Johnshall/Shadowrocket-ADBlock-Rules-Forever/build'
+          fetch lazy.conf \
+            "${LAZY_BASE}/lazy.conf"
+          fetch lazy_group.conf \
+            "${LAZY_BASE}/lazy_group.conf"
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.8.0
