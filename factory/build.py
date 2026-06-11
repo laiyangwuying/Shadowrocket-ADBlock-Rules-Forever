@@ -14,6 +14,7 @@ import ad
 import build_confs
 import fetch_vendor_modules
 import gfwlist
+import lazy_deploy
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -48,6 +49,7 @@ def main(argv: list[str] | None = None) -> int:
         log(f'[ad+gfwlist] parallel done in {stats["parallel_sec"]:.1f}s')
 
     stats['build_confs'] = build_confs.build()
+    stats['lazy'] = lazy_deploy.publish()
 
     elapsed = time.perf_counter() - t0
     log(f'=== build finished in {elapsed:.1f}s ===')

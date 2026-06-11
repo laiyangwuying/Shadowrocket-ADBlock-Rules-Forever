@@ -28,38 +28,6 @@ jobs:
       - name: Run build
         run: ./factory/auto_build.sh
 
-      - name: Fetch lazy rules
-        run: |
-          set -euo pipefail
-          valid_lazy() {
-            [ -s "$1" ] && ! grep -q '404: Not Found' "$1" && grep -q '^\[General\]' "$1"
-          }
-          fetch() {
-            local name="$1"
-            shift
-            local tmp="${name}.dl"
-            for url in "$@"; do
-              if curl -fsSL --retry 3 --retry-delay 2 -o "$tmp" "$url" && valid_lazy "$tmp"; then
-                mv "$tmp" "$name"
-                echo "OK $name ← $url"
-                return 0
-              fi
-              rm -f "$tmp"
-              echo "WARN: skip $url" >&2
-            done
-            if valid_lazy "$name"; then
-              echo "WARN: keep existing $name" >&2
-              return 0
-            fi
-            echo "ERROR: cannot fetch $name (no valid remote or local copy)" >&2
-            exit 1
-          }
-          LAZY_BASE='https://raw.githubusercontent.com/Johnshall/Shadowrocket-ADBlock-Rules-Forever/build'
-          fetch lazy.conf \
-            "${LAZY_BASE}/lazy.conf"
-          fetch lazy_group.conf \
-            "${LAZY_BASE}/lazy_group.conf"
-
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4.8.0
         with:
