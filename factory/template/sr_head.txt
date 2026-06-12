@@ -19,8 +19,8 @@ udp-policy-not-supported-behaviour = REJECT
 # 代理连接禁用 QUIC（HTTP/3），与 sr_head_rules_proxy_udp 配合使用
 block-quic = all-proxy
 
-# 直连 → doh.pub / 阿里 / 223.5.5.5；走代理 → minhui DoH-over-PROXY（须先在首页选中默认节点）
-dns-server = https://doh.pub/dns-query,https://dns.alidns.com/dns-query,223.5.5.5,https://www.minhui-inc.cn:18053/dns-query#proxy#no-h3
+# 直连 → doh.pub / 阿里；走代理 → minhui DoH-over-PROXY（远端解析，本地 DNS 日志通常无记录，属正常）
+dns-server = https://doh.pub/dns-query,https://dns.alidns.com/dns-query,https://www.minhui-inc.cn:18053/dns-query#proxy
 # 仅用于解析订阅里的「节点域名」，不要与网页分流 DNS 混用
 proxy-dns-server = https://dns.alidns.com/dns-query,223.5.5.5
 hijack-dns = 8.8.8.8:53,8.8.4.4:53,223.5.5.5:53,223.6.6.6:53,114.114.114.114:53,119.29.29.29:53,1.1.1.1:53
