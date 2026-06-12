@@ -1,4 +1,4 @@
-# Cats-Team AdRules @ 2026-06-12 11:32:23
+# Cats-Team AdRules @ 2026-06-12 19:44:56
 # source: https://raw.githubusercontent.com/Cats-Team/AdRules/main/adblock.txt
 ^https:\/\/[0-9a-f]{10}\.[0-9a-f]{10}\.com\/[a-f0-9]+\/\d+\?version_name=\w&domain= reject
 ^https:\/\/[a-z0-9]+\.[a-z0-9]+\.[a-z]{2,3}:\d{1,6}\/[a-z]{1,3}\/\d+\?is_not= reject
@@ -46455,7 +46455,6 @@
 ^https?:\/\/([\w-]+\.)*metrics\.cathflo\.com reject
 ^https?:\/\/([\w-]+\.)*metrics\.cb2\.com reject
 ^https?:\/\/([\w-]+\.)*metrics\.cbc\.ca reject
-^https?:\/\/([\w-]+\.)*metrics\.cbc\.youtube\.mercedes-benz\.com reject
 ^https?:\/\/([\w-]+\.)*metrics\.cbn\.com reject
 ^https?:\/\/([\w-]+\.)*metrics\.ccma\.cat reject
 ^https?:\/\/([\w-]+\.)*metrics\.cdiscount\.com reject
@@ -62906,7 +62905,6 @@
 ^https?:\/\/([\w-]+\.)*smetrics\.cathflo\.com reject
 ^https?:\/\/([\w-]+\.)*smetrics\.catxpert\.dk reject
 ^https?:\/\/([\w-]+\.)*smetrics\.cbc\.ca reject
-^https?:\/\/([\w-]+\.)*smetrics\.cbc\.youtube\.mercedes-benz\.com reject
 ^https?:\/\/([\w-]+\.)*smetrics\.cbn\.com reject
 ^https?:\/\/([\w-]+\.)*smetrics\.ccma\.cat reject
 ^https?:\/\/([\w-]+\.)*smetrics\.cdiscount\.com reject
@@ -83435,7 +83433,6 @@
 ^https?:\/\/([\w-]+\.)*youth\.cn\/images/public_ reject
 ^https?:\/\/([\w-]+\.)*youth\.cn\/qwtf2015/ reject
 ^https?:\/\/([\w-]+\.)*youthlyfowl\.cyou reject
-^https?:\/\/([\w-]+\.)*youtubee\.top reject
 ^https?:\/\/([\w-]+\.)*youxi\.baidu\.com\/tips/bdtips_min\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/tj\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/zz/nr\.js reject

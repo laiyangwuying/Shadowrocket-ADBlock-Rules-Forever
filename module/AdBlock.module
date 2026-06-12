@@ -1,9 +1,9 @@
 #!name= NoAd
-#!desc= 广告屏蔽（Cats-Team + App 静态）；YouTube 请用 YouTubeAd.sgmodule，勿与 AdBlock 重复注入 googlevideo 策略
+#!desc= 广告屏蔽（Cats-Team + App 静态）；YouTube/googlevideo 由 YouTubeAd.sgmodule 负责
 #!homepage=https://github.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever
 #!author= Tartarus2014 + build
 #!icon= https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date= 2026-06-12 11:32:27
+#!date= 2026-06-12 19:45:28
 
 [URL Rewrite]
 # Block Ads Start
@@ -47238,7 +47238,6 @@
 ^https?:\/\/([\w-]+\.)*metrics\.cathflo\.com reject
 ^https?:\/\/([\w-]+\.)*metrics\.cb2\.com reject
 ^https?:\/\/([\w-]+\.)*metrics\.cbc\.ca reject
-^https?:\/\/([\w-]+\.)*metrics\.cbc\.youtube\.mercedes-benz\.com reject
 ^https?:\/\/([\w-]+\.)*metrics\.cbn\.com reject
 ^https?:\/\/([\w-]+\.)*metrics\.ccma\.cat reject
 ^https?:\/\/([\w-]+\.)*metrics\.cdiscount\.com reject
@@ -63689,7 +63688,6 @@
 ^https?:\/\/([\w-]+\.)*smetrics\.cathflo\.com reject
 ^https?:\/\/([\w-]+\.)*smetrics\.catxpert\.dk reject
 ^https?:\/\/([\w-]+\.)*smetrics\.cbc\.ca reject
-^https?:\/\/([\w-]+\.)*smetrics\.cbc\.youtube\.mercedes-benz\.com reject
 ^https?:\/\/([\w-]+\.)*smetrics\.cbn\.com reject
 ^https?:\/\/([\w-]+\.)*smetrics\.ccma\.cat reject
 ^https?:\/\/([\w-]+\.)*smetrics\.cdiscount\.com reject
@@ -84218,7 +84216,6 @@
 ^https?:\/\/([\w-]+\.)*youth\.cn\/images/public_ reject
 ^https?:\/\/([\w-]+\.)*youth\.cn\/qwtf2015/ reject
 ^https?:\/\/([\w-]+\.)*youthlyfowl\.cyou reject
-^https?:\/\/([\w-]+\.)*youtubee\.top reject
 ^https?:\/\/([\w-]+\.)*youxi\.baidu\.com\/tips/bdtips_min\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/tj\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/zz/nr\.js reject

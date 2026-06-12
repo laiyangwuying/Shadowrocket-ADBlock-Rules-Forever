@@ -26,6 +26,11 @@ _YOUTUBE_COMMENT_RE = re.compile(
     re.I,
 )
 _YOUTUBE_RULE_MARKERS = tuple(YOUTUBE_PROTECTED_SUFFIXES)
+# Rewrite 规则中出现以下特征即视为 YouTube 生态，构建期整行删除
+_YOUTUBE_REWRITE_ECOSYSTEM_RE = re.compile(
+    r'googlevideo|youtubei|ytimg|ggpht|gvt1|youtubee\.|\.youtube\.|youtube\.com',
+    re.I,
+)
 # 与 YouTubeAd.sgmodule 同款的 googlevideo 去广告 Rewrite，不得进入 AdBlock
 _YOUTUBE_AD_SIGNATURE_RE = re.compile(
     r'dclk_video_ads|videoplayback\\\?|initplayback|ctier=L|googlevideo\.com',
@@ -33,10 +38,17 @@ _YOUTUBE_AD_SIGNATURE_RE = re.compile(
 )
 # 构建期探测：凡能命中下列正常播放 URL 的 Rewrite 一律剔除
 YOUTUBE_PLAYBACK_PROBE_URLS = (
-    'https://rr5---sn-test.googlevideo.com/videoplayback?expire=1&ei=abc',
-    'https://rr5---sn-test.googlevideo.com/initplayback?source=youtube&c=IOS&oad=5500',
+    'https://rr5---sn-a5meknsy.googlevideo.com/videoplayback?expire=1&ei=abc',
+    'https://rr5---sn-a5meknsy.googlevideo.com/initplayback?source=youtube&c=IOS&oad=5500',
+    'https://rr5---sn-a5mekn6s.googlevideo.com/initplayback?source=youtube&c=IOS&oad=5500',
     'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
     'https://youtubei.googleapis.com/youtubei/v1/player?prettyPrint=false',
+)
+# 典型 googlevideo CDN 主机（含 rr5---sn-* 子域）
+GOOGLEVIDEO_HOST_PROBES = (
+    'rr5---sn-a5meknsy.googlevideo.com',
+    'rr5---sn-a5mekn6s.googlevideo.com',
+    'redirector.googlevideo.com',
 )
 
 
@@ -60,6 +72,8 @@ def is_youtube_rewrite_rule(line: str) -> bool:
     if not stripped or stripped.startswith('#'):
         return False
     normalized = _normalize_rewrite_for_match(stripped)
+    if _YOUTUBE_REWRITE_ECOSYSTEM_RE.search(normalized):
+        return True
     return any(marker in normalized for marker in _YOUTUBE_RULE_MARKERS)
 
 
@@ -68,6 +82,8 @@ def is_youtube_abp_rule(line: str) -> bool:
     lowered = line.lower().strip()
     if not lowered or lowered.startswith('!') or lowered.startswith('@@'):
         return False
+    if _YOUTUBE_REWRITE_ECOSYSTEM_RE.search(lowered):
+        return True
     return any(marker in lowered for marker in _YOUTUBE_RULE_MARKERS)
 
 
@@ -106,12 +122,68 @@ def matches_youtube_playback_probe(line: str) -> bool:
     return False
 
 
+def matches_googlevideo_host_probe(line: str) -> bool:
+    """凡能命中 googlevideo CDN 子域（含 rr5---sn-*）的 Rewrite 一律剔除。"""
+    stripped = line.strip()
+    if not stripped or stripped.startswith('#'):
+        return False
+    pat = _rewrite_pattern_only(stripped)
+    for host in GOOGLEVIDEO_HOST_PROBES:
+        url = f'https://{host}/'
+        try:
+            if re.search(pat, url, re.I):
+                return True
+        except re.error:
+            return False
+    return False
+
+
 def is_youtube_blocked_rewrite(line: str) -> bool:
     return (
         is_youtube_rewrite_rule(line)
         or is_youtube_ad_signature_rewrite(line)
         or matches_youtube_playback_probe(line)
+        or matches_googlevideo_host_probe(line)
     )
+
+
+def finalize_adblock_rewrite_lines(lines: list[str]) -> tuple[list[str], int]:
+    """AdBlock.module 最终 Pass：剔除一切 YouTube/googlevideo Rewrite。"""
+    kept: list[str] = []
+    removed = 0
+    for raw in lines:
+        line = raw.rstrip()
+        stripped = line.strip()
+        if not stripped:
+            if kept and kept[-1] != '':
+                kept.append('')
+            continue
+        if stripped.startswith('#'):
+            if _YOUTUBE_COMMENT_RE.search(stripped):
+                removed += 1
+                continue
+            kept.append(line)
+            continue
+        if is_youtube_blocked_rewrite(line):
+            removed += 1
+            continue
+        kept.append(line)
+    return _compact_rewrite_spacing(kept), removed
+
+
+def count_googlevideo_rewrite_lines(text: str) -> int:
+    """构建后校验：统计仍含 googlevideo 的 Rewrite 行数（应为 0）。"""
+    count = 0
+    for raw in text.splitlines():
+        stripped = raw.strip()
+        if not stripped or stripped.startswith('#'):
+            continue
+        normalized = _normalize_rewrite_for_match(stripped)
+        if _YOUTUBE_REWRITE_ECOSYSTEM_RE.search(normalized):
+            count += 1
+        elif is_youtube_blocked_rewrite(stripped):
+            count += 1
+    return count
 
 
 def strip_youtube_rewrite_body(text: str) -> str:
@@ -235,6 +307,8 @@ def merge_rewrite_bodies(*parts: str) -> str:
                 continue
             if stripped.startswith('#'):
                 out.append(line)
+                continue
+            if is_youtube_blocked_rewrite(line):
                 continue
             if stripped in seen:
                 continue
