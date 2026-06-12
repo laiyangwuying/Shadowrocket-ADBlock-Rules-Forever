@@ -6,7 +6,7 @@ from __future__ import annotations
 import time
 from typing import Set
 
-from ad_block_util import is_youtube_abp_rule, is_youtube_rewrite_rule
+from ad_block_util import is_youtube_abp_rule, is_youtube_blocked_rewrite
 from ad_filters import iter_filter_rules
 from ad_rewrite import abp_network_rule_to_rewrite, static_rewrite_keys
 from build_util import RESULTANT_DIR, atomic_write, fetch_text, log
@@ -48,7 +48,7 @@ def build() -> dict:
         if rewrite is None:
             skipped_other += 1
             continue
-        if is_youtube_rewrite_rule(rewrite):
+        if is_youtube_blocked_rewrite(rewrite):
             skipped_other += 1
             continue
         if rewrite in static_keys or rewrite in rewrites:

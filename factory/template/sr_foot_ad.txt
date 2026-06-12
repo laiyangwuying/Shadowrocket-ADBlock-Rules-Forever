@@ -2,12 +2,9 @@
 # Redirect Google Search / Maps（.cn → .com）
 ^https?:\/\/(www\.)?google\.cn https://www.google.com 302
 ^https?:\/\/(ditu|maps)\.google\.cn https://maps.google.com 302
-# YouTube 去广告请单独启用 module/YouTubeAd.sgmodule（勿与 AdBlock 重复注入）
-
-# App 去广告（AdBlock.module 静态策略，见 factory/template/adblock_rewrite_static.txt）
-{{adblock_rewrite_static}}
+# App 去广告 MITM / Rewrite 由 module/AdBlock.module 提供，勿在 conf 重复注入（避免与 YouTubeAd.sgmodule 冲突）
+# YouTube 去广告请单独启用 module/YouTubeAd.sgmodule
 
 [MITM]
-enable = true
+enable = false
 h2 = true
-hostname = {{adblock_mitm_hosts}}

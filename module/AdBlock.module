@@ -1,9 +1,9 @@
 #!name= NoAd
-#!desc= 广告屏蔽（Cats-Team AdRules + App 静态规则，每日构建）
+#!desc= 广告屏蔽（Cats-Team + App 静态）；YouTube 请用 YouTubeAd.sgmodule，勿与 AdBlock 重复注入 googlevideo 策略
 #!homepage=https://github.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever
 #!author= Tartarus2014 + build
 #!icon= https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date= 2026-06-12 11:09:37
+#!date= 2026-06-12 19:31:39
 
 [URL Rewrite]
 # Block Ads Start
@@ -84218,7 +84218,6 @@
 ^https?:\/\/([\w-]+\.)*youth\.cn\/images/public_ reject
 ^https?:\/\/([\w-]+\.)*youth\.cn\/qwtf2015/ reject
 ^https?:\/\/([\w-]+\.)*youthlyfowl\.cyou reject
-^https?:\/\/([\w-]+\.)*youtube\.googleapis\.com\/youtubei/v1/log_event\? reject
 ^https?:\/\/([\w-]+\.)*youtubee\.top reject
 ^https?:\/\/([\w-]+\.)*youxi\.baidu\.com\/tips/bdtips_min\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/tj\.js reject

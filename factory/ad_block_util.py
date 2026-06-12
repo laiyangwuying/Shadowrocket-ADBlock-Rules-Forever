@@ -14,6 +14,7 @@ YOUTUBE_PROTECTED_SUFFIXES = frozenset({
     'youtube.com',
     'googlevideo.com',
     'youtubei.googleapis.com',
+    'youtube.googleapis.com',
     'youtube-nocookie.com',
     'youtubekids.com',
     'ytimg.com',
@@ -25,6 +26,18 @@ _YOUTUBE_COMMENT_RE = re.compile(
     re.I,
 )
 _YOUTUBE_RULE_MARKERS = tuple(YOUTUBE_PROTECTED_SUFFIXES)
+# 与 YouTubeAd.sgmodule 同款的 googlevideo 去广告 Rewrite，不得进入 AdBlock
+_YOUTUBE_AD_SIGNATURE_RE = re.compile(
+    r'dclk_video_ads|videoplayback\\\?|initplayback|ctier=L|googlevideo\.com',
+    re.I,
+)
+# 构建期探测：凡能命中下列正常播放 URL 的 Rewrite 一律剔除
+YOUTUBE_PLAYBACK_PROBE_URLS = (
+    'https://rr5---sn-test.googlevideo.com/videoplayback?expire=1&ei=abc',
+    'https://rr5---sn-test.googlevideo.com/initplayback?source=youtube&c=IOS&oad=5500',
+    'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
+    'https://youtubei.googleapis.com/youtubei/v1/player?prettyPrint=false',
+)
 
 
 def _normalize_rewrite_for_match(line: str) -> str:
@@ -58,6 +71,49 @@ def is_youtube_abp_rule(line: str) -> bool:
     return any(marker in lowered for marker in _YOUTUBE_RULE_MARKERS)
 
 
+def _rewrite_pattern_only(line: str) -> str:
+    pat = line.strip()
+    for suffix in (' reject', ' reject-200', ' - reject', ' - reject-200'):
+        if pat.lower().endswith(suffix):
+            return pat[: -len(suffix)].strip()
+    if ' $' in pat:
+        return pat.split(' $', 1)[0].strip()
+    if ' _ ' in pat:
+        return pat.split(' _ ', 1)[0].strip()
+    return pat
+
+
+def is_youtube_ad_signature_rewrite(line: str) -> bool:
+    """剔除与 YouTubeAd.sgmodule 同款的 googlevideo 策略，避免双模块叠加误伤。"""
+    stripped = line.strip()
+    if not stripped or stripped.startswith('#'):
+        return False
+    return bool(_YOUTUBE_AD_SIGNATURE_RE.search(stripped))
+
+
+def matches_youtube_playback_probe(line: str) -> bool:
+    """构建期用典型播放 URL 探测，防止 Cats-Team 转换出误伤规则。"""
+    stripped = line.strip()
+    if not stripped or stripped.startswith('#'):
+        return False
+    pat = _rewrite_pattern_only(stripped)
+    for url in YOUTUBE_PLAYBACK_PROBE_URLS:
+        try:
+            if re.search(pat, url, re.I):
+                return True
+        except re.error:
+            return False
+    return False
+
+
+def is_youtube_blocked_rewrite(line: str) -> bool:
+    return (
+        is_youtube_rewrite_rule(line)
+        or is_youtube_ad_signature_rewrite(line)
+        or matches_youtube_playback_probe(line)
+    )
+
+
 def strip_youtube_rewrite_body(text: str) -> str:
     """剔除 YouTube/googlevideo Rewrite 与相关注释（避免与 YouTubeAd.sgmodule 冲突）。"""
     if not text:
@@ -75,7 +131,7 @@ def strip_youtube_rewrite_body(text: str) -> str:
                 continue
             kept.append(line)
             continue
-        if is_youtube_rewrite_rule(line):
+        if is_youtube_blocked_rewrite(line):
             continue
         kept.append(line)
     return '\n'.join(_compact_rewrite_spacing(kept))

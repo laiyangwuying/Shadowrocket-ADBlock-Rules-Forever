@@ -7,7 +7,7 @@ import re
 import time
 from typing import Set
 
-from ad_block_util import is_youtube_rewrite_rule, normalize_rewrite_body
+from ad_block_util import is_youtube_blocked_rewrite, normalize_rewrite_body
 from ad_filters import (
     fetch_combined_filters,
     iter_filter_rules,
@@ -164,7 +164,7 @@ def build() -> dict:
         if rewrite is None:
             skipped += 1
             continue
-        if is_youtube_rewrite_rule(rewrite):
+        if is_youtube_blocked_rewrite(rewrite):
             youtube_skipped += 1
             continue
         if rewrite in static_keys:

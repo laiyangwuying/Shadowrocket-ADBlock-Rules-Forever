@@ -52,7 +52,7 @@ def build() -> dict:
 
     parts = [
         '#!name= NoAd',
-        '#!desc= 广告屏蔽（Cats-Team AdRules + App 静态规则，每日构建）',
+        '#!desc= 广告屏蔽（Cats-Team + App 静态）；YouTube 请用 YouTubeAd.sgmodule，勿与 AdBlock 重复注入 googlevideo 策略',
         '#!homepage=https://github.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever',
         '#!author= Tartarus2014 + build',
         '#!icon= https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png',
