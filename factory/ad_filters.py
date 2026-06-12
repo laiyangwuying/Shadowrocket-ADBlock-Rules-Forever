@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
-"""EasyList China + AdGuard 中文过滤器：拉取与规则行解析。"""
+"""广告过滤器拉取与 ABP 规则行解析。"""
 
 from __future__ import annotations
 
 import re
-from typing import Iterable, Iterator
+from typing import Iterator
 
-from build_util import fetch_text_parallel
+from build_util import fetch_text, fetch_text_parallel
+
+CATS_TEAM_DNS_URL = (
+    'https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/dns.txt'
+)
 
 EASYLIST_CHINA_URL = 'https://easylist-downloads.adblockplus.org/easylistchina.txt'
 ADGUARD_CHINESE_URL = (
@@ -17,6 +21,7 @@ ADGUARD_CHINESE_URL = (
 FILTER_URLS = (EASYLIST_CHINA_URL, ADGUARD_CHINESE_URL)
 
 _filter_cache: str | None = None
+_cats_team_dns_cache: str | None = None
 
 _SKIP_OPTION_RE = re.compile(
     r'elemhide|generichide|specifichide|append|removeparam|redirect',
@@ -39,9 +44,19 @@ def fetch_combined_filters(*, force: bool = False) -> str:
     return _filter_cache
 
 
+def fetch_cats_team_dns(*, force: bool = False) -> str:
+    """Cats-Team AdRules DNS 列表（供 conf 域名 REJECT）。"""
+    global _cats_team_dns_cache
+    if _cats_team_dns_cache is not None and not force:
+        return _cats_team_dns_cache
+    _cats_team_dns_cache = fetch_text(CATS_TEAM_DNS_URL) + '\n'
+    return _cats_team_dns_cache
+
+
 def clear_filter_cache() -> None:
-    global _filter_cache
+    global _filter_cache, _cats_team_dns_cache
     _filter_cache = None
+    _cats_team_dns_cache = None
 
 
 def iter_filter_rules(text: str) -> Iterator[str]:

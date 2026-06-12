@@ -57,7 +57,7 @@ GFWList 不能无损转换为 SR 规则，所以这里是对 GFWList 的补充�
 
 **ad.py**
 
-脚本，从指定的 Adblock Rule 中提取广告服务器的域名和 IP 至 `ad.list` 文件。
+脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 提取广告域名至 `ad.list`（供 conf 的 `DOMAIN,Reject` 规则）。
 
 -----------------------------------
 

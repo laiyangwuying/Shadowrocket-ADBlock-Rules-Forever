@@ -11,7 +11,8 @@ from typing import Set
 
 from ad_block_util import is_dedicated_module_host
 from ad_filters import (
-    fetch_combined_filters,
+    CATS_TEAM_DNS_URL,
+    fetch_cats_team_dns,
     iter_filter_rules,
     should_skip_scoped_options,
     split_rule_options,
@@ -76,7 +77,7 @@ def _parse_row(row: str, domains: Set[str], ignore: set[str]) -> int:
 
 def build() -> dict:
     ignore = _load_ignore()
-    rule = fetch_combined_filters()
+    rule = fetch_cats_team_dns()
 
     domains: Set[str] = set()
     idna_skipped = 0
@@ -84,8 +85,9 @@ def build() -> dict:
         idna_skipped += _parse_row(row, domains, ignore)
 
     header = (
-        '# adblock domains: EasyList China + AdGuard Chinese @ '
-        + time.strftime('%Y-%m-%d %H:%M:%S')
+        f'# adblock domains: Cats-Team AdRules dns.txt @ '
+        f'{time.strftime("%Y-%m-%d %H:%M:%S")}\n'
+        f'# source: {CATS_TEAM_DNS_URL}'
     )
     domains = {d for d in domains if not is_dedicated_module_host(d)}
     count = write_list(RESULTANT_DIR / 'ad.list', header, domains)
