@@ -9,7 +9,7 @@ import re
 import time
 from typing import Set
 
-from ad_block_util import YOUTUBE_PROTECTED_SUFFIXES, is_youtube_protected_host
+from ad_block_util import is_dedicated_module_host
 from ad_filters import (
     fetch_combined_filters,
     iter_filter_rules,
@@ -65,7 +65,7 @@ def _parse_row(row: str, domains: Set[str], ignore: set[str]) -> int:
     normalized = normalize_hostname(row, source='ad')
     if normalized is None:
         return 1
-    if is_youtube_protected_host(normalized):
+    if is_dedicated_module_host(normalized):
         return 0
 
     is_domain = '.' in normalized and _DOMAIN_RE.match(normalized)
@@ -75,7 +75,7 @@ def _parse_row(row: str, domains: Set[str], ignore: set[str]) -> int:
 
 
 def build() -> dict:
-    ignore = _load_ignore() | set(YOUTUBE_PROTECTED_SUFFIXES)
+    ignore = _load_ignore()
     rule = fetch_combined_filters()
 
     domains: Set[str] = set()
@@ -87,7 +87,7 @@ def build() -> dict:
         '# adblock domains: EasyList China + AdGuard Chinese @ '
         + time.strftime('%Y-%m-%d %H:%M:%S')
     )
-    domains = {d for d in domains if not is_youtube_protected_host(d)}
+    domains = {d for d in domains if not is_dedicated_module_host(d)}
     count = write_list(RESULTANT_DIR / 'ad.list', header, domains)
     write_corrections_log(
         str(RESULTANT_DIR / 'idna_corrections.log'),

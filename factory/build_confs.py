@@ -156,17 +156,17 @@ def _merged_gfw_rules_string(kind: str) -> str:
 
 
 def _adblock_rewrite_static() -> str:
-    from ad_block_util import normalize_rewrite_body, strip_youtube_rewrite_body
+    from ad_block_util import normalize_rewrite_body, strip_dedicated_module_rewrite_body
 
-    return strip_youtube_rewrite_body(
+    return strip_dedicated_module_rewrite_body(
         normalize_rewrite_body(_tpl('adblock_rewrite_static.txt'))
     )
 
 
 def _adblock_mitm_hosts() -> str:
-    from ad_block_util import filter_youtube_mitm_hosts, parse_mitm_hostname_value
+    from ad_block_util import filter_dedicated_module_mitm_hosts, parse_mitm_hostname_value
 
-    return filter_youtube_mitm_hosts(
+    return filter_dedicated_module_mitm_hosts(
         parse_mitm_hostname_value(_tpl('adblock_mitm_hosts.txt'))
     )
 

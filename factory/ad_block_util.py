@@ -9,82 +9,16 @@ from pathlib import Path
 _SECTION_RE = re.compile(r'^\[(URL Rewrite|MITM|Script|Rule)\]\s*$', re.I)
 _HOSTNAME_RE = re.compile(r'^hostname\s*=', re.I)
 
-# YouTube 去广告由 module/YouTubeAd.sgmodule 单独负责，AdBlock 不得触碰。
-YOUTUBE_PROTECTED_SUFFIXES = frozenset({
-    'youtube.com',
-    'googlevideo.com',
-    'youtubei.googleapis.com',
-    'youtube.googleapis.com',
-    'youtube-nocookie.com',
-    'youtubekids.com',
-    'ytimg.com',
-    'ggpht.com',
-    'gvt1.com',
-})
-_YOUTUBE_COMMENT_RE = re.compile(
-    r'googlevideo|youtube|ytimg|ggpht|gvt1|Youtube\+\+',
-    re.I,
-)
-_YOUTUBE_RULE_MARKERS = tuple(YOUTUBE_PROTECTED_SUFFIXES)
-# Rewrite 规则中出现以下特征即视为 YouTube 生态，构建期整行删除
-_YOUTUBE_REWRITE_ECOSYSTEM_RE = re.compile(
-    r'googlevideo|youtubei|ytimg|ggpht|gvt1|youtubee\.|\.youtube\.|youtube\.com',
-    re.I,
-)
-# 与 YouTubeAd.sgmodule 同款的 googlevideo 去广告 Rewrite，不得进入 AdBlock
-_YOUTUBE_AD_SIGNATURE_RE = re.compile(
-    r'dclk_video_ads|videoplayback\\\?|initplayback|ctier=L|googlevideo\.com',
-    re.I,
-)
-# 构建期探测：凡能命中下列正常播放 URL 的 Rewrite 一律剔除
-YOUTUBE_PLAYBACK_PROBE_URLS = (
-    'https://rr5---sn-a5meknsy.googlevideo.com/videoplayback?expire=1&ei=abc',
-    'https://rr5---sn-a5meknsy.googlevideo.com/initplayback?source=youtube&c=IOS&oad=5500',
-    'https://rr5---sn-a5mekn6s.googlevideo.com/initplayback?source=youtube&c=IOS&oad=5500',
-    'https://www.youtube.com/watch?v=dQw4w9WgXcQ',
-    'https://youtubei.googleapis.com/youtubei/v1/player?prettyPrint=false',
-)
-# 典型 googlevideo CDN 主机（含 rr5---sn-* 子域）
-GOOGLEVIDEO_HOST_PROBES = (
-    'rr5---sn-a5meknsy.googlevideo.com',
-    'rr5---sn-a5mekn6s.googlevideo.com',
-    'redirector.googlevideo.com',
-)
+
+def _dedicated_index():
+    from dedicated_modules import default_module_index
+
+    return default_module_index()
 
 
 def _normalize_rewrite_for_match(line: str) -> str:
     """Shadowrocket Rewrite 中域名常为 youtube\\.com 形式。"""
     return line.replace(r'\.', '.').replace(r'\/', '/').lower()
-
-
-def is_youtube_protected_host(host: str) -> bool:
-    h = host.lower().strip().rstrip('.')
-    if not h:
-        return False
-    for suffix in YOUTUBE_PROTECTED_SUFFIXES:
-        if h == suffix or h.endswith('.' + suffix):
-            return True
-    return False
-
-
-def is_youtube_rewrite_rule(line: str) -> bool:
-    stripped = line.strip()
-    if not stripped or stripped.startswith('#'):
-        return False
-    normalized = _normalize_rewrite_for_match(stripped)
-    if _YOUTUBE_REWRITE_ECOSYSTEM_RE.search(normalized):
-        return True
-    return any(marker in normalized for marker in _YOUTUBE_RULE_MARKERS)
-
-
-def is_youtube_abp_rule(line: str) -> bool:
-    """ABP 网络规则在转换前剔除 YouTube 相关域名，避免漏网或误转换。"""
-    lowered = line.lower().strip()
-    if not lowered or lowered.startswith('!') or lowered.startswith('@@'):
-        return False
-    if _YOUTUBE_REWRITE_ECOSYSTEM_RE.search(lowered):
-        return True
-    return any(marker in lowered for marker in _YOUTUBE_RULE_MARKERS)
 
 
 def _rewrite_pattern_only(line: str) -> str:
@@ -99,58 +33,60 @@ def _rewrite_pattern_only(line: str) -> str:
     return pat
 
 
-def is_youtube_ad_signature_rewrite(line: str) -> bool:
-    """剔除与 YouTubeAd.sgmodule 同款的 googlevideo 策略，避免双模块叠加误伤。"""
-    stripped = line.strip()
-    if not stripped or stripped.startswith('#'):
-        return False
-    return bool(_YOUTUBE_AD_SIGNATURE_RE.search(stripped))
+def is_dedicated_module_host(host: str) -> bool:
+    """host 是否由 module/ 专用模块负责（构建 AdBlock 时须剔除）。"""
+    return _dedicated_index().is_protected_host(host)
 
 
-def matches_youtube_playback_probe(line: str) -> bool:
-    """构建期用典型播放 URL 探测，防止 Cats-Team 转换出误伤规则。"""
-    stripped = line.strip()
-    if not stripped or stripped.startswith('#'):
-        return False
-    pat = _rewrite_pattern_only(stripped)
-    for url in YOUTUBE_PLAYBACK_PROBE_URLS:
-        try:
-            if re.search(pat, url, re.I):
-                return True
-        except re.error:
-            return False
-    return False
+def is_dedicated_module_rewrite(line: str) -> bool:
+    """Rewrite 是否与 module/ 专用模块策略重复或冲突。"""
+    return _dedicated_index().is_dedicated_rewrite(line)
 
 
-def matches_googlevideo_host_probe(line: str) -> bool:
-    """凡能命中 googlevideo CDN 子域（含 rr5---sn-*）的 Rewrite 一律剔除。"""
-    stripped = line.strip()
-    if not stripped or stripped.startswith('#'):
-        return False
-    pat = _rewrite_pattern_only(stripped)
-    for host in GOOGLEVIDEO_HOST_PROBES:
-        url = f'https://{host}/'
-        try:
-            if re.search(pat, url, re.I):
-                return True
-        except re.error:
-            return False
-    return False
+def is_dedicated_module_abp_rule(line: str) -> bool:
+    """ABP 规则是否 targeting 专用模块已覆盖的域名。"""
+    return _dedicated_index().is_dedicated_abp_rule(line)
 
 
-def is_youtube_blocked_rewrite(line: str) -> bool:
-    return (
-        is_youtube_rewrite_rule(line)
-        or is_youtube_ad_signature_rewrite(line)
-        or matches_youtube_playback_probe(line)
-        or matches_googlevideo_host_probe(line)
-    )
+# 兼容旧调用名
+is_youtube_protected_host = is_dedicated_module_host
+is_youtube_blocked_rewrite = is_dedicated_module_rewrite
+is_youtube_abp_rule = is_dedicated_module_abp_rule
+is_youtube_rewrite_rule = is_dedicated_module_rewrite
+
+
+def strip_dedicated_module_rewrite_body(text: str) -> str:
+    """剔除 module/ 专用模块已覆盖的 Rewrite 与相关注释。"""
+    if not text:
+        return ''
+    index = _dedicated_index()
+    kept: list[str] = []
+    for raw in text.splitlines():
+        line = raw.rstrip()
+        stripped = line.strip()
+        if not stripped:
+            if kept and kept[-1] != '':
+                kept.append('')
+            continue
+        if stripped.startswith('#'):
+            if index.comment_mentions_dedicated_domain(stripped):
+                continue
+            kept.append(line)
+            continue
+        if is_dedicated_module_rewrite(line):
+            continue
+        kept.append(line)
+    return '\n'.join(_compact_rewrite_spacing(kept))
+
+
+strip_youtube_rewrite_body = strip_dedicated_module_rewrite_body
 
 
 def finalize_adblock_rewrite_lines(lines: list[str]) -> tuple[list[str], int]:
-    """AdBlock.module 最终 Pass：剔除一切 YouTube/googlevideo Rewrite。"""
+    """AdBlock.module 最终 Pass：剔除专用模块已覆盖的 Rewrite。"""
     kept: list[str] = []
     removed = 0
+    index = _dedicated_index()
     for raw in lines:
         line = raw.rstrip()
         stripped = line.strip()
@@ -159,60 +95,65 @@ def finalize_adblock_rewrite_lines(lines: list[str]) -> tuple[list[str], int]:
                 kept.append('')
             continue
         if stripped.startswith('#'):
-            if _YOUTUBE_COMMENT_RE.search(stripped):
+            if index.comment_mentions_dedicated_domain(stripped):
                 removed += 1
                 continue
             kept.append(line)
             continue
-        if is_youtube_blocked_rewrite(line):
+        if is_dedicated_module_rewrite(line):
             removed += 1
             continue
         kept.append(line)
     return _compact_rewrite_spacing(kept), removed
 
 
-def count_googlevideo_rewrite_lines(text: str) -> int:
-    """构建后校验：统计仍含 googlevideo 的 Rewrite 行数（应为 0）。"""
+def count_dedicated_module_rewrite_leaks(text: str) -> int:
+    """构建后校验：统计仍与专用模块冲突的 Rewrite 行数。"""
     count = 0
     for raw in text.splitlines():
         stripped = raw.strip()
         if not stripped or stripped.startswith('#'):
             continue
-        normalized = _normalize_rewrite_for_match(stripped)
-        if _YOUTUBE_REWRITE_ECOSYSTEM_RE.search(normalized):
-            count += 1
-        elif is_youtube_blocked_rewrite(stripped):
+        lowered = stripped.lower()
+        if 'googlevideo' not in lowered and 'youtube' not in lowered:
+            continue
+        if is_dedicated_module_rewrite(stripped):
             count += 1
     return count
 
 
-def strip_youtube_rewrite_body(text: str) -> str:
-    """剔除 YouTube/googlevideo Rewrite 与相关注释（避免与 YouTubeAd.sgmodule 冲突）。"""
-    if not text:
-        return ''
-    kept: list[str] = []
-    for raw in text.splitlines():
-        line = raw.rstrip()
-        stripped = line.strip()
-        if not stripped:
-            if kept and kept[-1] != '':
-                kept.append('')
-            continue
-        if stripped.startswith('#'):
-            if _YOUTUBE_COMMENT_RE.search(stripped):
-                continue
-            kept.append(line)
-            continue
-        if is_youtube_blocked_rewrite(line):
-            continue
-        kept.append(line)
-    return '\n'.join(_compact_rewrite_spacing(kept))
+count_googlevideo_rewrite_lines = count_dedicated_module_rewrite_leaks
 
 
-def filter_youtube_mitm_hosts(hosts: str) -> str:
-    parts = [p.strip() for p in hosts.split(',') if p.strip()]
-    kept = [p for p in parts if not is_youtube_protected_host(p.replace('*', ''))]
+def _mitm_part_covered(part: str) -> bool:
+    from dedicated_modules import _host_matches_token
+
+    index = _dedicated_index()
+    sample = part.replace('?', 'x').replace('*', 'probe')
+    if index.is_protected_host(sample):
+        return True
+    lowered = part.lower()
+    for marker in index.domain_markers:
+        if '.' in marker and marker in lowered:
+            return True
+    for token in index.host_tokens:
+        if _host_matches_token(sample, token):
+            return True
+    return False
+
+
+def filter_dedicated_module_mitm_hosts(hosts: str) -> str:
+    """从 AdBlock MITM 列表剔除专用模块已声明的 hostname。"""
+    kept = [p for p in (x.strip() for x in hosts.split(',')) if p and not _mitm_part_covered(p)]
     return ','.join(kept)
+
+
+filter_youtube_mitm_hosts = filter_dedicated_module_mitm_hosts
+
+
+def dedicated_module_sources_summary() -> str:
+    index = _dedicated_index()
+    return ', '.join(index.sources) if index.sources else '(none)'
 
 
 def clean_text_newlines(text: str) -> str:
@@ -287,6 +228,7 @@ def parse_mitm_hostname_value(line: str) -> str:
 
 def merge_rewrite_bodies(*parts: str) -> str:
     """合并多段 Rewrite 规则，按行去重（保留注释与空行结构）。"""
+    index = _dedicated_index()
     seen: set[str] = set()
     out: list[str] = []
 
@@ -306,9 +248,9 @@ def merge_rewrite_bodies(*parts: str) -> str:
                 _append_blank()
                 continue
             if stripped.startswith('#'):
+                if index.comment_mentions_dedicated_domain(stripped):
+                    continue
                 out.append(line)
-                continue
-            if is_youtube_blocked_rewrite(line):
                 continue
             if stripped in seen:
                 continue

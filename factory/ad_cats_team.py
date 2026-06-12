@@ -6,8 +6,9 @@ from __future__ import annotations
 import time
 from typing import Set
 
-from ad_block_util import is_youtube_abp_rule, is_youtube_blocked_rewrite
+from ad_block_util import is_dedicated_module_abp_rule, is_dedicated_module_rewrite
 from ad_filters import iter_filter_rules
+from dedicated_modules import get_dedicated_module_index
 from ad_rewrite import abp_network_rule_to_rewrite, static_rewrite_keys
 from build_util import RESULTANT_DIR, atomic_write, fetch_text, log
 
@@ -29,6 +30,7 @@ def _cats_line_to_rewrite(line: str) -> str | None:
 
 
 def build() -> dict:
+    get_dedicated_module_index.cache_clear()
     static_keys = static_rewrite_keys()
     text = fetch_text(CATS_TEAM_RULES_URL)
     rewrites: Set[str] = set()
@@ -38,7 +40,7 @@ def build() -> dict:
 
     for line in iter_filter_rules(text):
         raw = line.strip()
-        if is_youtube_abp_rule(raw):
+        if is_dedicated_module_abp_rule(raw):
             skipped_other += 1
             continue
         if '$replace' in raw.lower():
@@ -48,7 +50,7 @@ def build() -> dict:
         if rewrite is None:
             skipped_other += 1
             continue
-        if is_youtube_blocked_rewrite(rewrite):
+        if is_dedicated_module_rewrite(rewrite):
             skipped_other += 1
             continue
         if rewrite in static_keys or rewrite in rewrites:
