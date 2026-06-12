@@ -12,7 +12,7 @@ from ad_rewrite import abp_network_rule_to_rewrite
 from build_util import RESULTANT_DIR, atomic_write, fetch_text, log
 
 CATS_TEAM_RULES_URL = (
-    'https://raw.githubusercontent.com/Cats-Team/AdRules/main/adblock_plus.txt'
+    'https://raw.githubusercontent.com/Cats-Team/AdRules/main/adblock.txt'
 )
 _OUTPUT = RESULTANT_DIR / 'cats_team_rewrite.list'
 _MAX_DELTA = 8000
@@ -64,7 +64,7 @@ def build() -> dict:
             break
 
     header = (
-        f'# Cats-Team AdRules Plus delta @ {time.strftime("%Y-%m-%d %H:%M:%S")}\n'
+        f'# Cats-Team AdRules delta @ {time.strftime("%Y-%m-%d %H:%M:%S")}\n'
         f'# source: {CATS_TEAM_RULES_URL}\n'
         f'# 相对 EasyList+AdGuard 的 ad_rewrite.list 增量（上限 {_MAX_DELTA}）\n'
     )
