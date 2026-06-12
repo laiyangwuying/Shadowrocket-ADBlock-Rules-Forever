@@ -6,13 +6,14 @@
 #
 # 路径禁止含 .. ，仅允许写入 factory/vendor/ 之下。
 #
+# 专用模块以仓库 module/ 为准（已镜像 script-path 到 scripts/）。
+# yfamilys.com 对 CI 返回 403，不再从此处拉取。
+#
 # ---- 按需取消注释或添加你的地址 ----
-# AdBlock.module     https://yfamilys.com/module/AdBlock.module
+# AdBlock.module     https://yfamilys.com/module/AdBlock.module  # 由 factory/ad_module.py 构建
 # YouTubeAd.sgmodule https://yfamilys.com/module/YouTubeAd.sgmodule
-xmlyad.module https://yfamilys.com/module/xmlyad.module
-aqc.module https://yfamilys.com/module/aqc.module
-caiyun.module https://yfamilys.com/module/caiyun.module
-YouTubeAd.sgmodule https://yfamilys.com/module/YouTubeAd.sgmodule
-# AdBlock.module https://yfamilys.com/module/AdBlock.module  # 由 factory/ad_module.py 构建
-wechatad.module https://yfamilys.com/module/wechatad.module
-adultra.module https://yfamilys.com/module/adultra.module
+# xmlyad.module       https://yfamilys.com/module/xmlyad.module
+# aqc.module          https://yfamilys.com/module/aqc.module
+# caiyun.module       https://yfamilys.com/module/caiyun.module
+# wechatad.module     https://yfamilys.com/module/wechatad.module
+# adultra.module      https://yfamilys.com/module/adultra.module

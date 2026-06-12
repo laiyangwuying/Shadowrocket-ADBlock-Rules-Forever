@@ -81,13 +81,18 @@ def _is_mirrored_url(url: str) -> bool:
 
 
 def _scan_module_files() -> list[Path]:
+    """仅扫描发布的 module/；vendor/ 为历史缓存，可能含失效外链。"""
     files: list[Path] = []
-    for root in (MODULE_ROOT, VENDOR_ROOT):
-        if not root.is_dir():
-            continue
+    if MODULE_ROOT.is_dir():
         for pattern in MODULE_GLOBS:
-            files.extend(sorted(root.glob(pattern)))
+            files.extend(sorted(MODULE_ROOT.glob(pattern)))
     return files
+
+
+def _count_local_scripts() -> int:
+    if not SCRIPTS_ROOT.is_dir():
+        return 0
+    return sum(1 for p in SCRIPTS_ROOT.rglob('*') if p.is_file())
 
 
 def _collect_script_urls(files: list[Path]) -> dict[str, set[str]]:
@@ -178,6 +183,20 @@ def _rewrite_modules(files: list[Path], url_map: dict[str, str]) -> int:
 def build() -> dict:
     files = _scan_module_files()
     groups = _collect_script_urls(files)
+    local_scripts = _count_local_scripts()
+    if not groups:
+        log(
+            f'vendor_scripts: skip fetch, all script-path already mirrored '
+            f'({local_scripts} local files)'
+        )
+        return {
+            'scripts': 0,
+            'mapped': 0,
+            'modules_rewritten': 0,
+            'local_scripts': local_scripts,
+            'time': time.strftime('%Y-%m-%d %H:%M:%S'),
+        }
+
     url_map = _download_scripts(groups)
     changed = _rewrite_modules(files, url_map)
     log(f'vendor_scripts: rewritten {changed} module files')
@@ -185,6 +204,7 @@ def build() -> dict:
         'scripts': len(groups),
         'mapped': len(url_map),
         'modules_rewritten': changed,
+        'local_scripts': local_scripts,
         'time': time.strftime('%Y-%m-%d %H:%M:%S'),
     }
 
