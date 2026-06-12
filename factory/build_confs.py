@@ -51,6 +51,9 @@ STREAMING_UDP_CONFS = frozenset({
     'sr_adb',
 })
 
+# GFW 上游无点标签转 DOMAIN-KEYWORD 时，过短子串会误伤国内域名（如 goo → goofish）
+_GFW_BARE_LABEL_KEYWORD_SKIP = frozenset({'goo', 'goog'})
+
 @lru_cache(maxsize=16)
 def _tpl(name: str) -> str:
     return (TEMPLATE_DIR / name).read_text(encoding='utf-8')
@@ -103,6 +106,8 @@ def _rule_line_from_plain_entry(content: str, kind: str) -> str | None:
         elif '/' not in content:
             content += '/32'
     elif '.' not in content and len(content) > 1:
+        if content in _GFW_BARE_LABEL_KEYWORD_SKIP:
+            return None
         prefix = 'DOMAIN-KEYWORD'
 
     return f'{prefix},{content},{kind}\n'
