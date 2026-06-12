@@ -15,7 +15,6 @@ CATS_TEAM_RULES_URL = (
     'https://raw.githubusercontent.com/Cats-Team/AdRules/main/adblock.txt'
 )
 _OUTPUT = RESULTANT_DIR / 'cats_team_rewrite.list'
-_MAX_DELTA = 8000
 
 
 def _existing_rewrite_keys() -> set[str]:
@@ -59,14 +58,11 @@ def build() -> dict:
             skipped_dup += 1
             continue
         rewrites.add(rewrite)
-        if len(rewrites) >= _MAX_DELTA:
-            log(f'ad_cats_team: hit cap {_MAX_DELTA}')
-            break
 
     header = (
         f'# Cats-Team AdRules delta @ {time.strftime("%Y-%m-%d %H:%M:%S")}\n'
         f'# source: {CATS_TEAM_RULES_URL}\n'
-        f'# 相对 EasyList+AdGuard 的 ad_rewrite.list 增量（上限 {_MAX_DELTA}）\n'
+        f'# 相对 EasyList+AdGuard 的 ad_rewrite.list 全量增量\n'
     )
     body = '\n'.join(sorted(rewrites)) + '\n'
     atomic_write(_OUTPUT, header + body)

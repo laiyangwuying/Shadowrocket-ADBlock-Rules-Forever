@@ -19,7 +19,6 @@ from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log
 _TEMPLATE_DIR = FACTORY_ROOT / 'template'
 
 _ACTION = 'reject'
-_MAX_REWRITES = 8000
 _ABP_REGEX_FLAGS_RE = re.compile(r'^[a-z]*$')
 
 
@@ -172,9 +171,6 @@ def build() -> dict:
             dup_static += 1
             continue
         rewrites.add(rewrite)
-        if len(rewrites) >= _MAX_REWRITES:
-            log(f'ad_rewrite: hit cap {_MAX_REWRITES}, remaining rules skipped')
-            break
 
     header = (
         f'# ad url rewrite from EasyList China + AdGuard Chinese @ '
