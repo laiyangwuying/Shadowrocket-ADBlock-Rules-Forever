@@ -9,15 +9,9 @@ import re
 import time
 from typing import Set
 
-from build_util import RESULTANT_DIR, fetch_text_parallel, log, read_entries, write_list
+from ad_filters import fetch_combined_filters, iter_filter_rules, split_rule_options
+from build_util import RESULTANT_DIR, log, read_entries, write_list
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
-
-RULES_URL = [
-    'https://easylist-downloads.adblockplus.org/easylistchina.txt',
-    'https://easylist-downloads.adblockplus.org/easylistchina+easylist.txt',
-    'https://raw.githubusercontent.com/xinggsf/Adblock-Plus-Rule/master/rule.txt',
-    'https://pgl.yoyo.org/adservers/serverlist.php?hostformat=adblockplus;showintro=0',
-]
 
 _DOMAIN_RE = re.compile(
     r'^\.?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}'
@@ -40,23 +34,18 @@ def _parse_row(row: str, domains: Set[str], ignore: set[str]) -> int:
             domains.discard(d)
         return 0
 
-    if (
-        not row
-        or row.startswith('!')
-        or row.startswith('[')
-        or '$' in row
-        or '##' in row
-        or '#@#' in row
-        or '#?#' in row
-    ):
+    if not row or '##' in row or '#@#' in row or '#?#' in row:
         return 0
 
-    row = re.sub(r'^\|?https?://', '', row)
-    row = re.sub(r'^\|\|', '', row)
-    row = row.lstrip('.*')
-    row = row.rstrip('/*')
+    pattern, _opts = split_rule_options(row)
+    if not pattern.startswith('||'):
+        return 0
+
+    row = pattern[2:]
     if row.endswith('^'):
         row = row[:-1]
+    if '/' in row:
+        row = row.split('/', 1)[0]
     row = re.sub(r':\d{2,5}$', '', row)
 
     if not row or re.search(r'[/^:*|]', row):
@@ -76,15 +65,17 @@ def _parse_row(row: str, domains: Set[str], ignore: set[str]) -> int:
 
 def build() -> dict:
     ignore = _load_ignore()
-    texts = fetch_text_parallel(RULES_URL)
-    rule = '\n'.join(texts[u] for u in RULES_URL) + '\n'
+    rule = fetch_combined_filters()
 
     domains: Set[str] = set()
     idna_skipped = 0
-    for row in rule.splitlines():
-        idna_skipped += _parse_row(row.strip(), domains, ignore)
+    for row in iter_filter_rules(rule):
+        idna_skipped += _parse_row(row, domains, ignore)
 
-    header = '# adblock rules refresh time: ' + time.strftime('%Y-%m-%d %H:%M:%S')
+    header = (
+        '# adblock domains: EasyList China + AdGuard Chinese @ '
+        + time.strftime('%Y-%m-%d %H:%M:%S')
+    )
     count = write_list(RESULTANT_DIR / 'ad.list', header, domains)
     write_corrections_log(
         str(RESULTANT_DIR / 'idna_corrections.log'),

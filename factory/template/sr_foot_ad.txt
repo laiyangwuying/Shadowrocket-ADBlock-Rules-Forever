@@ -9,7 +9,12 @@
 ^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) _ reject-200
 ^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?adcontext _ reject-200
 
+# App 去广告（AdBlock.module 静态策略，见 factory/template/adblock_rewrite_static.txt）
+{{adblock_rewrite_static}}
+# EasyList China + AdGuard 中文 URL 规则（每日构建生成）
+{{ad_url_rewrite}}
+
 [MITM]
 enable = true
 h2 = true
-hostname = -redirector*.googlevideo.com, *.googlevideo.com, www.youtube.com, s.youtube.com, youtubei.googleapis.com
+hostname = -redirector*.googlevideo.com, *.googlevideo.com, www.youtube.com, s.youtube.com, youtubei.googleapis.com, {{adblock_mitm_hosts}}
