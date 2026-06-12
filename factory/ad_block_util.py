@@ -9,6 +9,74 @@ from pathlib import Path
 _SECTION_RE = re.compile(r'^\[(URL Rewrite|MITM|Script|Rule)\]\s*$', re.I)
 _HOSTNAME_RE = re.compile(r'^hostname\s*=', re.I)
 
+# YouTube 去广告由 module/YouTubeAd.sgmodule 单独负责，AdBlock 不得触碰。
+YOUTUBE_PROTECTED_SUFFIXES = frozenset({
+    'youtube.com',
+    'googlevideo.com',
+    'youtubei.googleapis.com',
+})
+_YOUTUBE_COMMENT_RE = re.compile(
+    r'googlevideo|youtube\.com|Youtube\+\+',
+    re.I,
+)
+_YOUTUBE_RULE_MARKERS = (
+    'youtube.com',
+    'googlevideo.com',
+    'youtubei.googleapis.com',
+)
+
+
+def _normalize_rewrite_for_match(line: str) -> str:
+    """Shadowrocket Rewrite 中域名常为 youtube\\.com 形式。"""
+    return line.replace(r'\.', '.').replace(r'\/', '/').lower()
+
+
+def is_youtube_protected_host(host: str) -> bool:
+    h = host.lower().strip().rstrip('.')
+    if not h:
+        return False
+    for suffix in YOUTUBE_PROTECTED_SUFFIXES:
+        if h == suffix or h.endswith('.' + suffix):
+            return True
+    return False
+
+
+def is_youtube_rewrite_rule(line: str) -> bool:
+    stripped = line.strip()
+    if not stripped or stripped.startswith('#'):
+        return False
+    normalized = _normalize_rewrite_for_match(stripped)
+    return any(marker in normalized for marker in _YOUTUBE_RULE_MARKERS)
+
+
+def strip_youtube_rewrite_body(text: str) -> str:
+    """剔除 YouTube/googlevideo Rewrite 与相关注释（避免与 YouTubeAd.sgmodule 冲突）。"""
+    if not text:
+        return ''
+    kept: list[str] = []
+    for raw in text.splitlines():
+        line = raw.rstrip()
+        stripped = line.strip()
+        if not stripped:
+            if kept and kept[-1] != '':
+                kept.append('')
+            continue
+        if stripped.startswith('#'):
+            if _YOUTUBE_COMMENT_RE.search(stripped):
+                continue
+            kept.append(line)
+            continue
+        if is_youtube_rewrite_rule(line):
+            continue
+        kept.append(line)
+    return '\n'.join(_compact_rewrite_spacing(kept))
+
+
+def filter_youtube_mitm_hosts(hosts: str) -> str:
+    parts = [p.strip() for p in hosts.split(',') if p.strip()]
+    kept = [p for p in parts if not is_youtube_protected_host(p.replace('*', ''))]
+    return ','.join(kept)
+
 
 def clean_text_newlines(text: str) -> str:
     """vendor .module 常见 \\r\\r\\n，统一为 Unix 换行。"""

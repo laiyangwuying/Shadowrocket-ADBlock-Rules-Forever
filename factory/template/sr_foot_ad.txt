@@ -2,12 +2,7 @@
 # Redirect Google Search / Maps（.cn → .com）
 ^https?:\/\/(www\.)?google\.cn https://www.google.com 302
 ^https?:\/\/(ditu|maps)\.google\.cn https://maps.google.com 302
-# YouTube 去广告（与 factory/vendor/YouTubeAd.sgmodule 对齐）
-(^https?:\/\/[\w-]+\.googlevideo\.com\/(?!dclk_video_ads).+?)&ctier=L(&.+?),ctier,(.+) $1$2$3 302
-^https?:\/\/[\w-]+\.googlevideo\.com\/(?!(dclk_video_ads|videoplayback\?)).+&oad _ reject-200
-^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads _ reject-200
-^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) _ reject-200
-^https?:\/\/s\.youtube\.com\/api\/stats\/qoe\?adcontext _ reject-200
+# YouTube 去广告请单独启用 module/YouTubeAd.sgmodule（勿与 AdBlock 重复注入）
 
 # App 去广告（AdBlock.module 静态策略，见 factory/template/adblock_rewrite_static.txt）
 {{adblock_rewrite_static}}
@@ -17,4 +12,4 @@
 [MITM]
 enable = true
 h2 = true
-hostname = -redirector*.googlevideo.com, *.googlevideo.com, www.youtube.com, s.youtube.com, youtubei.googleapis.com, {{adblock_mitm_hosts}}
+hostname = {{adblock_mitm_hosts}}

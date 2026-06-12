@@ -1,4 +1,4 @@
-# ad url rewrite from EasyList China + AdGuard Chinese @ 2026-06-12 08:29:29
+# ad url rewrite from EasyList China + AdGuard Chinese @ 2026-06-12 16:41:26
 ^https:\/\/([a-z]+\.){2}\w{2,3}\/\d{4}\/\d{2}\ reject
 ^https:\/\/(www\.)?zxzjhd\.com\/[0-9]+\.gif reject
 ^https:\/\/[a-z0-9-]{3,12}\.[a-z0-9]+\.com\/([A-Za-z0-9.]+)(?:\ reject
@@ -4305,8 +4305,6 @@
 ^https?:\/\/([\w-]+\.)*youth\.cn\/images/c\.js reject
 ^https?:\/\/([\w-]+\.)*youth\.cn\/images/public_ reject
 ^https?:\/\/([\w-]+\.)*youth\.cn\/qwtf2015/ reject
-^https?:\/\/([\w-]+\.)*youtube\.com\/embed/wqLWTeNBEEQ\? reject
-^https?:\/\/([\w-]+\.)*youtube\.com\/iframe_api reject
 ^https?:\/\/([\w-]+\.)*youxi\.baidu\.com\/tips/bdtips_min\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/tj\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/zz/nr\.js reject

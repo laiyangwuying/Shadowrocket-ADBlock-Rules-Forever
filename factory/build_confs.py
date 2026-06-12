@@ -156,21 +156,30 @@ def _merged_gfw_rules_string(kind: str) -> str:
 
 
 def _adblock_rewrite_static() -> str:
-    from ad_block_util import normalize_rewrite_body
+    from ad_block_util import normalize_rewrite_body, strip_youtube_rewrite_body
 
-    return normalize_rewrite_body(_tpl('adblock_rewrite_static.txt'))
+    return strip_youtube_rewrite_body(
+        normalize_rewrite_body(_tpl('adblock_rewrite_static.txt'))
+    )
 
 
 def _ad_url_rewrite() -> str:
-    from ad_block_util import rewrite_lines_from_list_file
+    from ad_block_util import is_youtube_rewrite_rule, rewrite_lines_from_list_file
 
-    return '\n'.join(rewrite_lines_from_list_file(RESULTANT_DIR / 'ad_rewrite.list'))
+    lines = [
+        ln
+        for ln in rewrite_lines_from_list_file(RESULTANT_DIR / 'ad_rewrite.list')
+        if not is_youtube_rewrite_rule(ln)
+    ]
+    return '\n'.join(lines)
 
 
 def _adblock_mitm_hosts() -> str:
-    from ad_block_util import parse_mitm_hostname_value
+    from ad_block_util import filter_youtube_mitm_hosts, parse_mitm_hostname_value
 
-    return parse_mitm_hostname_value(_tpl('adblock_mitm_hosts.txt'))
+    return filter_youtube_mitm_hosts(
+        parse_mitm_hostname_value(_tpl('adblock_mitm_hosts.txt'))
+    )
 
 
 def build() -> dict:

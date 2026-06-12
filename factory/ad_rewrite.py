@@ -7,7 +7,7 @@ import re
 import time
 from typing import Set
 
-from ad_block_util import normalize_rewrite_body
+from ad_block_util import is_youtube_rewrite_rule, normalize_rewrite_body
 from ad_filters import (
     fetch_combined_filters,
     iter_filter_rules,
@@ -119,12 +119,16 @@ def build() -> dict:
     rewrites: Set[str] = set()
     skipped = 0
     dup_static = 0
+    youtube_skipped = 0
     static_keys = _static_rewrite_keys()
 
     for line in iter_filter_rules(text):
         rewrite = _abp_line_to_rewrite(line)
         if rewrite is None:
             skipped += 1
+            continue
+        if is_youtube_rewrite_rule(rewrite):
+            youtube_skipped += 1
             continue
         if rewrite in static_keys:
             dup_static += 1
@@ -142,9 +146,15 @@ def build() -> dict:
     atomic_write(RESULTANT_DIR / 'ad_rewrite.list', header + body)
     log(
         f'ad_rewrite: {len(rewrites)} lines '
-        f'({skipped} not converted, {dup_static} dup static)'
+        f'({skipped} not converted, {dup_static} dup static, '
+        f'{youtube_skipped} youtube skipped)'
     )
-    return {'rewrites': len(rewrites), 'skipped': skipped, 'dup_static': dup_static}
+    return {
+        'rewrites': len(rewrites),
+        'skipped': skipped,
+        'dup_static': dup_static,
+        'youtube_skipped': youtube_skipped,
+    }
 
 
 def main() -> int:

@@ -7,9 +7,12 @@ import time
 from pathlib import Path
 
 from ad_block_util import (
+    filter_youtube_mitm_hosts,
     merge_rewrite_bodies,
     normalize_rewrite_body,
+    parse_mitm_hostname_value,
     rewrite_lines_from_list_file,
+    strip_youtube_rewrite_body,
 )
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log
 
@@ -33,9 +36,16 @@ def _generated_rewrite_block() -> str:
 
 
 def build() -> dict:
-    static = normalize_rewrite_body(_read_optional(TEMPLATE_DIR / 'adblock_rewrite_static.txt'))
-    rewrite_body = merge_rewrite_bodies(static, _generated_rewrite_block())
-    mitm_raw = _read_optional(TEMPLATE_DIR / 'adblock_mitm_hosts.txt').strip()
+    static = strip_youtube_rewrite_body(
+        normalize_rewrite_body(_read_optional(TEMPLATE_DIR / 'adblock_rewrite_static.txt'))
+    )
+    rewrite_body = strip_youtube_rewrite_body(
+        merge_rewrite_bodies(static, _generated_rewrite_block())
+    )
+    mitm_hosts = filter_youtube_mitm_hosts(
+        parse_mitm_hostname_value(_read_optional(TEMPLATE_DIR / 'adblock_mitm_hosts.txt'))
+    )
+    mitm_raw = f'hostname = %APPEND% {mitm_hosts}' if mitm_hosts else ''
 
     parts = [
         '#!name= NoAd',

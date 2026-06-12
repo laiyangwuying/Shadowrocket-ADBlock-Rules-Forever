@@ -9,6 +9,7 @@ import re
 import time
 from typing import Set
 
+from ad_block_util import YOUTUBE_PROTECTED_SUFFIXES
 from ad_filters import fetch_combined_filters, iter_filter_rules, split_rule_options
 from build_util import RESULTANT_DIR, log, read_entries, write_list
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
@@ -64,7 +65,7 @@ def _parse_row(row: str, domains: Set[str], ignore: set[str]) -> int:
 
 
 def build() -> dict:
-    ignore = _load_ignore()
+    ignore = _load_ignore() | set(YOUTUBE_PROTECTED_SUFFIXES)
     rule = fetch_combined_filters()
 
     domains: Set[str] = set()
