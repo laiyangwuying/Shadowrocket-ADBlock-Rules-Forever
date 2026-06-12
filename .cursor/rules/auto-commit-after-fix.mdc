@@ -1,0 +1,15 @@
+---
+description: 修正完成后自动提交并推送（本仓库）
+alwaysApply: true
+---
+
+# 修正后自动提交
+
+在本仓库完成 bug 修复、配置修正或构建产物更新后：
+
+1. 运行 `git status` / `git diff` 确认变更范围
+2. **自动创建 commit**（无需用户再次说「提交」），commit message 简明说明修复原因
+3. 若用户曾要求推送或当前任务含「推送」，执行 `git push`；推送前如落后远端则 `git pull --rebase`
+4. 使用环境变量设置作者：`GIT_AUTHOR_NAME` / `GIT_COMMITTER_NAME` 与 `GIT_AUTHOR_EMAIL` / `GIT_COMMITTER_EMAIL`（勿改 global git config）
+
+例外：用户明确说「先别提交」、或变更仅为本地试验未完成时，不提交。

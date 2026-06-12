@@ -12,16 +12,18 @@ always-reject-url-rewrite = true
 bypass-system = true
 # 局域网域名返回真实 IP，避免 NAS/路由器管理页解析异常
 private-ip-answer = true
-# 直连域名用 dns-server 中无 #proxy 的地址；代理域名用带 #proxy 的地址（DNS-over-PROXY）
+# 直连域名：仅用无 #proxy 的 dns-server；代理域名默认在「远端节点」解析，须单独一行 #proxy 才会走本地 DoH-over-PROXY
 dns-direct-system = false
 dns-direct-fallback-proxy = false
 udp-policy-not-supported-behaviour = REJECT
 # 代理连接禁用 QUIC（HTTP/3），与 sr_head_rules_proxy_udp 配合使用
 block-quic = all-proxy
 
-# DNS 分流：直连 → doh.pub / 阿里；走代理 → minhui（经当前默认节点转发 DNS 查询）
-dns-server = https://doh.pub/dns-query,https://dns.alidns.com/dns-query,https://www.minhui-inc.cn:18053/dns-query#proxy
-# 解析订阅节点域名（非网页分流）可用国内 DNS，避免 minhui 解析节点失败
+# 直连 DNS（doh.pub / 阿里 / 明文备用，勿与 #proxy 混在同一行）
+dns-server = https://doh.pub/dns-query,https://dns.alidns.com/dns-query,223.5.5.5
+# 走代理的域名：minhui DoH 经默认节点转发（须先在首页选中节点；#proxy=proxy 比单独 #proxy 更稳）
+dns-server = https://www.minhui-inc.cn:18053/dns-query#proxy=proxy#no-h3
+# 仅用于解析订阅里的「节点域名」，不要与网页分流 DNS 混用
 proxy-dns-server = https://dns.alidns.com/dns-query,223.5.5.5
 hijack-dns = 8.8.8.8:53,8.8.4.4:53,223.5.5.5:53,223.6.6.6:53,114.114.114.114:53,119.29.29.29:53,1.1.1.1:53
 fallback-dns-server = system
