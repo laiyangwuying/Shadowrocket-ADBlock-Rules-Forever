@@ -1,4 +1,5 @@
-# === YouTube：UDP 广告流量降级为 TCP，以触发 URL Rewrite 拦截 ===
+# === 直连/混合 FINAL 配置专用：按域名将 UDP 降级为 TCP（不走 PROXY 的流量不会被上方全局规则命中） ===
+# YouTube
 AND,((DOMAIN-SUFFIX,googlevideo.com), (PROTOCOL,UDP)),REJECT
 AND,((DOMAIN,youtubei.googleapis.com), (PROTOCOL,UDP)),REJECT
 

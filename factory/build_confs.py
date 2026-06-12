@@ -38,10 +38,17 @@ PROXY_ORIENTED_CONFS = frozenset({
     'sr_cnip_ad',
 })
 
-# 含去广告 / 流媒体 UDP 降级 / YouTube MITM 重写
-AD_STREAMING_CONFS = frozenset(
+# 含去广告 MITM / URL Rewrite 尾部（sr_foot_ad.txt）
+AD_FOOT_CONFS = frozenset(
     n for n in CONFS_NAMES if n.endswith('_ad') or n in ('sr_adb', 'sr_proxy_banad', 'sr_direct_banad')
 )
+
+# 方案 A：仅 FINAL 非全代理的配置需要按域名 UDP 降级（其余由 FINAL,PROXY+UDP 兜底）
+STREAMING_UDP_CONFS = frozenset({
+    'sr_direct_banad',
+    'sr_backcn_ad',
+    'sr_adb',
+})
 
 RELEASE_RAW_BASE = (
     'https://raw.githubusercontent.com/laiyangwuying/'
@@ -60,7 +67,7 @@ def _assemble_prefix(conf_name: str) -> str:
     parts = [_tpl('sr_head.txt')]
     if conf_name in PROXY_ORIENTED_CONFS:
         parts.append(_tpl('sr_head_rules_proxy_udp.txt'))
-    if conf_name in AD_STREAMING_CONFS:
+    if conf_name in STREAMING_UDP_CONFS:
         parts.append(_tpl('sr_head_rules_streaming.txt'))
     if conf_name in PROXY_ORIENTED_CONFS:
         parts.append(_tpl('sr_head_rules_apns.txt'))
@@ -70,7 +77,7 @@ def _assemble_prefix(conf_name: str) -> str:
 def _assemble_suffix(conf_name: str) -> str:
     if conf_name == 'sr_ad_only':
         return ''
-    if conf_name in AD_STREAMING_CONFS:
+    if conf_name in AD_FOOT_CONFS:
         return _tpl('sr_foot_ad.txt')
     return _tpl('sr_foot_basic.txt')
 

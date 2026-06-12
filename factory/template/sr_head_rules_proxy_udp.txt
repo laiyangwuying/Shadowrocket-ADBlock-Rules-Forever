@@ -1,2 +1,3 @@
-# === 走代理流量的 UDP 拦截（配合 block-quic 与去广告） ===
+# === 代理向配置：凡最终走 PROXY 的 UDP 一律拒绝（配合 General 中 block-quic） ===
+# 已覆盖 YouTube/Twitter 等走代理的 UDP，无需再写按域名规则。
 AND,((FINAL,PROXY), (PROTOCOL,UDP)),REJECT
