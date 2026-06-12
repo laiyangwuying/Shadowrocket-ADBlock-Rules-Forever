@@ -163,17 +163,6 @@ def _adblock_rewrite_static() -> str:
     )
 
 
-def _ad_url_rewrite() -> str:
-    from ad_block_util import is_youtube_rewrite_rule, rewrite_lines_from_list_file
-
-    lines = [
-        ln
-        for ln in rewrite_lines_from_list_file(RESULTANT_DIR / 'ad_rewrite.list')
-        if not is_youtube_rewrite_rule(ln)
-    ]
-    return '\n'.join(lines)
-
-
 def _adblock_mitm_hosts() -> str:
     from ad_block_util import filter_youtube_mitm_hosts, parse_mitm_hostname_value
 
@@ -193,7 +182,6 @@ def build() -> dict:
         'manual_reject': _rules_string_from_file(FACTORY_ROOT / 'manual_reject.txt', 'Reject'),
         'gfwlist': _merged_gfw_rules_string('Proxy'),
         'adblock_rewrite_static': _adblock_rewrite_static(),
-        'ad_url_rewrite': _ad_url_rewrite(),
         'adblock_mitm_hosts': _adblock_mitm_hosts(),
     }
 
@@ -220,7 +208,7 @@ def build() -> dict:
         f'# build time: {values["build_time"]}\n'
         f'confs: {len(written)}\n'
         f'ad entries: {len(read_entries(RESULTANT_DIR / "ad.list"))}\n'
-        f'ad url rewrite: {len(read_entries(RESULTANT_DIR / "ad_rewrite.list"))}\n'
+        f'cats-team rewrite: {len(read_entries(RESULTANT_DIR / "cats_team_rewrite.list"))}\n'
         f'gfw entries: {len(read_entries(RESULTANT_DIR / "gfw.list"))}\n'
     )
     atomic_write(RESULTANT_DIR / 'build_summary.txt', summary)

@@ -13,7 +13,6 @@ from build_util import log, run_parallel
 import ad
 import ad_cats_team
 import ad_module
-import ad_rewrite
 import build_confs
 import fetch_vendor_modules
 import gfwlist
@@ -52,7 +51,6 @@ def main(argv: list[str] | None = None) -> int:
         stats['parallel_sec'] = time.perf_counter() - t_p
         log(f'[ad+gfwlist] parallel done in {stats["parallel_sec"]:.1f}s')
 
-    stats['ad_rewrite'] = ad_rewrite.build()
     stats['ad_cats_team'] = ad_cats_team.build()
     stats['ad_module'] = ad_module.build()
     stats['build_confs'] = build_confs.build()

@@ -1,26 +1,20 @@
 # -*- coding: utf-8 -*-
-"""拉取 Cats-Team AdRules Plus，补充 EasyList 未覆盖的 URL Rewrite。"""
+"""拉取 Cats-Team AdRules，全量生成 Shadowrocket URL Rewrite。"""
 
 from __future__ import annotations
 
 import time
 from typing import Set
 
-from ad_block_util import is_youtube_rewrite_rule, rewrite_lines_from_list_file
+from ad_block_util import is_youtube_rewrite_rule
 from ad_filters import iter_filter_rules
-from ad_rewrite import abp_network_rule_to_rewrite
+from ad_rewrite import abp_network_rule_to_rewrite, static_rewrite_keys
 from build_util import RESULTANT_DIR, atomic_write, fetch_text, log
 
 CATS_TEAM_RULES_URL = (
     'https://raw.githubusercontent.com/Cats-Team/AdRules/main/adblock.txt'
 )
 _OUTPUT = RESULTANT_DIR / 'cats_team_rewrite.list'
-
-
-def _existing_rewrite_keys() -> set[str]:
-    return set(rewrite_lines_from_list_file(RESULTANT_DIR / 'ad_rewrite.list'))
-
-
 def _cats_line_to_rewrite(line: str) -> str | None:
     stripped = line.strip()
     if not stripped or stripped.startswith('!'):
@@ -35,7 +29,7 @@ def _cats_line_to_rewrite(line: str) -> str | None:
 
 
 def build() -> dict:
-    existing = _existing_rewrite_keys()
+    static_keys = static_rewrite_keys()
     text = fetch_text(CATS_TEAM_RULES_URL)
     rewrites: Set[str] = set()
     skipped_replace = 0
@@ -54,21 +48,21 @@ def build() -> dict:
         if is_youtube_rewrite_rule(rewrite):
             skipped_other += 1
             continue
-        if rewrite in existing or rewrite in rewrites:
+        if rewrite in static_keys or rewrite in rewrites:
             skipped_dup += 1
             continue
         rewrites.add(rewrite)
 
     header = (
-        f'# Cats-Team AdRules delta @ {time.strftime("%Y-%m-%d %H:%M:%S")}\n'
+        f'# Cats-Team AdRules @ {time.strftime("%Y-%m-%d %H:%M:%S")}\n'
         f'# source: {CATS_TEAM_RULES_URL}\n'
-        f'# 相对 EasyList+AdGuard 的 ad_rewrite.list 全量增量\n'
     )
     body = '\n'.join(sorted(rewrites)) + '\n'
     atomic_write(_OUTPUT, header + body)
     log(
-        f'ad_cats_team: {len(rewrites)} delta rewrite lines '
-        f'({skipped_dup} dup, {skipped_replace} $replace, {skipped_other} other skipped)'
+        f'ad_cats_team: {len(rewrites)} rewrite lines '
+        f'({skipped_dup} dup static, {skipped_replace} $replace, '
+        f'{skipped_other} other skipped)'
     )
     return {
         'rewrites': len(rewrites),

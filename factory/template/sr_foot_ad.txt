@@ -6,8 +6,6 @@
 
 # App 去广告（AdBlock.module 静态策略，见 factory/template/adblock_rewrite_static.txt）
 {{adblock_rewrite_static}}
-# EasyList China + AdGuard 中文 URL 规则（每日构建生成）
-{{ad_url_rewrite}}
 
 [MITM]
 enable = true

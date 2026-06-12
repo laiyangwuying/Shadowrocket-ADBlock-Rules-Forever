@@ -138,7 +138,7 @@ def _abp_line_to_rewrite(line: str) -> str | None:
     return abp_network_rule_to_rewrite(line)
 
 
-def _static_rewrite_keys() -> set[str]:
+def static_rewrite_keys() -> set[str]:
     static = normalize_rewrite_body(
         (_TEMPLATE_DIR / 'adblock_rewrite_static.txt').read_text(encoding='utf-8')
         if (_TEMPLATE_DIR / 'adblock_rewrite_static.txt').is_file()
@@ -157,7 +157,7 @@ def build() -> dict:
     skipped = 0
     dup_static = 0
     youtube_skipped = 0
-    static_keys = _static_rewrite_keys()
+    static_keys = static_rewrite_keys()
 
     for line in iter_filter_rules(text):
         rewrite = _abp_line_to_rewrite(line)
