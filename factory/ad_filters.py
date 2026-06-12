@@ -49,7 +49,7 @@ def iter_filter_rules(text: str) -> Iterator[str]:
         line = raw.strip()
         if not line or line.startswith('!') or line.startswith('['):
             continue
-        if line.startswith('@@'):
+        if line.startswith('@@') or line.startswith('##'):
             continue
         yield line.split('!', 1)[0].strip()
 

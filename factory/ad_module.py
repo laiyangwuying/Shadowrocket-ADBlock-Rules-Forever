@@ -22,7 +22,7 @@ TEMPLATE_DIR = FACTORY_ROOT / 'template'
 _GEN_MARKER = '# --- EasyList China + AdGuard 中文（自动生成）---'
 _CATS_MARKER = '# --- Cats-Team AdRules 加强屏蔽（自动生成）---'
 _CATS_SOURCE = (
-    'https://github.com/Cats-Team/AdRules/blob/script/mod/rules/adblock-rules.txt'
+    'https://github.com/Cats-Team/AdRules/blob/main/adblock_plus.txt'
 )
 
 
