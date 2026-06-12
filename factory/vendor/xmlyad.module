@@ -88,13 +88,13 @@ hostname= %APPEND% *.xima*.*, *.xmcdn.*
 
 # ～ XiMaLaYa_喜马拉雅_屏蔽首页滚动_Ad@ddgksf2013
 
-喜马拉雅去广告=type=http-response,pattern=^https?:\/\/.*\.xima.*\.com\/discovery-feed\/v\d\/mix,requires-body=1,script-path=https://raw.githubusercontent.com/deezertidal/private/master/js-backup/Script/xmly_json.js
+喜马拉雅去广告=type=http-response,pattern=^https?:\/\/.*\.xima.*\.com\/discovery-feed\/v\d\/mix,requires-body=1,script-path=https://raw.githubusercontent.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever/refs/heads/build/scripts/raw.githubusercontent.com/deezertidal/private/master/js-backup/Script/xmly_json.b44e9ffc89.js
 
 # ～ XiMaLaYa_喜马拉雅_屏蔽Tab页滚动_Ad@ddgksf2013
 
-喜马拉雅去广告1=type=http-response,pattern=^https?:\/\/.*\.xima.*\.com\/discovery-category\/v\d/category,requires-body=1,script-path=https://raw.githubusercontent.com/deezertidal/private/master/js-backup/Script/xmly_json.js
+喜马拉雅去广告1=type=http-response,pattern=^https?:\/\/.*\.xima.*\.com\/discovery-category\/v\d/category,requires-body=1,script-path=https://raw.githubusercontent.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever/refs/heads/build/scripts/raw.githubusercontent.com/deezertidal/private/master/js-backup/Script/xmly_json.b44e9ffc89.js
 
 # ～ XiMaLaYa_喜马拉雅_去除我的页面Ad_Tag@ddgksf2013
 
-喜马拉雅去广告2=type=http-response,pattern=^https?:\/\/.*\.xima.*\.com\/mobile-user\/v\d\/homePage,requires-body=1,script-path=https://raw.githubusercontent.com/deezertidal/private/master/js-backup/Script/xmly_json.js
+喜马拉雅去广告2=type=http-response,pattern=^https?:\/\/.*\.xima.*\.com\/mobile-user\/v\d\/homePage,requires-body=1,script-path=https://raw.githubusercontent.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever/refs/heads/build/scripts/raw.githubusercontent.com/deezertidal/private/master/js-backup/Script/xmly_json.b44e9ffc89.js
 

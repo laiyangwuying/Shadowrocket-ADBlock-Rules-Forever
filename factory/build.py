@@ -16,6 +16,7 @@ import ad_module
 import build_confs
 import fetch_vendor_modules
 import gfwlist
+import vendor_scripts
 import lazy_deploy
 import qr_figure
 
@@ -39,6 +40,12 @@ def main(argv: list[str] | None = None) -> int:
     fetch_vendor_modules.main()
     stats['vendor_sec'] = time.perf_counter() - t_v
     log(f'[vendor] done in {stats["vendor_sec"]:.1f}s')
+
+    log('[vendor_scripts] start')
+    t_s = time.perf_counter()
+    stats['vendor_scripts'] = vendor_scripts.build()
+    stats['vendor_scripts_sec'] = time.perf_counter() - t_s
+    log(f'[vendor_scripts] done in {stats["vendor_scripts_sec"]:.1f}s')
 
     if args.serial:
         stats['ad'] = ad.build()
