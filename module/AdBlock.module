@@ -3,7 +3,7 @@
 #!homepage=https://github.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever
 #!author= Tartarus2014 + build
 #!icon= https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date= 2026-06-12 10:39:31
+#!date= 2026-06-12 18:56:11
 
 [URL Rewrite]
 # Block Ads Start
@@ -31440,7 +31440,6 @@
 ^https?:\/\/([\w-]+\.)*ggdumze\.cn reject
 ^https?:\/\/([\w-]+\.)*ggduzx\.potterybarn\.com\.kw reject
 ^https?:\/\/([\w-]+\.)*ggg[\w-]+\.com\/static/js/common\.js reject
-^https?:\/\/([\w-]+\.)*gggpht\.com reject
 ^https?:\/\/([\w-]+\.)*gggpppht\.com reject
 ^https?:\/\/([\w-]+\.)*gghmef7\.com reject
 ^https?:\/\/([\w-]+\.)*ggjs\.d17\.cc reject
@@ -84219,17 +84218,8 @@
 ^https?:\/\/([\w-]+\.)*youth\.cn\/images/public_ reject
 ^https?:\/\/([\w-]+\.)*youth\.cn\/qwtf2015/ reject
 ^https?:\/\/([\w-]+\.)*youthlyfowl\.cyou reject
-^https?:\/\/([\w-]+\.)*youtube-nocookie\.com\/api/stats/atr\?ns= reject
-^https?:\/\/([\w-]+\.)*youtube-nocookie\.com\/api/stats/qoe\? reject
-^https?:\/\/([\w-]+\.)*youtube-nocookie\.com\/ptracking\? reject
-^https?:\/\/([\w-]+\.)*youtube-nocookie\.com\/robots\.txt\? reject
-^https?:\/\/([\w-]+\.)*youtube-nocookie\.com\/youtubei/v1/log_event\? reject
 ^https?:\/\/([\w-]+\.)*youtube\.googleapis\.com\/youtubei/v1/log_event\? reject
 ^https?:\/\/([\w-]+\.)*youtubee\.top reject
-^https?:\/\/([\w-]+\.)*youtubekids\.com\/api/stats/ads\? reject
-^https?:\/\/([\w-]+\.)*youtubekids\.com\/api/stats/qoe\? reject
-^https?:\/\/([\w-]+\.)*youtubekids\.com\/ptracking\? reject
-^https?:\/\/([\w-]+\.)*youtubekids\.com\/youtubei/v1/log_event\? reject
 ^https?:\/\/([\w-]+\.)*youxi\.baidu\.com\/tips/bdtips_min\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/tj\.js reject
 ^https?:\/\/([\w-]+\.)*youy14\.com\/js/zz/nr\.js reject

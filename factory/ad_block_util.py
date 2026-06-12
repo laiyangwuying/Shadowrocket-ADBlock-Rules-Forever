@@ -14,16 +14,17 @@ YOUTUBE_PROTECTED_SUFFIXES = frozenset({
     'youtube.com',
     'googlevideo.com',
     'youtubei.googleapis.com',
+    'youtube-nocookie.com',
+    'youtubekids.com',
+    'ytimg.com',
+    'ggpht.com',
+    'gvt1.com',
 })
 _YOUTUBE_COMMENT_RE = re.compile(
-    r'googlevideo|youtube\.com|Youtube\+\+',
+    r'googlevideo|youtube|ytimg|ggpht|gvt1|Youtube\+\+',
     re.I,
 )
-_YOUTUBE_RULE_MARKERS = (
-    'youtube.com',
-    'googlevideo.com',
-    'youtubei.googleapis.com',
-)
+_YOUTUBE_RULE_MARKERS = tuple(YOUTUBE_PROTECTED_SUFFIXES)
 
 
 def _normalize_rewrite_for_match(line: str) -> str:
@@ -47,6 +48,14 @@ def is_youtube_rewrite_rule(line: str) -> bool:
         return False
     normalized = _normalize_rewrite_for_match(stripped)
     return any(marker in normalized for marker in _YOUTUBE_RULE_MARKERS)
+
+
+def is_youtube_abp_rule(line: str) -> bool:
+    """ABP 网络规则在转换前剔除 YouTube 相关域名，避免漏网或误转换。"""
+    lowered = line.lower().strip()
+    if not lowered or lowered.startswith('!') or lowered.startswith('@@'):
+        return False
+    return any(marker in lowered for marker in _YOUTUBE_RULE_MARKERS)
 
 
 def strip_youtube_rewrite_body(text: str) -> str:

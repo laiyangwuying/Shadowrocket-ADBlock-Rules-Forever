@@ -6,7 +6,7 @@ from __future__ import annotations
 import time
 from typing import Set
 
-from ad_block_util import is_youtube_rewrite_rule
+from ad_block_util import is_youtube_abp_rule, is_youtube_rewrite_rule
 from ad_filters import iter_filter_rules
 from ad_rewrite import abp_network_rule_to_rewrite, static_rewrite_keys
 from build_util import RESULTANT_DIR, atomic_write, fetch_text, log
@@ -38,6 +38,9 @@ def build() -> dict:
 
     for line in iter_filter_rules(text):
         raw = line.strip()
+        if is_youtube_abp_rule(raw):
+            skipped_other += 1
+            continue
         if '$replace' in raw.lower():
             skipped_replace += 1
             continue
