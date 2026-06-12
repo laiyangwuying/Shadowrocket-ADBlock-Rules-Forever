@@ -10,7 +10,12 @@ import time
 from typing import Set
 
 from ad_block_util import YOUTUBE_PROTECTED_SUFFIXES
-from ad_filters import fetch_combined_filters, iter_filter_rules, split_rule_options
+from ad_filters import (
+    fetch_combined_filters,
+    iter_filter_rules,
+    should_skip_scoped_options,
+    split_rule_options,
+)
 from build_util import RESULTANT_DIR, log, read_entries, write_list
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
 
@@ -38,15 +43,18 @@ def _parse_row(row: str, domains: Set[str], ignore: set[str]) -> int:
     if not row or '##' in row or '#@#' in row or '#?#' in row:
         return 0
 
-    pattern, _opts = split_rule_options(row)
+    pattern, opts = split_rule_options(row)
     if not pattern.startswith('||'):
+        return 0
+    if should_skip_scoped_options(opts):
         return 0
 
     row = pattern[2:]
     if row.endswith('^'):
         row = row[:-1]
+    # ||host/path 为按 URL 拦截，非整域拦截（由 ad_rewrite 处理）
     if '/' in row:
-        row = row.split('/', 1)[0]
+        return 0
     row = re.sub(r':\d{2,5}$', '', row)
 
     if not row or re.search(r'[/^:*|]', row):

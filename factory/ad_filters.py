@@ -22,6 +22,12 @@ _SKIP_OPTION_RE = re.compile(
     r'elemhide|generichide|specifichide|append|removeparam|redirect',
     re.I,
 )
+# 带作用域限制的选项无法忠实转为 Shadowrocket 全局规则
+_SKIP_SCOPED_OPTS_RE = re.compile(
+    r'domain=|third-party|first-party|popup|subdocument|xmlhttprequest|'
+    r'websocket|image|script|stylesheet|font|media|object|match-case|~',
+    re.I,
+)
 
 
 def fetch_combined_filters(*, force: bool = False) -> str:
@@ -59,3 +65,12 @@ def should_skip_options(opts: str) -> bool:
     if not opts:
         return False
     return bool(_SKIP_OPTION_RE.search(opts))
+
+
+def should_skip_scoped_options(opts: str) -> bool:
+    """跳过带 domain=/third-party 等上下文选项的规则（避免误伤）。"""
+    if not opts:
+        return False
+    if should_skip_options(opts):
+        return True
+    return bool(_SKIP_SCOPED_OPTS_RE.search(opts))

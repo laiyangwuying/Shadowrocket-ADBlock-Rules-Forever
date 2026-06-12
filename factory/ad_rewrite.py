@@ -11,7 +11,7 @@ from ad_block_util import is_youtube_rewrite_rule, normalize_rewrite_body
 from ad_filters import (
     fetch_combined_filters,
     iter_filter_rules,
-    should_skip_options,
+    should_skip_scoped_options,
     split_rule_options,
 )
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log
@@ -19,7 +19,8 @@ from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log
 _TEMPLATE_DIR = FACTORY_ROOT / 'template'
 
 _ACTION = 'reject'
-_MAX_REWRITES = 12000
+_MAX_REWRITES = 8000
+_ABP_REGEX_FLAGS_RE = re.compile(r'^[a-z]*$')
 
 
 def _wildcard_escape(pattern: str) -> str:
@@ -40,25 +41,45 @@ def _host_to_re(host: str) -> str:
     return rf'([\w-]+\.)*{escaped}'
 
 
+def _parse_abp_regex(pattern: str) -> tuple[str, str] | None:
+    """ABP 正则格式 /regexp/flags；与路径过滤器 /foo/bar 区分。"""
+    if not pattern.startswith('/') or pattern.count('/') < 2:
+        return None
+    last = pattern.rfind('/')
+    flags = pattern[last + 1 :]
+    if flags and not _ABP_REGEX_FLAGS_RE.fullmatch(flags):
+        return None
+    inner = pattern[1:last]
+    if not inner or len(inner) < 3:
+        return None
+    return inner, flags
+
+
+def _rewrite_prefix() -> str:
+    return r'^https?:\/\/'
+
+
 def _abp_line_to_rewrite(line: str) -> str | None:
     if '##' in line or '#@#' in line or '#?#' in line:
         return None
 
     pattern, opts = split_rule_options(line)
-    if not pattern or should_skip_options(opts):
+    if not pattern or should_skip_scoped_options(opts):
         return None
 
-    # 完整 URL：|http(s)://...
+    # 完整 URL：|http(s)://host/path（不含通配与残缺域名）
     if pattern.startswith('|http://') or pattern.startswith('|https://'):
         url = pattern[1:]
         if url.endswith('^'):
             url = url[:-1]
         url = re.sub(r'^https?://', '', url)
-        if not url or len(url) < 2:
+        if not url or len(url) < 6 or '*' in url:
             return None
-        return rf'^https?:\/\/{_wildcard_escape(url)} {_ACTION}'
+        if url.endswith('.') or url.count('.') < 1:
+            return None
+        return rf'{_rewrite_prefix()}{_wildcard_escape(url)} {_ACTION}'
 
-    # 域名 + 路径：||host/path^
+    # 域名 + 路径：||host/path^（须含明确 host）
     if pattern.startswith('||'):
         body = pattern[2:]
         if body.endswith('^'):
@@ -66,38 +87,23 @@ def _abp_line_to_rewrite(line: str) -> str | None:
         if '/' not in body:
             return None
         host, path = body.split('/', 1)
-        if not host or not path or len(path) < 2:
+        if not host or not path or len(path) < 3:
+            return None
+        if '*' in host and host.count('.') < 1:
             return None
         return (
-            rf'^https?:\/\/{_host_to_re(host)}\/{_wildcard_escape(path)} {_ACTION}'
+            rf'{_rewrite_prefix()}{_host_to_re(host)}\/{_wildcard_escape(path)} {_ACTION}'
         )
 
-    # ABP 正则：/.../options
-    if pattern.startswith('/') and pattern.count('/') >= 2:
-        m = re.match(r'^/(.*?)/([^/]*)$', pattern)
-        if not m:
-            return None
-        inner = m.group(1)
-        if not inner or len(inner) < 3:
-            return None
+    # ABP 正则：仅保留以 ^https 开头的完整 URL 正则
+    parsed = _parse_abp_regex(pattern)
+    if parsed is not None:
+        inner, _flags = parsed
         if inner.startswith('^https'):
             return f'{inner} {_ACTION}'
-        if inner.startswith('^'):
-            return f'^https?:\\/\\/[\\w.-]+{inner[1:]} {_ACTION}'
-        return rf'^https?:\/\/[\w.-]+{inner} {_ACTION}'
+        return None
 
-    # 路径 / 域名片段规则：.com/ads/、/banner.js 等
-    if pattern.startswith('/') or pattern.startswith('.'):
-        if len(pattern) < 5:
-            return None
-        if pattern.endswith('^'):
-            pattern = pattern[:-1]
-        # 过短泛路径易误伤，要求至少含一段有意义路径
-        core = pattern.strip('/.')
-        if len(core) < 3 or core in {'ad', 'ads', 'adv'}:
-            return None
-        return rf'^https?:\/\/[\w.-]+{_wildcard_escape(pattern)} {_ACTION}'
-
+    # 不转换泛路径 /path、.com/path（在 ABP 为全站通用，在 SR 全局 Rewrite 极易误伤）
     return None
 
 
