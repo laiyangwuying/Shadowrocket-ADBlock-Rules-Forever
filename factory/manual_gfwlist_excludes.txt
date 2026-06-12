@@ -17,8 +17,10 @@ itunes.com
 me.com
 mzstatic.com
 
+# 无点标签 goo/goog 会转成 DOMAIN-KEYWORD 误伤 goofish；仅精确剔除裸条目
+^goo$
+^goog$
 
-apple
 apple-cloudkit.com
 apple-darwin.com
 apple-darwin.net
