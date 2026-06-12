@@ -9,6 +9,7 @@ from pathlib import Path
 
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log, read_entries
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
+from publish_urls import RELEASE_RAW_BASE
 
 REPO_ROOT = FACTORY_ROOT.parent
 TEMPLATE_DIR = FACTORY_ROOT / 'template'
@@ -49,12 +50,6 @@ STREAMING_UDP_CONFS = frozenset({
     'sr_backcn_ad',
     'sr_adb',
 })
-
-RELEASE_RAW_BASE = (
-    'https://raw.githubusercontent.com/laiyangwuying/'
-    'Shadowrocket-ADBlock-Rules-Forever/refs/heads/build/'
-)
-
 
 @lru_cache(maxsize=16)
 def _tpl(name: str) -> str:

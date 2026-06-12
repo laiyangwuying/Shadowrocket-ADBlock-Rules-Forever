@@ -15,6 +15,7 @@ import build_confs
 import fetch_vendor_modules
 import gfwlist
 import lazy_deploy
+import qr_figure
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -50,6 +51,7 @@ def main(argv: list[str] | None = None) -> int:
 
     stats['build_confs'] = build_confs.build()
     stats['lazy'] = lazy_deploy.publish()
+    stats['qr_figure'] = qr_figure.build()
 
     elapsed = time.perf_counter() - t0
     log(f'=== build finished in {elapsed:.1f}s ===')
