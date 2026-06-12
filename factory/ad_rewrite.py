@@ -7,13 +7,16 @@ import re
 import time
 from typing import Set
 
+from ad_block_util import normalize_rewrite_body
 from ad_filters import (
     fetch_combined_filters,
     iter_filter_rules,
     should_skip_options,
     split_rule_options,
 )
-from build_util import RESULTANT_DIR, atomic_write, log
+from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log
+
+_TEMPLATE_DIR = FACTORY_ROOT / 'template'
 
 _ACTION = 'reject'
 _MAX_REWRITES = 12000
@@ -85,24 +88,46 @@ def _abp_line_to_rewrite(line: str) -> str | None:
 
     # 路径 / 域名片段规则：.com/ads/、/banner.js 等
     if pattern.startswith('/') or pattern.startswith('.'):
-        if len(pattern) < 4:
+        if len(pattern) < 5:
             return None
         if pattern.endswith('^'):
             pattern = pattern[:-1]
+        # 过短泛路径易误伤，要求至少含一段有意义路径
+        core = pattern.strip('/.')
+        if len(core) < 3 or core in {'ad', 'ads', 'adv'}:
+            return None
         return rf'^https?:\/\/[\w.-]+{_wildcard_escape(pattern)} {_ACTION}'
 
     return None
+
+
+def _static_rewrite_keys() -> set[str]:
+    static = normalize_rewrite_body(
+        (_TEMPLATE_DIR / 'adblock_rewrite_static.txt').read_text(encoding='utf-8')
+        if (_TEMPLATE_DIR / 'adblock_rewrite_static.txt').is_file()
+        else ''
+    )
+    return {
+        ln.strip()
+        for ln in static.splitlines()
+        if ln.strip() and not ln.strip().startswith('#')
+    }
 
 
 def build() -> dict:
     text = fetch_combined_filters()
     rewrites: Set[str] = set()
     skipped = 0
+    dup_static = 0
+    static_keys = _static_rewrite_keys()
 
     for line in iter_filter_rules(text):
         rewrite = _abp_line_to_rewrite(line)
         if rewrite is None:
             skipped += 1
+            continue
+        if rewrite in static_keys:
+            dup_static += 1
             continue
         rewrites.add(rewrite)
         if len(rewrites) >= _MAX_REWRITES:
@@ -115,8 +140,11 @@ def build() -> dict:
     )
     body = '\n'.join(sorted(rewrites)) + '\n'
     atomic_write(RESULTANT_DIR / 'ad_rewrite.list', header + body)
-    log(f'ad_rewrite: {len(rewrites)} lines ({skipped} filter rows not converted)')
-    return {'rewrites': len(rewrites), 'skipped': skipped}
+    log(
+        f'ad_rewrite: {len(rewrites)} lines '
+        f'({skipped} not converted, {dup_static} dup static)'
+    )
+    return {'rewrites': len(rewrites), 'skipped': skipped, 'dup_static': dup_static}
 
 
 def main() -> int:

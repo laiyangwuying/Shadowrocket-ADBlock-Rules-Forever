@@ -155,23 +155,22 @@ def _merged_gfw_rules_string(kind: str) -> str:
     return ''.join(ret)
 
 
-def _list_file_body(path: Path) -> str:
-    if not path.is_file():
-        return ''
-    lines = [
-        ln for ln in path.read_text(encoding='utf-8').splitlines()
-        if ln.strip() and not ln.lstrip().startswith('#')
-    ]
-    return '\n'.join(lines)
+def _adblock_rewrite_static() -> str:
+    from ad_block_util import normalize_rewrite_body
+
+    return normalize_rewrite_body(_tpl('adblock_rewrite_static.txt'))
+
+
+def _ad_url_rewrite() -> str:
+    from ad_block_util import rewrite_lines_from_list_file
+
+    return '\n'.join(rewrite_lines_from_list_file(RESULTANT_DIR / 'ad_rewrite.list'))
 
 
 def _adblock_mitm_hosts() -> str:
-    raw = _tpl('adblock_mitm_hosts.txt').strip()
-    if '=' in raw:
-        raw = raw.split('=', 1)[1].strip()
-    if raw.upper().startswith('%APPEND%'):
-        raw = raw[8:].strip()
-    return raw
+    from ad_block_util import parse_mitm_hostname_value
+
+    return parse_mitm_hostname_value(_tpl('adblock_mitm_hosts.txt'))
 
 
 def build() -> dict:
@@ -184,8 +183,8 @@ def build() -> dict:
         'manual_proxy': _rules_string_from_file(FACTORY_ROOT / 'manual_proxy.txt', 'Proxy'),
         'manual_reject': _rules_string_from_file(FACTORY_ROOT / 'manual_reject.txt', 'Reject'),
         'gfwlist': _merged_gfw_rules_string('Proxy'),
-        'adblock_rewrite_static': _tpl('adblock_rewrite_static.txt').rstrip(),
-        'ad_url_rewrite': _list_file_body(RESULTANT_DIR / 'ad_rewrite.list'),
+        'adblock_rewrite_static': _adblock_rewrite_static(),
+        'ad_url_rewrite': _ad_url_rewrite(),
         'adblock_mitm_hosts': _adblock_mitm_hosts(),
     }
 

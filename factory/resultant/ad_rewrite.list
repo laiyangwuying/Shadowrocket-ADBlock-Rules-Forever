@@ -1,4 +1,4 @@
-# ad url rewrite from EasyList China + AdGuard Chinese @ 2026-06-12 08:19:40
+# ad url rewrite from EasyList China + AdGuard Chinese @ 2026-06-12 16:28:53
 ^https:\/\/([a-z]+\.){2}\w{2,3}\/\d{4}\/\d{2}\ reject
 ^https:\/\/(www\.)?zxzjhd\.com\/[0-9]+\.gif reject
 ^https:\/\/[a-z0-9-]{3,12}\.[a-z0-9]+\.com\/([A-Za-z0-9.]+)(?:\ reject
@@ -4457,7 +4457,6 @@
 ^https?:\/\/[\w.-]+/QidianAdClient\. reject
 ^https?:\/\/[\w.-]+/RenderLapinBlock\? reject
 ^https?:\/\/[\w.-]+/V\.aspx\?Bln= reject
-^https?:\/\/[\w.-]+/\^\(\? reject
 ^https?:\/\/[\w.-]+/\^\(mon\|tue\|wed\|thu\|fri\|sat\|sun\)\\d\{1,2\}\\\.\\w\{2\}\\d\{1,6\}\\w\{4\}\\\.com reject
 ^https?:\/\/[\w.-]+/aSer_ reject
 ^https?:\/\/[\w.-]+/adTopBar\. reject
@@ -4773,7 +4772,6 @@
 ^https?:\/\/[\w.-]+\.com:9120/discor_list\.js reject
 ^https?:\/\/[\w.-]+\.com[\w-]+/ps/psCreat\.js reject
 ^https?:\/\/[\w.-]+\.fun/ad/ reject
-^https?:\/\/[\w.-]+\.gif reject
 ^https?:\/\/[\w.-]+\.gif\| reject
 ^https?:\/\/[\w.-]+\.hgo0[\w-]+uyi\.com/ reject
 ^https?:\/\/[\w.-]+\.html\?android=hx[\w-]+&_ reject

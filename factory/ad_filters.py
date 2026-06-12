@@ -16,15 +16,26 @@ ADGUARD_CHINESE_URL = (
 
 FILTER_URLS = (EASYLIST_CHINA_URL, ADGUARD_CHINESE_URL)
 
+_filter_cache: str | None = None
+
 _SKIP_OPTION_RE = re.compile(
     r'elemhide|generichide|specifichide|append|removeparam|redirect',
     re.I,
 )
 
 
-def fetch_combined_filters() -> str:
+def fetch_combined_filters(*, force: bool = False) -> str:
+    global _filter_cache
+    if _filter_cache is not None and not force:
+        return _filter_cache
     texts = fetch_text_parallel(FILTER_URLS)
-    return '\n'.join(texts[u] for u in FILTER_URLS) + '\n'
+    _filter_cache = '\n'.join(texts[u] for u in FILTER_URLS) + '\n'
+    return _filter_cache
+
+
+def clear_filter_cache() -> None:
+    global _filter_cache
+    _filter_cache = None
 
 
 def iter_filter_rules(text: str) -> Iterator[str]:
