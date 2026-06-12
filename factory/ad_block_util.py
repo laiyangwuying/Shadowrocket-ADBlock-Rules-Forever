@@ -108,16 +108,21 @@ def finalize_adblock_rewrite_lines(lines: list[str]) -> tuple[list[str], int]:
 
 
 def count_dedicated_module_rewrite_leaks(text: str) -> int:
-    """构建后校验：统计仍与专用模块冲突的 Rewrite 行数。"""
+    """构建后校验：统计仍与专用模块 / googlevideo 冲突的 Rewrite 行数。"""
+    from dedicated_modules import _matches_core_googlevideo_probe
+
     count = 0
     for raw in text.splitlines():
         stripped = raw.strip()
         if not stripped or stripped.startswith('#'):
             continue
         lowered = stripped.lower()
-        if 'googlevideo' not in lowered and 'youtube' not in lowered:
-            continue
-        if is_dedicated_module_rewrite(stripped):
+        if (
+            _matches_core_googlevideo_probe(stripped)
+            or 'googlevideo' in lowered
+            or 'youtube-nocookie' in lowered
+            or 'youtubekids' in lowered
+        ):
             count += 1
     return count
 

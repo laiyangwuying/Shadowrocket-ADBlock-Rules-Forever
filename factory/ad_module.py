@@ -16,7 +16,7 @@ from ad_block_util import (
     rewrite_lines_from_list_file,
     strip_dedicated_module_rewrite_body,
 )
-from dedicated_modules import get_dedicated_module_index
+from dedicated_modules import _matches_core_googlevideo_probe, get_dedicated_module_index
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log
 
 REPO_ROOT = FACTORY_ROOT.parent
@@ -49,6 +49,13 @@ def build() -> dict:
         normalize_rewrite_body(_read_optional(TEMPLATE_DIR / 'adblock_rewrite_static.txt'))
     )
     rewrite_body = merge_rewrite_bodies(static, _cats_team_rewrite_block())
+    rewrite_body = '\n'.join(
+        line
+        for line in rewrite_body.splitlines()
+        if not line.strip()
+        or line.strip().startswith('#')
+        or not _matches_core_googlevideo_probe(line)
+    )
     mitm_hosts = filter_dedicated_module_mitm_hosts(
         parse_mitm_hostname_value(_read_optional(TEMPLATE_DIR / 'adblock_mitm_hosts.txt'))
     )

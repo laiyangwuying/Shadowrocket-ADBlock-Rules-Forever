@@ -12,6 +12,26 @@ ADBLOCK_MODULE_NAME = 'AdBlock.module'
 _SECTION_RE = re.compile(r'^\[(URL Rewrite|MITM|Script|Rule)\]\s*$', re.I)
 _HOSTNAME_RE = re.compile(r'^hostname\s*=', re.I)
 
+# YouTube/googlevideo 由 YouTubeAd.sgmodule 负责，构建 AdBlock 时始终剔除
+CORE_VIDEO_SUFFIXES = frozenset({
+    'googlevideo.com',
+    'youtube.com',
+    'youtubei.googleapis.com',
+    'youtube.googleapis.com',
+    'youtube-nocookie.com',
+    'youtubekids.com',
+    'ytimg.com',
+    'ggpht.com',
+    'gvt1.com',
+})
+# 典型 googlevideo CDN 探测 URL（含 rr*---sn-* 子域）
+CORE_GOOGLEVIDEO_PROBE_URLS = (
+    'https://rr4---sn-a5meknzk.googlevideo.com/initplayback?source=youtube&oad=1',
+    'https://rr4---sn-a5meknzk.googlevideo.com/videoplayback?expire=1',
+    'https://rr5---sn-a5meknsy.googlevideo.com/initplayback?source=youtube&oad=1',
+    'https://redirector.googlevideo.com/videoplayback?expire=1',
+)
+
 
 def _clean_text_newlines(text: str) -> str:
     return text.replace('\r\n', '\n').replace('\r', '')
@@ -66,6 +86,48 @@ def _extract_domains_from_text(text: str) -> set[str]:
     return found
 
 
+def _core_video_host(host: str) -> bool:
+    h = host.lower().strip().rstrip('.')
+    if not h:
+        return False
+    if ':' in h and h.count(':') == 1:
+        h = h.split(':', 1)[0]
+    if 'googlevideo' in h:
+        return True
+    for suffix in CORE_VIDEO_SUFFIXES:
+        if h == suffix or h.endswith('.' + suffix):
+            return True
+    return False
+
+
+def _core_video_domain(domain: str) -> bool:
+    d = domain.lower().strip().rstrip('.')
+    if not d:
+        return False
+    if 'googlevideo' in d:
+        return True
+    if '.youtube.' in f'.{d}.':
+        return True
+    for suffix in CORE_VIDEO_SUFFIXES:
+        if d == suffix or d.endswith('.' + suffix):
+            return True
+    return False
+
+
+def _matches_core_googlevideo_probe(line: str) -> bool:
+    stripped = line.strip()
+    if not stripped or stripped.startswith('#'):
+        return False
+    pat = _rewrite_pattern_only(stripped)
+    for url in CORE_GOOGLEVIDEO_PROBE_URLS:
+        try:
+            if re.search(pat, url, re.I):
+                return True
+        except re.error:
+            return False
+    return False
+
+
 def _host_matches_token(host: str, token: str) -> bool:
     host = host.lower().strip().rstrip('.')
     if ':' in host and host.count(':') == 1:
@@ -116,6 +178,9 @@ class DedicatedModuleIndex:
         if ':' in h and h.count(':') == 1:
             h = h.split(':', 1)[0]
 
+        if _core_video_host(h):
+            return True
+
         if h in self.host_literals:
             return True
         for suffix in self.host_suffixes:
@@ -140,16 +205,26 @@ class DedicatedModuleIndex:
         if not stripped or stripped.startswith('#'):
             return False
 
+        if _matches_core_googlevideo_probe(stripped):
+            return True
+
+        normalized = _normalize_rewrite_for_match(stripped)
+        if 'googlevideo' in normalized:
+            return True
+
         pattern_key = _normalize_pattern_key(stripped)
         if pattern_key in self.rewrite_patterns:
             return True
 
         domains = _extract_domains_from_text(stripped)
         if domains:
-            return any(
-                self._domain_marker_covers(domain) or self.is_protected_host(domain)
+            if any(
+                _core_video_domain(domain)
+                or self._domain_marker_covers(domain)
+                or self.is_protected_host(domain)
                 for domain in domains
-            )
+            ):
+                return True
 
         pat = _rewrite_pattern_only(stripped)
         for url in self.probe_urls:
@@ -164,6 +239,12 @@ class DedicatedModuleIndex:
         lowered = line.lower().strip()
         if not lowered or lowered.startswith('!') or lowered.startswith('@@'):
             return False
+
+        if 'googlevideo' in lowered:
+            return True
+        for suffix in CORE_VIDEO_SUFFIXES:
+            if suffix in lowered:
+                return True
 
         if lowered.startswith('||'):
             host_part = lowered[2:].split('^', 1)[0].split('/', 1)[0].split('$', 1)[0]
@@ -310,7 +391,9 @@ def build_dedicated_module_index(module_dir: Path) -> DedicatedModuleIndex:
                 token = match.group(1).strip()
                 _ingest_host_token(token, host_tokens, host_suffixes, host_literals, domain_markers)
 
-    probe_urls = _build_probe_urls(host_suffixes, host_literals)
+    host_suffixes.update(CORE_VIDEO_SUFFIXES)
+    domain_markers.update(CORE_VIDEO_SUFFIXES)
+    probe_urls = list(CORE_GOOGLEVIDEO_PROBE_URLS) + _build_probe_urls(host_suffixes, host_literals)
     return DedicatedModuleIndex(
         sources=tuple(sources),
         rewrite_patterns=frozenset(rewrite_patterns),
