@@ -1,9 +1,9 @@
 #!name= NoAd
-#!desc= 广告屏蔽（EasyList China + AdGuard 中文，每日构建）
+#!desc= 广告屏蔽（EasyList + AdGuard + Cats-Team AdRules，每日构建）
 #!homepage=https://github.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever
 #!author= Tartarus2014 + build
 #!icon= https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png
-#!date= 2026-06-12 09:28:56
+#!date= 2026-06-12 17:41:46
 
 [URL Rewrite]
 # Block Ads Start
@@ -780,6 +780,41 @@
 ^https?:\/\/saad\.ms\.zhangyue\.net\/ad - reject
 
 # Block Ads End
+
+# --- Cats-Team AdRules 加强屏蔽（自动生成）---
+# https://github.com/Cats-Team/AdRules/blob/script/mod/rules/adblock-rules.txt
+^https?:\/\/([\w-]+\.)*ads[\w-]+-normal[\w-]+\.zijieapi\.com reject
+^https?:\/\/([\w-]+\.)*api\.psy-1\.com\/cosleep/newborn/ad reject
+^https?:\/\/([\w-]+\.)*api\.psy-1\.com\/cosleep/newborn/vips/picks reject
+^https?:\/\/([\w-]+\.)*ctobsnssdk\.com reject
+^https?:\/\/([\w-]+\.)*fvedio\.kuwo\.cn reject
+^https?:\/\/([\w-]+\.)*g\.koowo\.com reject
+^https?:\/\/([\w-]+\.)*gdfp\.gifshow\.com reject
+^https?:\/\/([\w-]+\.)*home\.mi\.com\/cgi-op/api/v1/recommendation/banner reject
+^https?:\/\/([\w-]+\.)*httpdns\.kg\.qq\.com reject
+^https?:\/\/([\w-]+\.)*lanm\.huliyinzi\.com reject
+^https?:\/\/([\w-]+\.)*media\.cdn\.kuwo\.cn\/.*tuijian[\w-]+\.json.* reject
+^https?:\/\/([\w-]+\.)*ns\.adobe\.com reject
+^https?:\/\/([\w-]+\.)*p[\w-]+-ad-sign\.byteimg\.com reject
+^https?:\/\/([\w-]+\.)*pangolin-sdk-toutiao-b\.com reject
+^https?:\/\/([\w-]+\.)*pangolin-sdk-toutiao\.com reject
+^https?:\/\/([\w-]+\.)*pangolin\.snssdk\.com reject
+^https?:\/\/([\w-]+\.)*pglstatp-toutiao\.com reject
+^https?:\/\/([\w-]+\.)*res\.psy-1\.com\/music/recommend reject
+^https?:\/\/([\w-]+\.)*searchrecterm\.kuwo\.cn reject
+^https?:\/\/([\w-]+\.)*soup\.v\.qq\.com reject
+^https?:\/\/([\w-]+\.)*st\.huliyinzi\.com\/ads_app_pic/ reject
+^https?:\/\/([\w-]+\.)*swimg2\.tsderen\.cn reject
+^https?:\/\/([\w-]+\.)*tnc[\w-]+\.zijieapi\.com reject
+^https?:\/\/([\w-]+\.)*umeng\.com reject
+^https?:\/\/([\w-]+\.)*us\.l\.qq\.com\/exapp reject
+^https?:\/\/([\w-]+\.)*uty\.micocc\.com reject
+^https?:\/\/([\w-]+\.)*vhot2\.qqvideo\.tc\.qq\.com reject
+^https?:\/\/([\w-]+\.)*volceapplog\.com reject
+^https?:\/\/([\w-]+\.)*xj-landing\.gdtimg\.com reject
+^https?:\/\/([\w-]+\.)*y\.gtimg\.cn\/music/common//upload/kg_ad reject
+^https?:\/\/([\w-]+\.)*y\.qq\.com\/music/common/upload/t_kg_activity_show reject
+^https?:\/\/([\w-]+\.)*yoda\.kwd\.inkuai\.com reject
 
 # --- EasyList China + AdGuard 中文（自动生成）---
 ^https:\/\/[a-z0-9]+\.[a-z0-9]+\.[a-z]{2,3}:\d{1,6}\/[a-z]{1,3}\/\d+\?is_not= reject

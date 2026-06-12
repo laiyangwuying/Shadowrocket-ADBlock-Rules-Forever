@@ -20,6 +20,10 @@ REPO_ROOT = FACTORY_ROOT.parent
 MODULE_PATH = REPO_ROOT / 'module' / 'AdBlock.module'
 TEMPLATE_DIR = FACTORY_ROOT / 'template'
 _GEN_MARKER = '# --- EasyList China + AdGuard 中文（自动生成）---'
+_CATS_MARKER = '# --- Cats-Team AdRules 加强屏蔽（自动生成）---'
+_CATS_SOURCE = (
+    'https://github.com/Cats-Team/AdRules/blob/script/mod/rules/adblock-rules.txt'
+)
 
 
 def _read_optional(path: Path) -> str:
@@ -35,12 +39,19 @@ def _generated_rewrite_block() -> str:
     return f'{_GEN_MARKER}\n' + '\n'.join(lines)
 
 
+def _cats_team_rewrite_block() -> str:
+    lines = rewrite_lines_from_list_file(RESULTANT_DIR / 'cats_team_rewrite.list')
+    if not lines:
+        return ''
+    return f'{_CATS_MARKER}\n# {_CATS_SOURCE}\n' + '\n'.join(lines)
+
+
 def build() -> dict:
     static = strip_youtube_rewrite_body(
         normalize_rewrite_body(_read_optional(TEMPLATE_DIR / 'adblock_rewrite_static.txt'))
     )
     rewrite_body = strip_youtube_rewrite_body(
-        merge_rewrite_bodies(static, _generated_rewrite_block())
+        merge_rewrite_bodies(static, _cats_team_rewrite_block(), _generated_rewrite_block())
     )
     mitm_hosts = filter_youtube_mitm_hosts(
         parse_mitm_hostname_value(_read_optional(TEMPLATE_DIR / 'adblock_mitm_hosts.txt'))
@@ -49,7 +60,7 @@ def build() -> dict:
 
     parts = [
         '#!name= NoAd',
-        '#!desc= 广告屏蔽（EasyList China + AdGuard 中文，每日构建）',
+        '#!desc= 广告屏蔽（EasyList + AdGuard + Cats-Team AdRules，每日构建）',
         '#!homepage=https://github.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever',
         '#!author= Tartarus2014 + build',
         '#!icon= https://raw.githubusercontent.com/Koolson/Qure/master/IconSet/Color/Advertising.png',

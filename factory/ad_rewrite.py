@@ -59,12 +59,21 @@ def _rewrite_prefix() -> str:
     return r'^https?:\/\/'
 
 
-def _abp_line_to_rewrite(line: str) -> str | None:
+def abp_network_rule_to_rewrite(
+    line: str,
+    *,
+    allow_domain_block: bool = False,
+    skip_scoped_options: bool = True,
+) -> str | None:
     if '##' in line or '#@#' in line or '#?#' in line:
         return None
 
     pattern, opts = split_rule_options(line)
-    if not pattern or should_skip_scoped_options(opts):
+    if not pattern:
+        return None
+    if skip_scoped_options and should_skip_scoped_options(opts):
+        return None
+    if re.search(r'replace=|removeparam', opts, re.I):
         return None
 
     # 完整 URL：|http(s)://host/path（不含通配与残缺域名）
@@ -79,21 +88,40 @@ def _abp_line_to_rewrite(line: str) -> str | None:
             return None
         return rf'{_rewrite_prefix()}{_wildcard_escape(url)} {_ACTION}'
 
-    # 域名 + 路径：||host/path^（须含明确 host）
+    # ||host/path^ 或 ||host^（整域）
     if pattern.startswith('||'):
         body = pattern[2:]
         if body.endswith('^'):
             body = body[:-1]
-        if '/' not in body:
+        body = body.lstrip('*/')
+        if not body:
             return None
-        host, path = body.split('/', 1)
-        if not host or not path or len(path) < 3:
+
+        if '/' in body:
+            host, path = body.split('/', 1)
+            if not host or not path or len(path) < 3:
+                return None
+            if '*' in host and host.count('.') < 1:
+                return None
+            return (
+                rf'{_rewrite_prefix()}{_host_to_re(host)}\/'
+                f'{_wildcard_escape(path)} {_ACTION}'
+            )
+
+        star = body.find('*')
+        if star > 0 and '.' in body[:star]:
+            host, path = body[:star], body[star + 1 :]
+            if host and path and len(path) >= 3:
+                return (
+                    rf'{_rewrite_prefix()}{_host_to_re(host)}\/'
+                    f'.*{_wildcard_escape(path)}.* {_ACTION}'
+                )
+
+        if not allow_domain_block:
             return None
-        if '*' in host and host.count('.') < 1:
+        if body.count('.') < 1 and '*' not in body:
             return None
-        return (
-            rf'{_rewrite_prefix()}{_host_to_re(host)}\/{_wildcard_escape(path)} {_ACTION}'
-        )
+        return rf'{_rewrite_prefix()}{_host_to_re(body)} {_ACTION}'
 
     # ABP 正则：仅保留以 ^https 开头的完整 URL 正则
     parsed = _parse_abp_regex(pattern)
@@ -105,6 +133,10 @@ def _abp_line_to_rewrite(line: str) -> str | None:
 
     # 不转换泛路径 /path、.com/path（在 ABP 为全站通用，在 SR 全局 Rewrite 极易误伤）
     return None
+
+
+def _abp_line_to_rewrite(line: str) -> str | None:
+    return abp_network_rule_to_rewrite(line)
 
 
 def _static_rewrite_keys() -> set[str]:
