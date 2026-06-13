@@ -1,8 +1,8 @@
-# build time: 2026-06-13 07:43:10
-total_sec: 383.2
-vendor_sec: 0.0
-vendor_scripts_sec: 0.1
-parallel_sec: 14.2
+# build time: 2026-06-13 08:29:24
+total_sec: 304.9
+vendor_sec: 0.4
+vendor_scripts_sec: 0.3
+parallel_sec: 11.0
 confs: 12
 ad entries: 177977
 ad host wildcards: 400
@@ -17,7 +17,8 @@ sr compliance issues: 0
 manual_reject skipped (in rule-set): 177
 cats-team rewrite: 83621
 gfw entries: 26304
-vendor_scripts mapped: 0
-vendor_scripts modules rewritten: 0
+vendor_scripts mapped: 2
+vendor_scripts modules rewritten: 2
 vendor_scripts local files: 206
+remote modules fetched: 3/3
 rule_set_url: https://raw.githubusercontent.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever/refs/heads/release/factory/resultant/ad.rule-set
