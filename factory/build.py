@@ -56,6 +56,7 @@ def _write_build_summary(stats: dict, elapsed: float) -> None:
         f'vendor_scripts mapped: {vs.get("mapped", 0)}',
         f'vendor_scripts modules rewritten: {vs.get("modules_rewritten", 0)}',
         f'vendor_scripts local files: {vs.get("local_scripts", 0)}',
+        f'remote modules fetched: {(stats.get("fetch_modules") or {}).get("module_ok", 0)}/{(stats.get("fetch_modules") or {}).get("module_total", 0)}',
     ]
     existing = RESULTANT_DIR / 'build_summary.txt'
     if existing.is_file():
@@ -84,9 +85,13 @@ def main(argv: list[str] | None = None) -> int:
 
     log('[vendor] start')
     t_v = time.perf_counter()
-    fetch_vendor_modules.main()
+    stats['fetch_modules'] = fetch_vendor_modules.main()
     stats['vendor_sec'] = time.perf_counter() - t_v
-    log(f'[vendor] done in {stats["vendor_sec"]:.1f}s')
+    fm = stats['fetch_modules']
+    log(
+        f'[vendor] done in {stats["vendor_sec"]:.1f}s '
+        f'(module {fm.get("module_ok", 0)}/{fm.get("module_total", 0)})'
+    )
 
     log('[vendor_scripts] start')
     t_s = time.perf_counter()

@@ -1,4 +1,6 @@
-# 构建时自动下载远端模块写入 factory/vendor/<路径>。
+# 构建时自动下载远端模块：
+#   module_urls.txt → 仓库 module/（iab0x00 ProxyRules 等）
+#   vendor_urls.txt → factory/vendor/
 # 任一条下载失败时不覆盖本地已有同名文件。
 #
 # 格式（每行一条，制表符或多个空格皆可）：

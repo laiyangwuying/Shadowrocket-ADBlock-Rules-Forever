@@ -1,0 +1,6 @@
+# 构建时自动下载到仓库 module/（失败则保留本地已有文件）。
+# 格式：<module 目录内文件名>  <http(s) URL>
+#
+YouTubeNoAd.sgmodule	https://raw.githubusercontent.com/iab0x00/ProxyRules/main/Rewrite/YouTubeNoAd.sgmodule
+DiDiClean.sgmodule	https://raw.githubusercontent.com/iab0x00/ProxyRules/main/Rewrite/DiDiClean.sgmodule
+RedBook.srmodule	https://raw.githubusercontent.com/iab0x00/ProxyRules/main/Rewrite/RedBook.srmodule
