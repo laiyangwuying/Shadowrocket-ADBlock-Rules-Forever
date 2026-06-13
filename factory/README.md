@@ -74,7 +74,7 @@ legacy 镜像，与 `ad.set` 内容一致。
 | `/regex/` | 正则 | 简单 `/^kw\./` → `DOMAIN-KEYWORD` |
 | `!` / `#` | 注释 | 跳过 |
 
-构建后由 `audit_ad_dns.py` 校验。
+构建后由 `audit_ad_dns.py` 校验 dns.txt 映射，由 `audit_sr.py` 校验 Shadowrocket 合规（RULE-SET、pre-matching、MITM %APPEND% 等）。
 
 -----------------------------------
 
