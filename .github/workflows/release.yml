@@ -42,9 +42,11 @@ jobs:
           cp -r figure ../release/
           cp -r module ../release/ 2>/dev/null || true
           mkdir -p ../release/factory/resultant
+          test -f factory/resultant/ad.rule-set
+          cp factory/resultant/ad.rule-set ../release/factory/resultant/
+          test -f ../release/factory/resultant/ad.rule-set
           test -f factory/resultant/ad.set
           cp factory/resultant/ad.set ../release/factory/resultant/
-          test -f ../release/factory/resultant/ad.set
           cp LICENSE ../release/
           cp readme.md ../release/
           cp -r .github ../release/
@@ -61,6 +63,7 @@ jobs:
           cd release || exit 1
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
+          test -f factory/resultant/ad.rule-set
           test -f factory/resultant/ad.set
           git checkout --orphan latest_branch
           git add -A

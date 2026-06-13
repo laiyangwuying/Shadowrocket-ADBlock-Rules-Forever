@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 #
 # Cats-Team dns.txt → Shadowrocket 规则（AdGuard DNS 语法）：
-#   ||domain^     → ad.set `.domain`（自身+子域）
-#   ||.domain^    → ad_host `*.domain`（仅子域）
-#   IP host       → ad.set `host`（精确，不含子域）
-#   /regex/       → ad_keyword（简单 /^kw\./）或跳过复杂正则
-#   @@...         → 按文件顺序解除对应拦截
+#   ||domain^     → RULE-SET DOMAIN-SUFFIX,domain,REJECT
+#   ||.domain^    → RULE-SET DOMAIN-WILDCARD,*.domain,REJECT + [Host]
+#   IP host       → RULE-SET DOMAIN,host,REJECT（精确）
+#   /regex/       → ad_keyword；@@ 按文件顺序解除
 
 from __future__ import annotations
 
@@ -50,23 +49,43 @@ class DnsOutputs:
     dns_rule_lines: int = 0
 
 
-def to_domain_set_line(domain: str) -> str:
-    """AdGuard `||domain^` / `||host^` → DOMAIN-SET `.domain`（自身 + 全部子域）。"""
-    if is_ip_host(domain):
-        return domain
-    bare = domain.lower().strip('.')
-    return f'.{bare}'
+def to_rule_set_suffix(domain: str) -> str:
+    """AdGuard `||domain^` → DOMAIN-SUFFIX（匹配自身及全部子域）。"""
+    return f'DOMAIN-SUFFIX,{domain.lower().strip(".")},REJECT'
 
 
-def to_exact_domain_set_line(domain: str) -> str:
-    """AdGuard `127.0.0.1 domain` → DOMAIN-SET 精确行（不含子域）。"""
-    return domain.lower().strip('.')
+def to_rule_set_exact(domain: str) -> str:
+    """AdGuard `127.0.0.1 domain` → DOMAIN（仅精确匹配）。"""
+    return f'DOMAIN,{domain.lower().strip(".")},REJECT'
+
+
+def to_rule_set_ip(ip: str) -> str:
+    host = ip.split('/')[0]
+    if ':' in host:
+        return f'IP-CIDR,{ip if "/" in ip else ip + "/128"},REJECT,no-resolve'
+    return f'IP-CIDR,{ip if "/" in ip else ip + "/32"},REJECT,no-resolve'
+
+
+def to_rule_set_wildcard(pattern: str) -> str:
+    return f'DOMAIN-WILDCARD,{pattern.lower()},REJECT'
 
 
 def to_subdomain_only_host_pattern(domain: str) -> str:
     """AdGuard `||.domain^` → [Host] `*.domain`（仅子域，不含根域）。"""
     bare = domain.lower().strip('.')
     return f'*.{bare}'
+
+
+def suffix_rule_covers(host: str, suffix_domains: set[str]) -> bool:
+    """等同 Shadowrocket DOMAIN-SUFFIX 语义。"""
+    h = host.lower().strip('.')
+    if not h:
+        return False
+    for suffix in suffix_domains:
+        s = suffix.lower().strip('.')
+        if h == s or h.endswith('.' + s):
+            return True
+    return False
 
 
 def read_host_wildcard_patterns(path: str | Path | None = None) -> set[str]:
@@ -82,21 +101,45 @@ def read_host_wildcard_patterns(path: str | Path | None = None) -> set[str]:
     return patterns
 
 
-def domain_set_covers(host: str, entries: set[str]) -> bool:
-    h = host.lower().strip('.')
-    if not h:
-        return False
-    if h in entries:
-        return True
-    if f'.{h}' in entries:
-        return True
-    for entry in entries:
-        if not entry.startswith('.'):
+def load_rule_set_coverage(
+    path: str | Path | None = None,
+) -> tuple[set[str], set[str], set[str]]:
+    """解析 ad.rule-set → (suffix_domains, exact_hosts, wildcards)。"""
+    file_path = Path(path or RESULTANT_DIR / 'ad.rule-set')
+    suffix_domains: set[str] = set()
+    exact_hosts: set[str] = set()
+    wildcards: set[str] = set()
+    if not file_path.is_file():
+        return suffix_domains, exact_hosts, wildcards
+    for raw in file_path.read_text(encoding='utf-8').splitlines():
+        line = raw.strip()
+        if not line or line.startswith('#'):
             continue
-        suffix = entry[1:]
-        if h == suffix or h.endswith('.' + suffix):
-            return True
-    return False
+        parts = [p.strip() for p in line.split(',')]
+        if len(parts) < 2:
+            continue
+        kind, value = parts[0].upper(), parts[1].lower()
+        if kind == 'DOMAIN-SUFFIX':
+            suffix_domains.add(value)
+        elif kind == 'DOMAIN':
+            exact_hosts.add(value)
+        elif kind == 'DOMAIN-WILDCARD':
+            wildcards.add(value)
+    return suffix_domains, exact_hosts, wildcards
+
+
+def dns_outputs_covers(
+    host: str,
+    suffix_domains: set[str],
+    exact_hosts: set[str],
+    wildcards: set[str],
+) -> bool:
+    h = host.lower().strip('.')
+    if h in exact_hosts:
+        return True
+    if suffix_rule_covers(h, suffix_domains):
+        return True
+    return host_wildcard_covers(h, wildcards)
 
 
 def host_wildcard_covers(host: str, patterns: set[str]) -> bool:
@@ -114,15 +157,20 @@ def host_wildcard_covers(host: str, patterns: set[str]) -> bool:
     return False
 
 
-def dns_rule_covers(host: str, ad_set: set[str], host_wildcards: set[str]) -> bool:
-    return domain_set_covers(host, ad_set) or host_wildcard_covers(host, host_wildcards)
-
-
-def ad_set_lines(outputs: DnsOutputs) -> set[str]:
-    lines = {to_domain_set_line(d) for d in outputs.suffix_domains}
-    lines.update(to_exact_domain_set_line(h) for h in outputs.exact_hosts)
-    lines.update(outputs.ip_hosts)
-    return {line.lower() for line in lines}
+def rule_set_lines(outputs: DnsOutputs) -> list[str]:
+    lines: list[str] = []
+    for domain in sorted(outputs.suffix_domains):
+        lines.append(to_rule_set_suffix(domain))
+    for host in sorted(outputs.exact_hosts):
+        if host not in outputs.suffix_domains:
+            lines.append(to_rule_set_exact(host))
+    for ip in sorted(outputs.ip_hosts):
+        lines.append(to_rule_set_ip(ip))
+    for pat in sorted(outputs.host_subdomain_only):
+        lines.append(to_rule_set_wildcard(pat))
+    for pat in sorted(outputs.host_patterns):
+        lines.append(to_rule_set_wildcard(pat))
+    return lines
 
 
 def _load_ignore() -> set[str]:
@@ -321,16 +369,8 @@ def collect_dns_outputs(text: str, *, ignore: set[str] | None = None) -> DnsOutp
     return outputs
 
 
-def _write_plain_set(path: Path, header: str, outputs: DnsOutputs) -> int:
-    lines = sorted(to_domain_set_line(d) for d in outputs.suffix_domains)
-    lines.extend(
-        sorted(
-            to_exact_domain_set_line(h)
-            for h in outputs.exact_hosts
-            if h not in outputs.suffix_domains
-        )
-    )
-    lines.extend(sorted(outputs.ip_hosts))
+def _write_rule_set(path: Path, header: str, outputs: DnsOutputs) -> int:
+    lines = rule_set_lines(outputs)
     body = header.rstrip('\n') + '\n' + '\n'.join(lines) + '\n'
     atomic_write(path, body)
     return len(lines)
@@ -359,11 +399,17 @@ def build() -> dict:
         f'# source: {CATS_TEAM_DNS_URL}'
     )
 
-    domain_count = _write_plain_set(
-        RESULTANT_DIR / 'ad.set',
+    rule_count = _write_rule_set(
+        RESULTANT_DIR / 'ad.rule-set',
         header_common
-        + '\n# ||domain^→.domain | IP host→exact | 127.0.0.1 host→exact',
+        + '\n# ||domain^→DOMAIN-SUFFIX | hosts→DOMAIN | ||.^→DOMAIN-WILDCARD',
         outputs,
+    )
+    # 兼容统计：纯域名列表
+    write_list(
+        RESULTANT_DIR / 'ad.set',
+        header_common + '\n# legacy domain list (conf 使用 ad.rule-set)',
+        outputs.suffix_domains | outputs.exact_hosts | outputs.ip_hosts,
     )
     host_line_count = _write_host_wildcard_set(
         RESULTANT_DIR / 'ad_host_wildcard.set',
@@ -378,8 +424,8 @@ def build() -> dict:
 
     write_list(
         RESULTANT_DIR / 'ad.list',
-        header_common + '\n# legacy ad.list mirror of ad.set',
-        ad_set_lines(outputs),
+        header_common + '\n# legacy mirror of ad.set',
+        outputs.suffix_domains | outputs.exact_hosts | outputs.ip_hosts,
     )
 
     write_corrections_log(
@@ -390,11 +436,10 @@ def build() -> dict:
 
     st = outputs.stats
     log(
-        f'ad: {domain_count} DOMAIN-SET '
-        f'({st.get("suffix_hosts", 0)} ||^, {st.get("exact_hosts", 0)} hosts, '
-        f'{st.get("ip_hosts", 0)} IP), '
-        f'{st.get("subdomain_only", 0)} ||.^ Host, '
-        f'{st.get("wildcard_hosts", 0)} wildcard Host, '
+        f'ad: {rule_count} RULE-SET lines '
+        f'({st.get("suffix_hosts", 0)} DOMAIN-SUFFIX, {st.get("exact_hosts", 0)} DOMAIN, '
+        f'{st.get("ip_hosts", 0)} IP, {st.get("subdomain_only", 0)} ||.^ wildcard, '
+        f'{st.get("wildcard_hosts", 0)} ||* wildcard), '
         f'{st.get("exceptions", 0)} @@ exceptions, '
         f'{keyword_count} keywords, {outputs.idna_skipped} idna-skipped'
     )
@@ -408,7 +453,7 @@ def build() -> dict:
         - outputs.idna_skipped,
     )
     return {
-        'domains': domain_count,
+        'domains': rule_count,
         'host_patterns': host_line_count,
         'host_subdomain_only': len(outputs.host_subdomain_only),
         'keywords': keyword_count,

@@ -49,13 +49,17 @@ GFWList 不能无损转换为 SR 规则，所以这里是对 GFWList 的补充�
 
 -----------------------------------
 
+**resultant/ad.rule-set**
+
+广告规则集，由 `ad.py` 从 Cats-Team dns.txt 生成；每行含规则类型，conf 通过 `RULE-SET` 引用。
+
 **resultant/ad.set**
 
-广告域名集合，由 `ad.py` 从 Cats-Team dns.txt 生成；`||domain^`/`||host^` 写为 `.domain`（DOMAIN-SET 后缀匹配）。
+legacy 域名列表（纯域名，无规则类型），仅供统计与旧引用。
 
 **resultant/ad.list**
 
-legacy 镜像，与 `ad.set` 内容一致，仅供旧引用与统计。
+legacy 镜像，与 `ad.set` 内容一致。
 
 **ad.py**
 
@@ -63,9 +67,9 @@ legacy 镜像，与 `ad.set` 内容一致，仅供旧引用与统计。
 
 | dns.txt | 含义 | 输出 |
 |---------|------|------|
-| `\|\|domain^` | 域及全部子域 | `ad.set` → `.domain` |
+| `\|\|domain^` | 域及全部子域 | `ad.rule-set` → `DOMAIN-SUFFIX,domain,REJECT` |
 | `\|\|.domain^` | 仅子域（不含根域） | `ad_host` → `*.domain` |
-| `127.0.0.1 domain` | 仅精确域（不含子域） | `ad.set` → `domain`（无前导点） |
+| `127.0.0.1 domain` | 仅精确域（不含子域） | `ad.rule-set` → `DOMAIN,domain,REJECT` |
 | `@@...` | 解除对应拦截 | 按文件顺序从集合中移除 |
 | `/regex/` | 正则 | 简单 `/^kw\./` → `DOMAIN-KEYWORD` |
 | `!` / `#` | 注释 | 跳过 |

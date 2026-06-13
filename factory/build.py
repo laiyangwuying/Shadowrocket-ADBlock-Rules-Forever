@@ -48,7 +48,7 @@ def _write_build_summary(stats: dict, elapsed: float) -> None:
         f'ad scoped skipped: {ad.get("scoped_skipped", 0)}',
         f'ad coverage gap: {_coverage_gap(ad)}',
         f'ad dns audit missing: {(stats.get("audit_ad_dns") or {}).get("missing_count", 0)}',
-        f'manual_reject skipped (in ad.set): {bc.get("manual_reject_skipped", 0)}',
+        f'manual_reject skipped (in rule-set): {bc.get("manual_reject_skipped", 0)}',
         f'cats-team rewrite: {(stats.get("ad_cats_team") or {}).get("rewrites", 0)}',
         f'gfw entries: {(stats.get("gfwlist") or {}).get("rules", 0)}',
         f'vendor_scripts mapped: {vs.get("mapped", 0)}',
@@ -60,7 +60,7 @@ def _write_build_summary(stats: dict, elapsed: float) -> None:
         extra = [
             line
             for line in existing.read_text(encoding='utf-8').splitlines()
-            if line.startswith('domain_set_url:')
+            if line.startswith('rule_set_url:')
         ]
         lines.extend(extra)
     atomic_write(existing, '\n'.join(lines) + '\n')
@@ -115,7 +115,7 @@ def main(argv: list[str] | None = None) -> int:
     gap = _coverage_gap(stats.get('ad') or {})
     if gap > _AD_COVERAGE_GAP_THRESHOLD:
         log(
-            f'WARNING: ad.set coverage gap {gap} exceeds threshold '
+            f'WARNING: ad.rule-set coverage gap {gap} exceeds threshold '
             f'{_AD_COVERAGE_GAP_THRESHOLD}'
         )
 
@@ -123,7 +123,7 @@ def main(argv: list[str] | None = None) -> int:
     _write_build_summary(stats, elapsed)
     log(f'=== build finished in {elapsed:.1f}s ===')
     if audit_missing:
-        log(f'ERROR: ad.set missing {audit_missing} plain dns.txt hosts')
+        log(f'ERROR: ad.rule-set missing {audit_missing} dns.txt outputs')
         return 1
     return 1 if gap > _AD_COVERAGE_GAP_THRESHOLD else 0
 

@@ -8,7 +8,9 @@ GITHUB_REPO = 'laiyangwuying/Shadowrocket-ADBlock-Rules-Forever'
 PAGES_BASE = f'https://laiyangwuying.github.io/{GITHUB_REPO.split("/")[1]}/'
 BUILD_RAW_BASE = f'https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/build/'
 RELEASE_RAW_BASE = f'https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/release/'
-AD_DOMAIN_SET_URL = RELEASE_RAW_BASE + 'factory/resultant/ad.set'
+AD_RULE_SET_URL = RELEASE_RAW_BASE + 'factory/resultant/ad.rule-set'
+# legacy；conf 已改用 RULE-SET
+AD_DOMAIN_SET_URL = AD_RULE_SET_URL
 
 GUIDE_PNG_URL = (
     'https://raw.githubusercontent.com/Johnshall/'
