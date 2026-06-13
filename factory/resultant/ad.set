@@ -1,6 +1,6 @@
-# Cats-Team AdRules dns.txt @ 2026-06-13 05:48:44
+# Cats-Team AdRules dns.txt @ 2026-06-13 13:54:59
 # source: https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/dns.txt
-# ||domain^ / ||host^ → .domain（DOMAIN-SET，自身+子域）
+# ||domain^→.domain | IP host→exact | 127.0.0.1 host→exact
 .0.avmarket.rs
 .0.myikas.com
 .0.net.easyjet.com

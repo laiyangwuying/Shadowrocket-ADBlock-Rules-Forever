@@ -60,11 +60,20 @@ def clear_filter_cache() -> None:
 
 
 def iter_filter_rules(text: str) -> Iterator[str]:
+    """ABP 网络规则行（跳过例外 @@，供 adblock.txt 等）。"""
+    for line in iter_dns_lines(text):
+        if line.startswith('@@'):
+            continue
+        yield line
+
+
+def iter_dns_lines(text: str) -> Iterator[str]:
+    """dns.txt 有效行（保留 @@ 例外；跳过 ! / # 注释）。"""
     for raw in text.splitlines():
         line = raw.strip()
-        if not line or line.startswith('!') or line.startswith('['):
+        if not line or line.startswith('!') or line.startswith('#'):
             continue
-        if line.startswith('@@') or line.startswith('##'):
+        if line.startswith('['):
             continue
         yield line.split('!', 1)[0].strip()
 

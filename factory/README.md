@@ -59,13 +59,18 @@ legacy 镜像，与 `ad.set` 内容一致，仅供旧引用与统计。
 
 **ad.py**
 
-脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 按 AdGuard 语义生成：
+脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 按 **AdGuard DNS 语法** 构建：
 
-- `||domain^` / `||host^` → `ad.set` 行 `.domain`（DOMAIN-SET，自身+子域）
-- `||.domain^` → `ad_host_wildcard.set` 行 `*.domain`（[Host]，仅子域不含根域）
-- `||*...^` 通配符 → `ad_host_wildcard.set`；`/^keyword\./` → `ad_keyword.list`
+| dns.txt | 含义 | 输出 |
+|---------|------|------|
+| `\|\|domain^` | 域及全部子域 | `ad.set` → `.domain` |
+| `\|\|.domain^` | 仅子域（不含根域） | `ad_host` → `*.domain` |
+| `127.0.0.1 domain` | 仅精确域（不含子域） | `ad.set` → `domain`（无前导点） |
+| `@@...` | 解除对应拦截 | 按文件顺序从集合中移除 |
+| `/regex/` | 正则 | 简单 `/^kw\./` → `DOMAIN-KEYWORD` |
+| `!` / `#` | 注释 | 跳过 |
 
-构建后由 `audit_ad_dns.py` 校验覆盖率。
+构建后由 `audit_ad_dns.py` 校验。
 
 -----------------------------------
 
