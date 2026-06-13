@@ -91,3 +91,41 @@ legacy 镜像，与 `ad.set` 内容一致。
 **gfwlist.py**
 
 脚本。解译最新版本的 GFWList。
+
+-----------------------------------
+
+## 第三方模块（zirawell / iab0x00）
+
+**策略（2026-06-12）：维持现状，不在 CI 中接入 Script-Hub 批量转换。**
+
+### 当前做法
+
+| 来源 | 模块 | 处理方式 |
+|------|------|----------|
+| 仓库内嵌 | `wechatAdBlock.sgmodule`、`appAdBlock.sgmodule`（zirawell Surge 语法） | 直接随 `module/` 发布；构建时 `vendor_scripts.py` 将 `script-path` 镜像到 `scripts/` |
+| 构建拉取 | `YouTubeNoAd`、`DiDiClean`、`RedBook`（iab0x00） | `module_urls.txt` + `fetch_vendor_modules.py` |
+
+广告拦截分层：
+
+- **DNS 级**：conf + `ad.rule-set`（`pre-matching`）
+- **通用 App**：`AdBlock.module`（Cats-Team URL Rewrite）
+- **专用 App/小程序**：上述 zirawell / iab0x00 模块（需开启 HTTPS 解密）
+
+`wechatAdBlock.sgmodule` 与 `wechatad.module` 功能重叠，建议只启用前者。
+
+### Script-Hub 评估（不接入）
+
+曾评估用 [Script-Hub](https://github.com/Script-Hub-Org/Script-Hub) 将 zirawell 的 Surge 模块批量转为 Shadowrocket 模块（`surge-module` → `shadowrocket-module`）。
+
+**POC 结论**：Node 下通过 `service.js` + `Rewrite-Parser.js` 可跑通（`wechatAdBlock` ~4s、`appAdBlock` ~1s），但**不作为构建步骤**。
+
+| 项 | 说明 |
+|----|------|
+| 无官方 CLI | 仅浏览器 UI 或本地 `service.js`（Koa + `eval` 跑 Surge 脚本运行时） |
+| URL 约定 | 源链接放在 `/_start_/…/_end_/` 路径中且**不要**整体 `encodeURIComponent`，否则报 `Invalid URL` |
+| 大文件 | `appAdBlock`（~365 KB）无法用 `localtext` 查询参数，需 HTTP 提供源文件 |
+| 与仓库策略冲突 | 转换会去掉 `[Rule]` 中 REJECT 的 `pre-matching`，与 `sr_policy.py` / `audit_sr.py` 方向相反 |
+| 其他差异 | `requires-body=1`→`true`（有益）；`Map Local` 可能去掉 `status-code=200` |
+| 上游路径 | zirawell R-Store 上部分模块 raw 路径已 404，不宜依赖「每次从上游拉取再转换」 |
+
+**若日后需要 SR 语法规范化**，优先自写轻量 `sr_module_fixup.py`（补 `pre-matching`、`requires-body=true` 等），而非依赖 Script-Hub 全量转换。
