@@ -7,6 +7,7 @@ GITHUB_REPO = 'laiyangwuying/Shadowrocket-ADBlock-Rules-Forever'
 
 PAGES_BASE = f'https://laiyangwuying.github.io/{GITHUB_REPO.split("/")[1]}/'
 RELEASE_RAW_BASE = f'https://raw.githubusercontent.com/{GITHUB_REPO}/refs/heads/build/'
+AD_DOMAIN_SET_URL = RELEASE_RAW_BASE + 'factory/resultant/ad.set'
 
 GUIDE_PNG_URL = (
     'https://raw.githubusercontent.com/Johnshall/'

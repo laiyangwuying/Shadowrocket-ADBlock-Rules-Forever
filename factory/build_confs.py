@@ -9,7 +9,7 @@ from pathlib import Path
 
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log, read_entries
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
-from publish_urls import RELEASE_RAW_BASE
+from publish_urls import AD_DOMAIN_SET_URL, RELEASE_RAW_BASE
 
 REPO_ROOT = FACTORY_ROOT.parent
 TEMPLATE_DIR = FACTORY_ROOT / 'template'
@@ -58,8 +58,12 @@ def _tpl(name: str) -> str:
 
 def _assemble_prefix(conf_name: str) -> str:
     if conf_name == 'sr_ad_only':
-        return ''
+        return _tpl('sr_head_ad_only.txt').replace('{{ad_host}}', _ad_host_string())
     parts = [_tpl('sr_head.txt')]
+    if conf_name in AD_FOOT_CONFS:
+        parts[0] = parts[0].replace('{{ad_host}}', _ad_host_string())
+    else:
+        parts[0] = parts[0].replace('{{ad_host}}', '')
     if conf_name in PROXY_ORIENTED_CONFS:
         parts.append(_tpl('sr_head_rules_proxy_udp.txt'))
     if conf_name in STREAMING_UDP_CONFS:
@@ -70,11 +74,45 @@ def _assemble_prefix(conf_name: str) -> str:
 
 
 def _assemble_suffix(conf_name: str) -> str:
-    if conf_name == 'sr_ad_only':
-        return ''
     if conf_name in AD_FOOT_CONFS:
         return _tpl('sr_foot_ad.txt')
     return _tpl('sr_foot_basic.txt')
+
+
+def _ad_host_string() -> str:
+    path = RESULTANT_DIR / 'ad_host_wildcard.set'
+    if not path.is_file():
+        return ''
+    lines: list[str] = []
+    for raw in path.read_text(encoding='utf-8').splitlines():
+        line = raw.strip()
+        if not line or line.startswith('#'):
+            continue
+        lines.append(line + '\n')
+    if not lines:
+        return ''
+    return '# Cats-Team dns.txt → Host 级拦截（等效 DNS 过滤）\n' + ''.join(lines)
+
+
+def _count_ad_host_lines() -> int:
+    path = RESULTANT_DIR / 'ad_host_wildcard.set'
+    if not path.is_file():
+        return 0
+    return sum(
+        1
+        for raw in path.read_text(encoding='utf-8').splitlines()
+        if raw.strip() and not raw.strip().startswith('#')
+    )
+
+
+def _ad_rules_string() -> str:
+    lines = [
+        '# Cats-Team AdRules dns.txt → DOMAIN-SET + 正则关键词\n',
+        f'DOMAIN-SET,{AD_DOMAIN_SET_URL},REJECT\n',
+    ]
+    for kw in read_entries(RESULTANT_DIR / 'ad_keyword.list'):
+        lines.append(f'DOMAIN-KEYWORD,{kw},REJECT\n')
+    return ''.join(lines)
 
 
 def _rule_line_from_plain_entry(content: str, kind: str) -> str | None:
@@ -176,7 +214,7 @@ def build() -> dict:
         'build_time': time.strftime('%Y-%m-%d %H:%M:%S'),
         'top500_proxy': _rules_string_from_file(RESULTANT_DIR / 'top500_proxy.list', 'Proxy'),
         'top500_direct': _rules_string_from_file(RESULTANT_DIR / 'top500_direct.list', 'Direct'),
-        'ad': _rules_string_from_file(RESULTANT_DIR / 'ad.list', 'Reject'),
+        'ad': _ad_rules_string(),
         'manual_direct': _rules_string_from_file(FACTORY_ROOT / 'manual_direct.txt', 'Direct'),
         'manual_proxy': _rules_string_from_file(FACTORY_ROOT / 'manual_proxy.txt', 'Proxy'),
         'manual_reject': _rules_string_from_file(FACTORY_ROOT / 'manual_reject.txt', 'Reject'),
@@ -207,7 +245,9 @@ def build() -> dict:
     summary = (
         f'# build time: {values["build_time"]}\n'
         f'confs: {len(written)}\n'
-        f'ad entries: {len(read_entries(RESULTANT_DIR / "ad.list"))}\n'
+        f'ad entries: {len(read_entries(RESULTANT_DIR / "ad.set"))}\n'
+        f'ad host lines: {_count_ad_host_lines()}\n'
+        f'ad keywords: {len(read_entries(RESULTANT_DIR / "ad_keyword.list"))}\n'
         f'cats-team rewrite: {len(read_entries(RESULTANT_DIR / "cats_team_rewrite.list"))}\n'
         f'gfw entries: {len(read_entries(RESULTANT_DIR / "gfw.list"))}\n'
     )

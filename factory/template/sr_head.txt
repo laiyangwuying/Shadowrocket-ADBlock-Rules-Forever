@@ -35,6 +35,7 @@ tun-excluded-routes = 10.0.0.0/8,100.64.0.0/10,127.0.0.0/8,169.254.0.0/16,172.16
 *.apple.com = server:system
 *.icloud.com = server:system
 localhost = 127.0.0.1
+{{ad_host}}
 
 [Rule]
 # === 局域网与本地回环（直接连接） ===

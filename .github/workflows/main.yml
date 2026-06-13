@@ -23,8 +23,10 @@ jobs:
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
+      # 仓库默认分支为 release（无 factory/），定时任务须 checkout build 源码
       - uses: actions/checkout@v6
         with:
+          ref: build
           fetch-depth: 0
 
       - name: Install requirements
