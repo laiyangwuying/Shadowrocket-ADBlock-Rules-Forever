@@ -9,10 +9,13 @@ from functools import lru_cache
 from pathlib import Path
 
 ADBLOCK_MODULE_NAME = 'AdBlock.module'
-_SECTION_RE = re.compile(r'^\[(URL Rewrite|MITM|Script|Rule)\]\s*$', re.I)
+_SECTION_RE = re.compile(
+    r'^\[(URL Rewrite|MITM|Script|Rule|Map Local|Body Rewrite|Header Rewrite)\]\s*$',
+    re.I,
+)
 _HOSTNAME_RE = re.compile(r'^hostname\s*=', re.I)
 
-# YouTube/googlevideo 由 YouTubeAd.sgmodule 负责，构建 AdBlock 时始终剔除
+# YouTube/googlevideo 由 YouTubeNoAd.sgmodule 负责，构建 AdBlock 时始终剔除
 CORE_VIDEO_SUFFIXES = frozenset({
     'googlevideo.com',
     'youtube.com',
@@ -61,6 +64,20 @@ def _parse_mitm_hostname_value(line: str) -> str:
         raw = raw[8:].strip()
     return raw
 
+def _pattern_from_extended_line(line: str) -> str:
+    """Map Local / Body Rewrite / Header Rewrite 行首 URL 模式。"""
+    stripped = line.strip()
+    if not stripped or stripped.startswith('#'):
+        return ''
+    if stripped.lower().startswith('http-response-jq '):
+        return stripped.split(None, 2)[1] if len(stripped.split(None, 2)) >= 2 else ''
+    if stripped.lower().startswith('http-response '):
+        return stripped.split(None, 2)[1] if len(stripped.split(None, 2)) >= 2 else ''
+    if ' data-type=' in stripped:
+        return stripped.split(' data-type=', 1)[0].strip()
+    return _rewrite_pattern_only(stripped)
+
+
 _RULE_DOMAIN_RE = re.compile(r'DOMAIN(?:-SUFFIX)?,([^,\)]+)', re.I)
 _SCRIPT_PATTERN_RE = re.compile(r'pattern\s*=\s*([^,\s]+)', re.I)
 _DOMAIN_LIKE_RE = re.compile(
@@ -68,6 +85,8 @@ _DOMAIN_LIKE_RE = re.compile(
     re.I,
 )
 
+
+_MODULE_SUFFIXES = frozenset({'.module', '.sgmodule', '.srmodule'})
 
 def _normalize_pattern_key(line: str) -> str:
     return _rewrite_pattern_only(line).strip().lower()
@@ -356,7 +375,7 @@ def build_dedicated_module_index(module_dir: Path) -> DedicatedModuleIndex:
     for path in sorted(module_dir.iterdir()):
         if path.name == ADBLOCK_MODULE_NAME:
             continue
-        if path.suffix not in ('.module', '.sgmodule'):
+        if path.suffix not in _MODULE_SUFFIXES:
             continue
         if not path.is_file():
             continue
@@ -364,11 +383,15 @@ def build_dedicated_module_index(module_dir: Path) -> DedicatedModuleIndex:
         mod_name, sections = _parse_module_file(path)
         sources.append(f'{path.name}({mod_name})')
 
-        for line in sections.get('url rewrite', []):
-            if line.startswith('#'):
-                continue
-            rewrite_patterns.add(_normalize_pattern_key(line))
-            domain_markers.update(_extract_domains_from_text(line))
+        for section in ('url rewrite', 'map local', 'body rewrite', 'header rewrite'):
+            for line in sections.get(section, []):
+                if line.startswith('#'):
+                    continue
+                pat_line = line if section == 'url rewrite' else _pattern_from_extended_line(line)
+                if not pat_line:
+                    continue
+                rewrite_patterns.add(_normalize_pattern_key(pat_line))
+                domain_markers.update(_extract_domains_from_text(pat_line))
 
         for line in sections.get('mitm', []):
             if not line.lower().startswith('hostname'):

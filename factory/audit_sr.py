@@ -74,7 +74,7 @@ def _issues_from_rule_set(path: Path) -> list[str]:
 
 def _issues_from_modules() -> list[str]:
     issues: list[str] = []
-    for path in sorted(MODULE_DIR.glob('*.module')) + sorted(MODULE_DIR.glob('*.sgmodule')):
+    for path in sorted(MODULE_DIR.glob('*.module')) + sorted(MODULE_DIR.glob('*.sgmodule')) + sorted(MODULE_DIR.glob('*.srmodule')):
         text = path.read_text(encoding='utf-8', errors='replace')
         if '[MITM]' not in text:
             continue

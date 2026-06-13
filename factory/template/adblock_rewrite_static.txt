@@ -265,7 +265,7 @@
 # ^https?:\/\/(www|s)\.youtube\.com\/api\/stats\/ads - reject
 # ^https?:\/\/(www|s)\.youtube\.com\/(pagead|ptracking) - reject
 # ^https?:\/\/\s.youtube.com/api/stats/qoe?.*adformat= - reject
-# （YouTube 去广告由 module/YouTubeAd.sgmodule 负责，此处保持注释）
+# （YouTube 去广告由 module/YouTubeNoAd.sgmodule 负责，此处保持注释）
 
 # > Gofun - gateway.shouqiev.com
 ^https?:\/\/gateway\.shouqiev\.com(:8443)?\/fsda\/app\/bootImage\.json - reject

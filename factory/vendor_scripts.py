@@ -18,7 +18,7 @@ MODULE_ROOT = REPO_ROOT / 'module'
 VENDOR_ROOT = FACTORY_ROOT / 'vendor'
 
 SCRIPT_PATH_RE = re.compile(r'(script-path=)(https?://[^,\s]+)', re.I)
-MODULE_GLOBS = ('*.module', '*.sgmodule')
+MODULE_GLOBS = ('*.module', '*.sgmodule', '*.srmodule')
 
 _GITHUB_BLOB_RE = re.compile(
     r'^https://github\.com/([^/]+)/([^/]+)/blob/([^/]+)/(.*)$', re.I

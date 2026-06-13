@@ -1,5 +1,5 @@
 # === 直连/混合 FINAL 配置专用：按域名将 UDP 降级为 TCP（不走 PROXY 的流量不会被上方全局规则命中） ===
-# YouTube 播放依赖 googlevideo QUIC/UDP，此处不得 REJECT；去广告请单独启用 module/YouTubeAd.sgmodule。
+# YouTube 播放依赖 googlevideo QUIC/UDP，此处不得 REJECT；去广告请单独启用 module/YouTubeNoAd.sgmodule。
 
 # === Twitter/X：UDP 降级，避免客户端刷不出时间线 ===
 AND,((DOMAIN-SUFFIX,twimg.com), (PROTOCOL,UDP)),REJECT
