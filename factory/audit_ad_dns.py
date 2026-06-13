@@ -3,7 +3,7 @@
 
 from __future__ import annotations
 
-from ad import _DOMAIN_RE, _load_ignore, _strip_host
+from ad import _DOMAIN_RE, _load_ignore, _strip_host, domain_set_covers
 from ad_filters import fetch_cats_team_dns, iter_filter_rules, should_skip_scoped_options, split_rule_options
 from build_util import RESULTANT_DIR, log, read_entries
 from idna_util import is_ip_host, normalize_hostname
@@ -46,7 +46,7 @@ def _eligible_plain_hosts() -> tuple[list[str], list[tuple[str, str]]]:
             continue
 
         expected.append(normalized)
-        if normalized.lower() not in ad_set:
+        if not domain_set_covers(normalized, ad_set):
             missing.append((row, normalized))
 
     return expected, missing

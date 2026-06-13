@@ -30,6 +30,30 @@ _KEYWORD_LITERAL_RE = re.compile(r'^[a-zA-Z0-9_-]{3,}$')
 _HOST_UNSAFE_RE = re.compile(r'[/^:|]')
 
 
+def to_domain_set_line(domain: str) -> str:
+    """DOMAIN-SET 行：前导 `.` 表示匹配自身及全部子域（等同 AdGuard `||domain^`）。"""
+    if is_ip_host(domain):
+        return domain
+    bare = domain.lower().strip('.')
+    return f'.{bare}'
+
+
+def domain_set_covers(host: str, entries: set[str]) -> bool:
+    """请求域名是否被 ad.set 中任一条 DOMAIN-SET 规则覆盖。"""
+    h = host.lower().strip('.')
+    if not h:
+        return False
+    if h in entries or f'.{h}' in entries:
+        return True
+    for entry in entries:
+        if not entry.startswith('.'):
+            continue
+        suffix = entry[1:]
+        if h == suffix or h.endswith('.' + suffix):
+            return True
+    return False
+
+
 def _load_ignore() -> set[str]:
     path = RESULTANT_DIR / 'ad_ignore.list'
     if not path.is_file():
@@ -111,7 +135,7 @@ def _parse_row(
 
 
 def _write_plain_set(path, header: str, items: Set[str]) -> int:
-    lines = sorted(items)
+    lines = sorted(to_domain_set_line(item) for item in items)
     body = header.rstrip('\n') + '\n' + '\n'.join(lines) + '\n'
     atomic_write(path, body)
     return len(lines)
@@ -142,7 +166,8 @@ def build() -> dict:
 
     domain_count = _write_plain_set(
         RESULTANT_DIR / 'ad.set',
-        header_common + '\n# format: one hostname per line (DOMAIN-SET)',
+        header_common
+        + '\n# format: .domain = suffix match (self + subdomains, DOMAIN-SET)',
         domains,
     )
     wildcard_hosts = sorted(f'{pattern} = 0.0.0.0' for pattern in host_patterns)
@@ -158,9 +183,13 @@ def build() -> dict:
         keywords,
     )
 
-    # 兼容旧引用与 build_summary 统计
+    # 兼容旧引用与 build_summary 统计（与 ad.set 相同 .domain 格式）
     legacy_header = header_common + '\n# legacy ad.list mirror of ad.set'
-    write_list(RESULTANT_DIR / 'ad.list', legacy_header, domains)
+    write_list(
+        RESULTANT_DIR / 'ad.list',
+        legacy_header,
+        {to_domain_set_line(item) for item in domains},
+    )
 
     write_corrections_log(
         str(RESULTANT_DIR / 'idna_corrections.log'),

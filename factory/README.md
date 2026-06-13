@@ -51,7 +51,7 @@ GFWList 不能无损转换为 SR 规则，所以这里是对 GFWList 的补充�
 
 **resultant/ad.set**
 
-广告域名集合，由 `ad.py` 从 Cats-Team dns.txt 生成；release 分支同步后供 conf 的 `DOMAIN-SET` 外链订阅。
+广告域名集合，由 `ad.py` 从 Cats-Team dns.txt 生成；每行 `.domain` 表示 DOMAIN-SET 后缀匹配（自身 + 全部子域，等同 AdGuard `||domain^`）。
 
 **resultant/ad.list**
 

@@ -7,6 +7,7 @@ import time
 from functools import lru_cache
 from pathlib import Path
 
+from ad import domain_set_covers
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log, read_entries
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
 from publish_urls import AD_DOMAIN_SET_URL, RELEASE_RAW_BASE
@@ -225,7 +226,7 @@ def _manual_reject_rules_string() -> tuple[str, int]:
             content = content[5:].strip()
         if content and not is_ip_host(content) and ('.' in content or not content.isascii()):
             normalized = normalize_hostname(content, source='manual_reject')
-            if normalized is not None and normalized.lower() in ad_set:
+            if normalized is not None and domain_set_covers(normalized, ad_set):
                 skipped += 1
                 continue
         rule = _rule_line_from_plain_entry(line, 'Reject')
