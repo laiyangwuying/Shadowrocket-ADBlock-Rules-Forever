@@ -1,6 +1,6 @@
-# Cats-Team AdRules dns.txt @ 2026-06-13 05:36:43
+# Cats-Team AdRules dns.txt @ 2026-06-13 13:44:44
 # source: https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/dns.txt
-# dns.txt 通配符 → [Host] 解析拦截
+# dns.txt 通配符 ||*...^
 *-ad-sign.byteimg.com = 0.0.0.0
 *-ad.a.yximgs.com = 0.0.0.0
 *-applog.fqnovel.com = 0.0.0.0

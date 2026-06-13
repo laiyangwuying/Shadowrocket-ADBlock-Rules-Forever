@@ -7,7 +7,7 @@ import time
 from functools import lru_cache
 from pathlib import Path
 
-from ad import domain_set_covers
+from ad import dns_rule_covers, read_host_wildcard_patterns
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log, read_entries
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
 from publish_urls import AD_DOMAIN_SET_URL, RELEASE_RAW_BASE
@@ -212,6 +212,7 @@ def _adblock_mitm_hosts() -> str:
 
 def _manual_reject_rules_string() -> tuple[str, int]:
     ad_set = {entry.lower() for entry in read_entries(RESULTANT_DIR / 'ad.set')}
+    host_wildcards = read_host_wildcard_patterns()
     lines_out: list[str] = []
     skipped = 0
     for raw in (FACTORY_ROOT / 'manual_reject.txt').read_text(encoding='utf-8').splitlines():
@@ -226,7 +227,9 @@ def _manual_reject_rules_string() -> tuple[str, int]:
             content = content[5:].strip()
         if content and not is_ip_host(content) and ('.' in content or not content.isascii()):
             normalized = normalize_hostname(content, source='manual_reject')
-            if normalized is not None and domain_set_covers(normalized, ad_set):
+            if normalized is not None and dns_rule_covers(
+                normalized, ad_set, host_wildcards
+            ):
                 skipped += 1
                 continue
         rule = _rule_line_from_plain_entry(line, 'Reject')

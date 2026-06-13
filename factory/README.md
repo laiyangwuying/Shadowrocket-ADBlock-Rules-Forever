@@ -51,7 +51,7 @@ GFWList 不能无损转换为 SR 规则，所以这里是对 GFWList 的补充�
 
 **resultant/ad.set**
 
-广告域名集合，由 `ad.py` 从 Cats-Team dns.txt 生成；每行 `.domain` 表示 DOMAIN-SET 后缀匹配（自身 + 全部子域，等同 AdGuard `||domain^`）。
+广告域名集合，由 `ad.py` 从 Cats-Team dns.txt 生成；`||domain^`/`||host^` 写为 `.domain`（DOMAIN-SET 后缀匹配）。
 
 **resultant/ad.list**
 
@@ -59,7 +59,13 @@ legacy 镜像，与 `ad.set` 内容一致，仅供旧引用与统计。
 
 **ad.py**
 
-脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 生成 `ad.set`（DOMAIN-SET）、`ad_host_wildcard.set`（[Host]）与 `ad_keyword.list`（DOMAIN-KEYWORD）。明文 `||` 域名全量写入 `ad.set`；构建后由 `audit_ad_dns.py` 校验覆盖率。
+脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 按 AdGuard 语义生成：
+
+- `||domain^` / `||host^` → `ad.set` 行 `.domain`（DOMAIN-SET，自身+子域）
+- `||.domain^` → `ad_host_wildcard.set` 行 `*.domain`（[Host]，仅子域不含根域）
+- `||*...^` 通配符 → `ad_host_wildcard.set`；`/^keyword\./` → `ad_keyword.list`
+
+构建后由 `audit_ad_dns.py` 校验覆盖率。
 
 -----------------------------------
 
