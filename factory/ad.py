@@ -11,7 +11,6 @@ import re
 import time
 from typing import Set
 
-from ad_block_util import is_dedicated_module_host
 from ad_filters import (
     CATS_TEAM_DNS_URL,
     fetch_cats_team_dns,
@@ -103,10 +102,6 @@ def _parse_row(
     normalized = normalize_hostname(body, source='ad')
     if normalized is None:
         return 1
-    if is_dedicated_module_host(normalized):
-        if stats is not None:
-            stats['dedicated_skipped'] = stats.get('dedicated_skipped', 0) + 1
-        return 0
 
     if is_ip_host(normalized):
         domains.add(normalized)
@@ -139,7 +134,6 @@ def build() -> dict:
             row, domains, host_patterns, keywords, ignore, parse_stats
         )
 
-    domains = {d for d in domains if not is_dedicated_module_host(d)}
     stamp = time.strftime('%Y-%m-%d %H:%M:%S')
     header_common = (
         f'# Cats-Team AdRules dns.txt @ {stamp}\n'
@@ -178,14 +172,12 @@ def build() -> dict:
         f'{keyword_count} keywords, {idna_skipped} idna-skipped'
     )
     pipe_eligible = parse_stats.get('pipe_eligible', 0)
-    dedicated_skipped = parse_stats.get('dedicated_skipped', 0)
     scoped_skipped = parse_stats.get('scoped_skipped', 0)
     coverage_gap = max(
         0,
         pipe_eligible
         - domain_count
         - len(host_patterns)
-        - dedicated_skipped
         - idna_skipped,
     )
     return {
@@ -195,7 +187,6 @@ def build() -> dict:
         'idna_skipped': idna_skipped,
         'dns_rule_lines': dns_rule_lines,
         'pipe_eligible': pipe_eligible,
-        'dedicated_skipped': dedicated_skipped,
         'scoped_skipped': scoped_skipped,
         'coverage_gap': coverage_gap,
     }

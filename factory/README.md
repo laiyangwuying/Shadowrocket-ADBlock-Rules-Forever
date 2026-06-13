@@ -59,7 +59,7 @@ legacy 镜像，与 `ad.set` 内容一致，仅供旧引用与统计。
 
 **ad.py**
 
-脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 生成 `ad.set`（DOMAIN-SET）、`ad_host_wildcard.set`（[Host]）与 `ad_keyword.list`（DOMAIN-KEYWORD）。
+脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 生成 `ad.set`（DOMAIN-SET）、`ad_host_wildcard.set`（[Host]）与 `ad_keyword.list`（DOMAIN-KEYWORD）。明文 `||` 域名全量写入 `ad.set`；构建后由 `audit_ad_dns.py` 校验覆盖率。
 
 -----------------------------------
 

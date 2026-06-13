@@ -13,6 +13,7 @@ from build_util import RESULTANT_DIR, atomic_write, log, read_entries, run_paral
 import ad
 import ad_cats_team
 import ad_module
+import audit_ad_dns
 import build_confs
 import fetch_vendor_modules
 import gfwlist
@@ -44,9 +45,9 @@ def _write_build_summary(stats: dict, elapsed: float) -> None:
         f'ad idna skipped: {ad.get("idna_skipped", 0)}',
         f'ad dns rule lines: {ad.get("dns_rule_lines", 0)}',
         f'ad pipe eligible: {ad.get("pipe_eligible", 0)}',
-        f'ad dedicated skipped: {ad.get("dedicated_skipped", 0)}',
         f'ad scoped skipped: {ad.get("scoped_skipped", 0)}',
         f'ad coverage gap: {_coverage_gap(ad)}',
+        f'ad dns audit missing: {(stats.get("audit_ad_dns") or {}).get("missing_count", 0)}',
         f'manual_reject skipped (in ad.set): {bc.get("manual_reject_skipped", 0)}',
         f'cats-team rewrite: {(stats.get("ad_cats_team") or {}).get("rewrites", 0)}',
         f'gfw entries: {(stats.get("gfwlist") or {}).get("rules", 0)}',
@@ -102,6 +103,9 @@ def main(argv: list[str] | None = None) -> int:
         stats['parallel_sec'] = time.perf_counter() - t_p
         log(f'[ad+gfwlist] parallel done in {stats["parallel_sec"]:.1f}s')
 
+    stats['audit_ad_dns'] = audit_ad_dns.audit()
+    audit_missing = stats['audit_ad_dns'].get('missing_count', 0)
+
     stats['ad_cats_team'] = ad_cats_team.build()
     stats['ad_module'] = ad_module.build()
     stats['build_confs'] = build_confs.build()
@@ -118,6 +122,9 @@ def main(argv: list[str] | None = None) -> int:
     elapsed = time.perf_counter() - t0
     _write_build_summary(stats, elapsed)
     log(f'=== build finished in {elapsed:.1f}s ===')
+    if audit_missing:
+        log(f'ERROR: ad.set missing {audit_missing} plain dns.txt hosts')
+        return 1
     return 1 if gap > _AD_COVERAGE_GAP_THRESHOLD else 0
 
 
