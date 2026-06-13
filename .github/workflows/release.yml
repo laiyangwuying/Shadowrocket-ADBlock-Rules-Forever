@@ -36,12 +36,15 @@ jobs:
 
       - name: Move files
         run: |
+          set -euo pipefail
           cd build || exit 1
           cp *.conf ../release/
           cp -r figure ../release/
           cp -r module ../release/ 2>/dev/null || true
           mkdir -p ../release/factory/resultant
+          test -f factory/resultant/ad.set
           cp factory/resultant/ad.set ../release/factory/resultant/
+          test -f ../release/factory/resultant/ad.set
           cp LICENSE ../release/
           cp readme.md ../release/
           cp -r .github ../release/
@@ -54,12 +57,15 @@ jobs:
 
       - name: Remove commits
         run: |
+          set -euo pipefail
           cd release || exit 1
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
+          test -f factory/resultant/ad.set
           git checkout --orphan latest_branch
           git add -A
-          git commit -am "Nightly build"
+          git status --short
+          git commit -m "Nightly build"
           git branch -D release
           git branch -m release
           git push -f origin release
