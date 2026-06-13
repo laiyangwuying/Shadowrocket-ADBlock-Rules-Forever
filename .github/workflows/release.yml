@@ -43,10 +43,10 @@ jobs:
           cp -r module ../release/ 2>/dev/null || true
           mkdir -p ../release/factory/resultant
           test -f factory/resultant/ad.rule-set
-          cp factory/resultant/ad.rule-set ../release/factory/resultant/
-          test -f ../release/factory/resultant/ad.rule-set
           test -f factory/resultant/ad.set
-          cp factory/resultant/ad.set ../release/factory/resultant/
+          cp -f factory/resultant/ad.rule-set factory/resultant/ad.set ../release/factory/resultant/
+          test -s ../release/factory/resultant/ad.rule-set
+          test -s ../release/factory/resultant/ad.set
           cp LICENSE ../release/
           cp readme.md ../release/
           cp -r .github ../release/
@@ -64,10 +64,12 @@ jobs:
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           test -f factory/resultant/ad.rule-set
+          test -s factory/resultant/ad.rule-set
           test -f factory/resultant/ad.set
           git checkout --orphan latest_branch
           git add -A
           git status --short
+          test -f factory/resultant/ad.rule-set || (echo 'FATAL: ad.rule-set missing before commit' && exit 1)
           git commit -m "Nightly build"
           git branch -D release
           git branch -m release
