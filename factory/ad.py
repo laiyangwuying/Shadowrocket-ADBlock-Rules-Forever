@@ -23,6 +23,7 @@ from ad_filters import (
 )
 from build_util import RESULTANT_DIR, atomic_write, log, read_entries, write_list
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
+from sr_policy import REJECT_EXTS
 
 _DOMAIN_RE = re.compile(
     r'^\.?[a-zA-Z0-9][-a-zA-Z0-9]{0,62}'
@@ -51,23 +52,23 @@ class DnsOutputs:
 
 def to_rule_set_suffix(domain: str) -> str:
     """AdGuard `||domain^` → DOMAIN-SUFFIX（匹配自身及全部子域）。"""
-    return f'DOMAIN-SUFFIX,{domain.lower().strip(".")},REJECT'
+    return f'DOMAIN-SUFFIX,{domain.lower().strip(".")},REJECT{REJECT_EXTS}'
 
 
 def to_rule_set_exact(domain: str) -> str:
     """AdGuard `127.0.0.1 domain` → DOMAIN（仅精确匹配）。"""
-    return f'DOMAIN,{domain.lower().strip(".")},REJECT'
+    return f'DOMAIN,{domain.lower().strip(".")},REJECT{REJECT_EXTS}'
 
 
 def to_rule_set_ip(ip: str) -> str:
     host = ip.split('/')[0]
     if ':' in host:
-        return f'IP-CIDR,{ip if "/" in ip else ip + "/128"},REJECT,no-resolve'
-    return f'IP-CIDR,{ip if "/" in ip else ip + "/32"},REJECT,no-resolve'
+        return f'IP-CIDR,{ip if "/" in ip else ip + "/128"},REJECT,no-resolve{REJECT_EXTS}'
+    return f'IP-CIDR,{ip if "/" in ip else ip + "/32"},REJECT,no-resolve{REJECT_EXTS}'
 
 
 def to_rule_set_wildcard(pattern: str) -> str:
-    return f'DOMAIN-WILDCARD,{pattern.lower()},REJECT'
+    return f'DOMAIN-WILDCARD,{pattern.lower()},REJECT{REJECT_EXTS}'
 
 
 def to_subdomain_only_host_pattern(domain: str) -> str:

@@ -11,6 +11,7 @@ from ad import dns_outputs_covers, load_rule_set_coverage
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, log, read_entries
 from idna_util import drain_corrections, is_ip_host, normalize_hostname, write_corrections_log
 from publish_urls import AD_RULE_SET_URL, RELEASE_RAW_BASE
+from sr_policy import REJECT_EXTS, normalize_policy, policy_suffix
 
 REPO_ROOT = FACTORY_ROOT.parent
 TEMPLATE_DIR = FACTORY_ROOT / 'template'
@@ -109,10 +110,10 @@ def _count_ad_host_lines() -> int:
 def _ad_rules_string() -> str:
     lines = [
         '# Cats-Team AdRules dns.txt → RULE-SET(DOMAIN-SUFFIX) + 正则关键词\n',
-        f'RULE-SET,{AD_RULE_SET_URL},REJECT\n',
+        f'RULE-SET,{AD_RULE_SET_URL},REJECT{REJECT_EXTS}\n',
     ]
     for kw in read_entries(RESULTANT_DIR / 'ad_keyword.list'):
-        lines.append(f'DOMAIN-KEYWORD,{kw},REJECT\n')
+        lines.append(f'DOMAIN-KEYWORD,{kw},REJECT{REJECT_EXTS}\n')
     return ''.join(lines)
 
 
@@ -144,7 +145,11 @@ def _rule_line_from_plain_entry(content: str, kind: str) -> str | None:
     elif '.' not in content and len(content) > 1:
         prefix = 'DOMAIN-KEYWORD'
 
-    return f'{prefix},{content},{kind}\n'
+    policy = normalize_policy(kind)
+    extras = policy_suffix(kind)
+    if prefix == 'IP-CIDR' and ':' in content.split('/')[0]:
+        prefix = 'IP-CIDR6'
+    return f'{prefix},{content},{policy}{extras}\n'
 
 
 def _rules_string_from_file(path: str | Path, kind: str) -> str:

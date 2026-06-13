@@ -14,6 +14,7 @@ import ad
 import ad_cats_team
 import ad_module
 import audit_ad_dns
+import audit_sr
 import build_confs
 import fetch_vendor_modules
 import gfwlist
@@ -48,6 +49,7 @@ def _write_build_summary(stats: dict, elapsed: float) -> None:
         f'ad scoped skipped: {ad.get("scoped_skipped", 0)}',
         f'ad coverage gap: {_coverage_gap(ad)}',
         f'ad dns audit missing: {(stats.get("audit_ad_dns") or {}).get("missing_count", 0)}',
+        f'sr compliance issues: {(stats.get("audit_sr") or {}).get("issue_count", 0)}',
         f'manual_reject skipped (in rule-set): {bc.get("manual_reject_skipped", 0)}',
         f'cats-team rewrite: {(stats.get("ad_cats_team") or {}).get("rewrites", 0)}',
         f'gfw entries: {(stats.get("gfwlist") or {}).get("rules", 0)}',
@@ -106,6 +108,9 @@ def main(argv: list[str] | None = None) -> int:
     stats['audit_ad_dns'] = audit_ad_dns.audit()
     audit_missing = stats['audit_ad_dns'].get('missing_count', 0)
 
+    stats['audit_sr'] = audit_sr.audit()
+    audit_sr_issues = stats['audit_sr'].get('issue_count', 0)
+
     stats['ad_cats_team'] = ad_cats_team.build()
     stats['ad_module'] = ad_module.build()
     stats['build_confs'] = build_confs.build()
@@ -124,6 +129,9 @@ def main(argv: list[str] | None = None) -> int:
     log(f'=== build finished in {elapsed:.1f}s ===')
     if audit_missing:
         log(f'ERROR: ad.rule-set missing {audit_missing} dns.txt outputs')
+        return 1
+    if audit_sr_issues:
+        log(f'ERROR: Shadowrocket compliance audit failed ({audit_sr_issues} issues)')
         return 1
     return 1 if gap > _AD_COVERAGE_GAP_THRESHOLD else 0
 
