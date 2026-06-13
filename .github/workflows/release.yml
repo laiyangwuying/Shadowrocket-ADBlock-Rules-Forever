@@ -1,26 +1,26 @@
 name: Release Shadowrocket Rules
 
 on:
-  push:
-    branches:
-      - build
-    paths-ignore: 
-      - '**.md'
-      - 'LICENSE'
-      
-  pull_request_target:
-    branches:
-      - build
-    paths-ignore: 
-      - '**.md'
-      - 'LICENSE'
+  workflow_run:
+    workflows: ['Build Shadowrocket Rules']
+    types: [completed]
+    branches: [build]
 
   workflow_dispatch:
-  
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
 jobs:
   Release:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
-    # 避免 Node 20 弃用告警；与 github.blog 2025-09-19 指引一致
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
@@ -34,30 +34,24 @@ jobs:
           ref: release
           path: release
 
-      - name: Install requirements
-        run: pip3 install -r build/requirements.txt
-
-      - name: Build Rules
-        run: |
-          cd build || exit 1
-          ./factory/auto_build.sh
-      
       - name: Move files
         run: |
           cd build || exit 1
           cp *.conf ../release/
           cp -r figure ../release/
           cp -r module ../release/ 2>/dev/null || true
+          mkdir -p ../release/factory/resultant
+          cp factory/resultant/ad.set ../release/factory/resultant/
           cp LICENSE ../release/
           cp readme.md ../release/
           cp -r .github ../release/
-      
+
       - name: Update lazy rules
         run: |
           cd release || exit 1
           rm -f lazy.conf lazy_group.conf
           cp ../build/factory/lazy/lazy.conf ../build/factory/lazy/lazy_group.conf .
-        
+
       - name: Remove commits
         run: |
           cd release || exit 1

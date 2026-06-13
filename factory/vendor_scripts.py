@@ -10,7 +10,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlparse
 
 from build_util import FACTORY_ROOT, RESULTANT_DIR, atomic_write, fetch_text, log
-from publish_urls import RELEASE_RAW_BASE
+from publish_urls import BUILD_RAW_BASE
 
 REPO_ROOT = FACTORY_ROOT.parent
 SCRIPTS_ROOT = REPO_ROOT / 'scripts'
@@ -72,11 +72,11 @@ def _local_relpath(url: str) -> str:
 
 
 def _mirrored_url(rel_path: str) -> str:
-    return RELEASE_RAW_BASE + rel_path.replace('\\', '/')
+    return BUILD_RAW_BASE + rel_path.replace('\\', '/')
 
 
 def _is_mirrored_url(url: str) -> bool:
-    prefix = RELEASE_RAW_BASE + 'scripts/'
+    prefix = BUILD_RAW_BASE + 'scripts/'
     return url.startswith(prefix)
 
 

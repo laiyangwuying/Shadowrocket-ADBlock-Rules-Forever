@@ -35,29 +35,31 @@ GFWList 不能无损转换为 SR 规则，所以这里是对 GFWList 的补充�
 
 ## 代码及自动生成的文件
 
-**resultant/top50_direct.list** 
+**resultant/top500_direct.list**
 
-域名列表，由 `top500.py` 自动生成。记录着前 50 网站中所有可直连网站的域名。
+域名列表，静态备份（2022-05）。原由 `top500.py` 自动生成，因排名数据源失效已不再更新。
 
-**resultant/top50_proxy.list** 
+**resultant/top500_proxy.list**
 
-域名列表，由 `top500.py` 自动生成。记录着前 50 网站中无法直连网站的域名。
-
-其中未包括含有 `google` 关键字的域名，并且首页请求时间大于 10 秒也视为无法直连。
+域名列表，静态备份（2022-05）。原由 `top500.py` 自动生成，因排名数据源失效已不再更新。
 
 **top500.py**
 
-脚本，运行所需时间较长。自动爬取生成 `top500_*.list` 文件。
+脚本已停用（站长之家 top500 源不可用）。保留代码供日后恢复；当前构建直接使用 `resultant/top500_*.list` 静态文件。
 
 -----------------------------------
 
+**resultant/ad.set**
+
+广告域名集合，由 `ad.py` 从 Cats-Team dns.txt 生成；release 分支同步后供 conf 的 `DOMAIN-SET` 外链订阅。
+
 **resultant/ad.list**
 
-广告列表，由 `ad.py` 自动生成。包括所有需要屏蔽的广告服务器的域名和 IP。
+legacy 镜像，与 `ad.set` 内容一致，仅供旧引用与统计。
 
 **ad.py**
 
-脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 提取广告域名至 `ad.list`（供 conf 的 `DOMAIN,Reject` 规则）。
+脚本，从 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 生成 `ad.set`（DOMAIN-SET）、`ad_host_wildcard.set`（[Host]）与 `ad_keyword.list`（DOMAIN-KEYWORD）。
 
 -----------------------------------
 

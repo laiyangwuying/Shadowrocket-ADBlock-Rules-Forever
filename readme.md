@@ -22,7 +22,7 @@
 
 - 黑名单由最新版 [GFWList](https://github.com/gfwlist/gfwlist) 自动转换；
 - 加入 [Greatfire Analyzer](https://github.com/Loyalsoldier/cn-blocked-domain) 检测到的屏蔽域名；
-- 自动转换最新版本的 `EasyList`, `Eaylist China`, `Peter Lowe 广告和隐私跟踪域名`，`乘风规则` 为 SR 规则，全面去除广告且去除重复；
+- 广告域名由 [Cats-Team AdRules dns.txt](https://github.com/Cats-Team/AdRules/blob/main/dns.txt) 构建，conf 通过 `DOMAIN-SET` 引用 release 分支上的 [`ad.set`](https://raw.githubusercontent.com/laiyangwuying/Shadowrocket-ADBlock-Rules-Forever/refs/heads/release/factory/resultant/ad.set)；App 内广告由 [`AdBlock.module`](module/AdBlock.module) 加载 Cats-Team adblock.txt 的 URL Rewrite；
 - 包括自定义的广告过滤规则，针对 iOS 端的网页广告、App 广告和视频广告；
 - 提供多个规则文件供大家自由选择或者自由切换使用；
 - 专门针对 ShadowRocket 开发，可以保证与 SR 的兼容性；
@@ -318,9 +318,7 @@ INTP | Jack of all trades | I use Arch BTW
 ### 本项目引用：  
 [gfwlist](https://github.com/gfwlist/gfwlist)  
 [Greatfire Analyzer](https://github.com/Loyalsoldier/cn-blocked-domain)   
-[乘风广告过滤规则](https://github.com/xinggsf/Adblock-Plus-Rule)  
-[EasyList China](https://adblockplus.org/)  
-[Peter Lowe 广告和隐私跟踪域名](https://pgl.yoyo.org/)   
+[Cats-Team AdRules](https://github.com/Cats-Team/AdRules)（dns.txt + adblock.txt）  
 [blackmatrix7/ios_rule_script](https://github.com/blackmatrix7/ios_rule_script)  
 
 ## Stargazers over time

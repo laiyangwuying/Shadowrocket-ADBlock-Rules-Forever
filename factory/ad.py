@@ -27,6 +27,7 @@ _DOMAIN_RE = re.compile(
     r'(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})*\.[a-zA-Z0-9][-a-zA-Z0-9]{1,}$'
 )
 _REGEX_KEYWORD_RE = re.compile(r'^/\^(.+?)\\\.')
+_KEYWORD_LITERAL_RE = re.compile(r'^[a-zA-Z0-9_-]{3,}$')
 _HOST_UNSAFE_RE = re.compile(r'[/^:|]')
 
 
@@ -49,6 +50,7 @@ def _parse_row(
     host_patterns: Set[str],
     keywords: Set[str],
     ignore: set[str],
+    stats: dict[str, int] | None = None,
 ) -> int:
     """解析一行；返回 1 表示因 IDNA 无效而跳过。"""
     if row.startswith('@@'):
@@ -65,7 +67,7 @@ def _parse_row(
         m = _REGEX_KEYWORD_RE.match(row)
         if m:
             kw = m.group(1).replace('\\', '').strip()
-            if len(kw) >= 3 and kw not in ignore:
+            if _KEYWORD_LITERAL_RE.match(kw) and kw not in ignore:
                 keywords.add(kw)
         return 0
 
@@ -73,7 +75,11 @@ def _parse_row(
     if not pattern.startswith('||'):
         return 0
     if should_skip_scoped_options(opts):
+        if stats is not None:
+            stats['scoped_skipped'] = stats.get('scoped_skipped', 0) + 1
         return 0
+    if stats is not None:
+        stats['pipe_eligible'] = stats.get('pipe_eligible', 0) + 1
 
     body = _strip_host(pattern[2:])
     if not body or '/' in body:
@@ -98,6 +104,8 @@ def _parse_row(
     if normalized is None:
         return 1
     if is_dedicated_module_host(normalized):
+        if stats is not None:
+            stats['dedicated_skipped'] = stats.get('dedicated_skipped', 0) + 1
         return 0
 
     if is_ip_host(normalized):
@@ -122,9 +130,14 @@ def build() -> dict:
     host_patterns: Set[str] = set()
     keywords: Set[str] = set()
     idna_skipped = 0
+    dns_rule_lines = 0
+    parse_stats: dict[str, int] = {}
 
     for row in iter_filter_rules(rule):
-        idna_skipped += _parse_row(row, domains, host_patterns, keywords, ignore)
+        dns_rule_lines += 1
+        idna_skipped += _parse_row(
+            row, domains, host_patterns, keywords, ignore, parse_stats
+        )
 
     domains = {d for d in domains if not is_dedicated_module_host(d)}
     stamp = time.strftime('%Y-%m-%d %H:%M:%S')
@@ -164,11 +177,27 @@ def build() -> dict:
         f'ad: {domain_count} domains, {len(host_patterns)} host wildcards, '
         f'{keyword_count} keywords, {idna_skipped} idna-skipped'
     )
+    pipe_eligible = parse_stats.get('pipe_eligible', 0)
+    dedicated_skipped = parse_stats.get('dedicated_skipped', 0)
+    scoped_skipped = parse_stats.get('scoped_skipped', 0)
+    coverage_gap = max(
+        0,
+        pipe_eligible
+        - domain_count
+        - len(host_patterns)
+        - dedicated_skipped
+        - idna_skipped,
+    )
     return {
         'domains': domain_count,
         'host_patterns': len(host_patterns),
         'keywords': keyword_count,
         'idna_skipped': idna_skipped,
+        'dns_rule_lines': dns_rule_lines,
+        'pipe_eligible': pipe_eligible,
+        'dedicated_skipped': dedicated_skipped,
+        'scoped_skipped': scoped_skipped,
+        'coverage_gap': coverage_gap,
     }
 
 

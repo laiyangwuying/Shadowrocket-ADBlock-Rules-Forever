@@ -209,7 +209,33 @@ def _adblock_mitm_hosts() -> str:
     )
 
 
+def _manual_reject_rules_string() -> tuple[str, int]:
+    ad_set = {entry.lower() for entry in read_entries(RESULTANT_DIR / 'ad.set')}
+    lines_out: list[str] = []
+    skipped = 0
+    for raw in (FACTORY_ROOT / 'manual_reject.txt').read_text(encoding='utf-8').splitlines():
+        line = raw.strip()
+        if not line:
+            continue
+        if line.startswith('#'):
+            lines_out.append(line + '\n')
+            continue
+        content = line
+        if content.startswith('FULL:'):
+            content = content[5:].strip()
+        if content and not is_ip_host(content) and ('.' in content or not content.isascii()):
+            normalized = normalize_hostname(content, source='manual_reject')
+            if normalized is not None and normalized.lower() in ad_set:
+                skipped += 1
+                continue
+        rule = _rule_line_from_plain_entry(line, 'Reject')
+        if rule:
+            lines_out.append(rule)
+    return ''.join(lines_out), skipped
+
+
 def build() -> dict:
+    manual_reject, manual_reject_skipped = _manual_reject_rules_string()
     values = {
         'build_time': time.strftime('%Y-%m-%d %H:%M:%S'),
         'top500_proxy': _rules_string_from_file(RESULTANT_DIR / 'top500_proxy.list', 'Proxy'),
@@ -217,7 +243,7 @@ def build() -> dict:
         'ad': _ad_rules_string(),
         'manual_direct': _rules_string_from_file(FACTORY_ROOT / 'manual_direct.txt', 'Direct'),
         'manual_proxy': _rules_string_from_file(FACTORY_ROOT / 'manual_proxy.txt', 'Proxy'),
-        'manual_reject': _rules_string_from_file(FACTORY_ROOT / 'manual_reject.txt', 'Reject'),
+        'manual_reject': manual_reject,
         'gfwlist': _merged_gfw_rules_string('Proxy'),
         'adblock_rewrite_static': _adblock_rewrite_static(),
         'adblock_mitm_hosts': _adblock_mitm_hosts(),
@@ -248,13 +274,18 @@ def build() -> dict:
         f'ad entries: {len(read_entries(RESULTANT_DIR / "ad.set"))}\n'
         f'ad host lines: {_count_ad_host_lines()}\n'
         f'ad keywords: {len(read_entries(RESULTANT_DIR / "ad_keyword.list"))}\n'
+        f'manual_reject skipped (in ad.set): {manual_reject_skipped}\n'
         f'cats-team rewrite: {len(read_entries(RESULTANT_DIR / "cats_team_rewrite.list"))}\n'
         f'gfw entries: {len(read_entries(RESULTANT_DIR / "gfw.list"))}\n'
+        f'domain_set_url: {AD_DOMAIN_SET_URL}\n'
     )
     atomic_write(RESULTANT_DIR / 'build_summary.txt', summary)
 
     log(f'build_confs: wrote {len(written)} conf files')
-    return {'confs': len(written)}
+    return {
+        'confs': len(written),
+        'manual_reject_skipped': manual_reject_skipped,
+    }
 
 
 def main() -> int:
