@@ -1,0 +1,52 @@
+name: Build Shadowrocket Rules
+
+on:
+  schedule:
+    # 每日北京时间 8:00（UTC 23:00）
+    - cron: '0 23 * * *'
+
+  push:
+    branches:
+      - build
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      # 仓库默认分支为 release（无 factory/），定时任务须 checkout build 源码
+      - uses: actions/checkout@v6
+        with:
+          ref: build
+          fetch-depth: 0
+
+      - name: Install requirements
+        run: pip3 install -r requirements.txt
+
+      - name: Run build
+        run: ./factory/auto_build.sh
+
+      - name: Commit and push to build
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Nightly build"
+          git push
