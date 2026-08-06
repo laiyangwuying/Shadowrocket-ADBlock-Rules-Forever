@@ -1,4 +1,4 @@
-# Cats-Team AdRules dns.txt @ 2026-08-04 23:59:45
+# Cats-Team AdRules dns.txt @ 2026-08-05 23:57:18
 # source: https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/dns.txt
 # dns.txt 通配符 ||*...^
 *-ad-sign.byteimg.com = 0.0.0.0
@@ -345,6 +345,7 @@ stlog*-local.kakao.com = 0.0.0.0
 stun.*.kugou.com = 0.0.0.0
 t*.playdigo.live = 0.0.0.0
 t*.zcvh.net = 0.0.0.0
+tag-v*.kuzen.io = 0.0.0.0
 tblog-*.kgslb.com = 0.0.0.0
 telemetry*.transcend.io = 0.0.0.0
 telemetry.*.pvp.net = 0.0.0.0
