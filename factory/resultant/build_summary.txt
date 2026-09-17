@@ -1,21 +1,21 @@
-# build time: 2026-09-16 01:08:30
-total_sec: 395.7
-vendor_sec: 0.7
-vendor_scripts_sec: 0.5
-parallel_sec: 13.9
+# build time: 2026-09-17 01:10:33
+total_sec: 390.8
+vendor_sec: 0.8
+vendor_scripts_sec: 1.0
+parallel_sec: 14.2
 confs: 12
-ad entries: 199261
-ad host wildcards: 404
+ad entries: 199216
+ad host wildcards: 403
 ad keywords: 26
 ad idna skipped: 0
-ad dns rule lines: 199295
-ad pipe eligible: 199268
+ad dns rule lines: 199251
+ad pipe eligible: 199224
 ad scoped skipped: 0
-ad coverage gap: 7
+ad coverage gap: 8
 ad dns audit missing: 0
 sr compliance issues: 0
 manual_reject skipped (in rule-set): 176
-cats-team rewrite: 86922
+cats-team rewrite: 86695
 gfw entries: 26751
 vendor_scripts mapped: 3
 vendor_scripts modules rewritten: 2
