@@ -1,4 +1,4 @@
-# Cats-Team AdRules dns.txt @ 2026-10-01 01:47:49
+# Cats-Team AdRules dns.txt @ 2026-10-02 01:57:34
 # source: https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/dns.txt
 # dns.txt 通配符 ||*...^
 *-ad-sign.byteimg.com = 0.0.0.0
@@ -164,6 +164,7 @@ f-log-*.grammarly.io = 0.0.0.0
 fads*s.com = 0.0.0.0
 fads*z.com = 0.0.0.0
 fanpingbi*.gaokao.com = 0.0.0.0
+faro-collector-*.grafana-ops.net = 0.0.0.0
 faro-collector-prod-*.grafana.net = 0.0.0.0
 firebaselogging-*.googleapis.com = 0.0.0.0
 flurry.agentportal-*.yahoodns.net = 0.0.0.0
