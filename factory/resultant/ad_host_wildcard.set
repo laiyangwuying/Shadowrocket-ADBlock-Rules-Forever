@@ -1,4 +1,4 @@
-# Cats-Team AdRules dns.txt @ 2026-10-12 02:01:58
+# Cats-Team AdRules dns.txt @ 2026-10-13 03:20:18
 # source: https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/dns.txt
 # dns.txt 通配符 ||*...^
 *-ad-sign.byteimg.com = 0.0.0.0
@@ -78,6 +78,7 @@ analytics-*-nfl.yinzcam.com = 0.0.0.0
 analytics-ad-*.kgslb.com = 0.0.0.0
 analytics-rollout-*.amazonaws.com = 0.0.0.0
 analytics-v*.eip.telegraph.co.uk = 0.0.0.0
+analytics.*.adjust.com = 0.0.0.0
 analytics.*.sky.com = 0.0.0.0
 analyzer*.fc2.com = 0.0.0.0
 api*.amplitude.com = 0.0.0.0
