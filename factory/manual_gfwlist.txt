@@ -1,5 +1,6 @@
 # GFWList 不能无损转换为 SR 规则，所以这里是对 GFWList 的补充
 # 后缀匹配默认 DOMAIN-SUFFIX；需要「仅在完整主机名匹配」时请写前缀 FULL: 例如 FULL:www.example.com
+# 无点条目（如 google）视为顶级域；确需关键词匹配时写 KEYWORD:google（会覆盖所有含该词的域名，慎用）
 
 tampermonkey.net
 greasyfork.org
@@ -70,8 +71,8 @@ netfilter.org
 i-scmp.com
 search.xxx
 50.7.31.230
-blogspot
-google
+KEYWORD:blogspot
+KEYWORD:google
 akamaihd.net
 azurewebsites.net
 # /twimg\.edgesuite\.net\/\/?appledaily
@@ -84,7 +85,6 @@ picturedip.com
 uchicago.edu
 xda-developers.com
 # google.*/falun
-phobos
 # q=freedom
 # q%3Dfreedom
 # search*safeweb

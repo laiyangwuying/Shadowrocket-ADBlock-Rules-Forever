@@ -121,6 +121,15 @@ def _rule_line_from_plain_entry(content: str, kind: str) -> str | None:
     if not content:
         return None
 
+    policy = normalize_policy(kind)
+    extras = policy_suffix(kind)
+
+    if content.startswith('KEYWORD:'):
+        keyword = content[8:].strip().lower()
+        if not keyword:
+            return None
+        return f'DOMAIN-KEYWORD,{keyword},{policy}{extras}\n'
+
     prefix = 'DOMAIN-SUFFIX'
     if content.startswith('FULL:'):
         prefix = 'DOMAIN'
@@ -142,11 +151,10 @@ def _rule_line_from_plain_entry(content: str, kind: str) -> str | None:
                 content += '/128'
         elif '/' not in content:
             content += '/32'
-    elif '.' not in content and len(content) > 1:
-        prefix = 'DOMAIN-KEYWORD'
+    else:
+        # 无点条目（如 apple、google）是顶级域，按后缀匹配；写成关键词会吞掉 apple.com 等直连域名
+        content = content.lower()
 
-    policy = normalize_policy(kind)
-    extras = policy_suffix(kind)
     if prefix == 'IP-CIDR' and ':' in content.split('/')[0]:
         prefix = 'IP-CIDR6'
     return f'{prefix},{content},{policy}{extras}\n'

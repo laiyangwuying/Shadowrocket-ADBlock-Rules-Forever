@@ -84,6 +84,71 @@ def _issues_from_modules() -> list[str]:
     return issues
 
 
+def _manual_direct_hosts() -> list[str]:
+    hosts: list[str] = []
+    for raw in (FACTORY_ROOT / 'manual_direct.txt').read_text(encoding='utf-8').splitlines():
+        line = raw.strip()
+        if not line or line.startswith('#') or line.startswith('KEYWORD:'):
+            continue
+        if line.startswith('FULL:'):
+            line = line[5:].strip()
+        if '.' in line and not line.replace('.', '').replace('/', '').isdigit() and ':' not in line:
+            hosts.append(line.lower())
+    return hosts
+
+
+def _confs_with_manual_direct() -> list[str]:
+    return sorted(
+        path.stem
+        for path in (FACTORY_ROOT / 'template').glob('sr_*.txt')
+        if '{{manual_direct}}' in path.read_text(encoding='utf-8')
+    )
+
+
+def _issues_from_shadowed_direct(path: Path, hosts: list[str]) -> list[str]:
+    """按 Shadowrocket 自上而下首条命中，检查 manual_direct 是否被非 DIRECT 规则抢先匹配。"""
+    exact: dict[str, tuple[int, str]] = {}
+    suffix: dict[str, tuple[int, str]] = {}
+    keywords: list[tuple[int, str, str]] = []
+    in_rule = False
+    for idx, raw in enumerate(path.read_text(encoding='utf-8').splitlines()):
+        s = raw.strip()
+        if s.startswith('['):
+            in_rule = s == '[Rule]'
+            continue
+        if not in_rule or not s or s.startswith('#'):
+            continue
+        parts = [p.strip() for p in s.split(',')]
+        if len(parts) < 3 or parts[2].upper() == 'REJECT':
+            continue
+        kind, value, policy = parts[0].upper(), parts[1].lower(), parts[2].upper()
+        entry = (idx, f'{kind},{value},{policy}')
+        if kind == 'DOMAIN':
+            exact.setdefault(value, entry)
+        elif kind == 'DOMAIN-SUFFIX':
+            suffix.setdefault(value, entry)
+        elif kind == 'DOMAIN-KEYWORD':
+            keywords.append((idx, value, entry[1]))
+
+    issues: list[str] = []
+    for host in hosts:
+        candidates: list[tuple[int, str]] = []
+        if host in exact:
+            candidates.append(exact[host])
+        labels = host.split('.')
+        for i in range(len(labels)):
+            hit = suffix.get('.'.join(labels[i:]))
+            if hit:
+                candidates.append(hit)
+        candidates.extend((idx, rule) for idx, kw, rule in keywords if kw in host)
+        if not candidates:
+            continue
+        _, first = min(candidates)
+        if not first.endswith(',DIRECT'):
+            issues.append(f'{path.name}: manual_direct {host} 被 {first} 抢先匹配')
+    return issues
+
+
 def _issues_from_head_template() -> list[str]:
     path = FACTORY_ROOT / 'template' / 'sr_head.txt'
     text = path.read_text(encoding='utf-8')
@@ -103,6 +168,11 @@ def audit(*, max_log: int = 15) -> dict:
         conf = REPO_ROOT / f'{name}.conf'
         if conf.is_file():
             issues.extend(_issues_from_conf(conf))
+    direct_hosts = _manual_direct_hosts()
+    for name in _confs_with_manual_direct():
+        conf = REPO_ROOT / f'{name}.conf'
+        if conf.is_file():
+            issues.extend(_issues_from_shadowed_direct(conf, direct_hosts))
     issues.extend(_issues_from_modules())
 
     result = {
@@ -116,7 +186,7 @@ def audit(*, max_log: int = 15) -> dict:
         if len(issues) > max_log:
             log(f'  ... and {len(issues) - max_log} more')
     else:
-        log('audit_sr: ok (RULE-SET/pre-matching/MITM %APPEND%/General 参数)')
+        log('audit_sr: ok (RULE-SET/pre-matching/MITM %APPEND%/General 参数/manual_direct 优先级)')
     return result
 
 

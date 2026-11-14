@@ -113,12 +113,12 @@ def main(argv: list[str] | None = None) -> int:
     stats['audit_ad_dns'] = audit_ad_dns.audit()
     audit_missing = stats['audit_ad_dns'].get('missing_count', 0)
 
-    stats['audit_sr'] = audit_sr.audit()
-    audit_sr_issues = stats['audit_sr'].get('issue_count', 0)
-
     stats['ad_cats_team'] = ad_cats_team.build()
     stats['ad_module'] = ad_module.build()
     stats['build_confs'] = build_confs.build()
+
+    stats['audit_sr'] = audit_sr.audit()
+    audit_sr_issues = stats['audit_sr'].get('issue_count', 0)
     stats['lazy'] = lazy_deploy.publish()
     stats['qr_figure'] = qr_figure.build()
 

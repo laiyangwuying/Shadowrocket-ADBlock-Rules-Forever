@@ -12,6 +12,10 @@
 
 ## 手工配置的文件
 
+列表条目语法：`example.com` → `DOMAIN-SUFFIX`；`FULL:www.example.com` → `DOMAIN`；`KEYWORD:google` → `DOMAIN-KEYWORD`。无点条目（如 `apple`、`google`）视为顶级域，按 `DOMAIN-SUFFIX` 处理，不会再生成会吞掉 `apple.com` 的关键词规则。
+
+规则优先级：`manual_reject` / 广告 → `manual_direct` → `manual_proxy` → gfwlist / top500。`audit_sr.py` 会模拟 Shadowrocket 首条命中，若 `manual_direct` 中的域名被非直连规则抢先匹配，构建失败。
+
 **manual_direct.txt**
 
 列表，手动编写。记录走直连的域名或 IP。
