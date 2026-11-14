@@ -1,4 +1,4 @@
-# Cats-Team AdRules dns.txt @ 2026-10-14 01:34:24
+# Cats-Team AdRules dns.txt @ 2026-11-14 16:03:24
 # source: https://raw.githubusercontent.com/Cats-Team/AdRules/refs/heads/main/dns.txt
 # dns.txt 通配符 ||*...^
 *-ad-sign.byteimg.com = 0.0.0.0
@@ -170,7 +170,6 @@ firebaselogging-*.googleapis.com = 0.0.0.0
 flurry.agentportal-*.yahoodns.net = 0.0.0.0
 flurry.agentportal.*.yahoodns.net = 0.0.0.0
 fp-*it*.fengkongcloud.com = 0.0.0.0
-fpb*.51edu.com = 0.0.0.0
 fra-*.braze.eu = 0.0.0.0
 gads*s.com = 0.0.0.0
 gads*z.com = 0.0.0.0
@@ -208,7 +207,6 @@ iptracker-lb-*.amazonaws.com = 0.0.0.0
 ir-new-cdn-eu-west-*-hb.rayjump.com = 0.0.0.0
 ja*.apppure.net = 0.0.0.0
 ja*.gamersky.com = 0.0.0.0
-js*.abolezi.com = 0.0.0.0
 js.*2023*.live = 0.0.0.0
 js.*2023*.xyz = 0.0.0.0
 jtbo*.nqxvevk.cn = 0.0.0.0
