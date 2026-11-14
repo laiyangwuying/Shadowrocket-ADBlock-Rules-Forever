@@ -17,6 +17,9 @@ itunes.com
 me.com
 mzstatic.com
 
+# 无点条目是品牌顶级域（.apple、.amazon、.sony…），几乎无人使用；仅保留 Google 系与成人内容顶级域
+^(?!(google|goog|youtube|android|chrome|gmail|gle|gbiz|dclk|guge|hangout|nexus|xn--flw351e|xn--qcka1pmc|porn|adult)$)[^.]+$
+
 apple-cloudkit.com
 apple-darwin.com
 apple-darwin.net
