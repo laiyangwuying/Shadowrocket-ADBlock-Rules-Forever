@@ -250,10 +250,28 @@ def _manual_reject_rules_string() -> tuple[str, int]:
     return ''.join(lines_out), skipped
 
 
+def _count_rule_lines(text: str) -> int:
+    in_rule = False
+    n = 0
+    for raw in text.splitlines():
+        s = raw.strip()
+        if s.startswith('['):
+            in_rule = s == '[Rule]'
+            continue
+        if in_rule and s and not s.startswith('#'):
+            n += 1
+    return n
+
+
 def build() -> dict:
     manual_reject, manual_reject_skipped = _manual_reject_rules_string()
+    ad_rule_set_count = len(read_entries(RESULTANT_DIR / 'ad.rule-set'))
+    gfw_count = len(read_entries(RESULTANT_DIR / 'gfw.list'))
     values = {
         'build_time': time.strftime('%Y-%m-%d %H:%M:%S'),
+        'ad_rule_set_count': str(ad_rule_set_count),
+        'gfw_count': str(gfw_count),
+        'conf_rule_count': '0',
         'top500_proxy': _rules_string_from_file(RESULTANT_DIR / 'top500_proxy.list', 'Proxy'),
         'top500_direct': _rules_string_from_file(RESULTANT_DIR / 'top500_direct.list', 'Direct'),
         'ad': _ad_rules_string(),
@@ -271,9 +289,18 @@ def build() -> dict:
         body = (TEMPLATE_DIR / f'{conf_name}.txt').read_text(encoding='utf-8')
         template = _assemble_prefix(conf_name) + body + _assemble_suffix(conf_name)
 
+        # 先填除 conf_rule_count 外的占位，再统计 [Rule] 行数回填
+        values['conf_rule_count'] = '0'
         for mark in set(re.findall(r'{{(.+?)}}', template)):
             if mark in values:
                 template = template.replace('{{' + mark + '}}', values[mark])
+        values['conf_rule_count'] = str(_count_rule_lines(template))
+        template = re.sub(
+            r'(# build .+ \| conf≈)\d+',
+            r'\g<1>' + values['conf_rule_count'],
+            template,
+            count=1,
+        )
 
         atomic_write(REPO_ROOT / f'{conf_name}.conf', template)
         written.append(conf_name)

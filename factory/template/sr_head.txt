@@ -1,4 +1,6 @@
 [General]
+# build {{build_time}} | conf≈{{conf_rule_count}} | ad.rule-set={{ad_rule_set_count}} | gfw={{gfw_count}}
+# 广告域名在远程 RULE-SET，不计入上方 conf 行数；小火箭「策略」数主要看 conf，故广告增长时该数字可能几乎不变。
 # 须与本次生成的文件名一致（由 build_confs 填入）。若固定成别的 conf，小火箭会自动更新成那份文件——MITM/重写会整段丢失。
 update-url = {{release_update_url}}
 stun-response-ip = 1.1.1.1

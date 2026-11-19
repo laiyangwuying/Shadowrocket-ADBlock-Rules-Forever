@@ -98,6 +98,16 @@ legacy 镜像，与 `ad.set` 内容一致。
 
 -----------------------------------
 
+## 关于「策略数量不变」
+
+自广告域名改为远程 `RULE-SET`（`ad.rule-set`，约二十万行）后：
+
+- 小火箭配置详情里的「策略」数主要统计 **conf 内联规则**（约 2.7 万），`RULE-SET` 通常只计 1 条
+- 每日广告增量写在 `factory/resultant/ad.rule-set`，**不会**让 conf 策略数跟着涨
+- 看是否更新：打开 conf 头部注释 `# build … | ad.rule-set=… | gfw=…`，或对比 `build_summary.txt`
+
+定时构建：`main.yml` schedule 挂在默认分支 `release` 上。若仓库长期只有 bot 提交，GitHub 可能停用 schedule（约 60 天）；需在 Actions 页重新启用，或手动 Run workflow。
+
 ## 第三方模块（zirawell / iab0x00）
 
 **策略（2026-06-12）：维持现状，不在 CI 中接入 Script-Hub 批量转换。**

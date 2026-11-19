@@ -2,8 +2,11 @@ name: Build Shadowrocket Rules
 
 on:
   schedule:
-    # 每日北京时间 8:00（UTC 23:00）
-    - cron: '0 23 * * *'
+    # 每日北京时间 8:00（UTC 00:00）。GitHub 对仅 bot 提交的仓库可能在约 60 天后停用 schedule，
+    # 若 Actions 里看不到定时运行，需在仓库 Actions 页重新 Enable schedule，或手动 Run workflow。
+    - cron: '0 0 * * *'
+    # 备用：北京时间 20:00，降低单次漏跑影响
+    - cron: '0 12 * * *'
 
   push:
     branches:
@@ -41,12 +44,16 @@ jobs:
 
       - name: Commit and push to build
         run: |
+          set -euo pipefail
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
+          # 即使上游无变动，build_summary / conf 头时间戳也会变，保证每日有提交以维持 Actions 活跃
+          date -u '+%Y-%m-%dT%H:%M:%SZ' > factory/resultant/last_build_utc.txt
           git add -A
           if git diff --staged --quiet; then
             echo "No changes to commit"
             exit 0
           fi
           git commit -m "Nightly build"
+          git pull --rebase origin build || true
           git push
