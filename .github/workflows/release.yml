@@ -1,0 +1,77 @@
+name: Release Shadowrocket Rules
+
+on:
+  workflow_run:
+    workflows: ['Build Shadowrocket Rules']
+    types: [completed]
+    branches: [build]
+
+  workflow_dispatch:
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  Release:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: build
+          path: build
+
+      - uses: actions/checkout@v6
+        with:
+          ref: release
+          path: release
+
+      - name: Move files
+        run: |
+          set -euo pipefail
+          cd build || exit 1
+          cp *.conf ../release/
+          cp -r figure ../release/
+          rm -rf ../release/module
+          cp -r module ../release/
+          mkdir -p ../release/factory/resultant
+          test -f factory/resultant/ad.rule-set
+          test -f factory/resultant/ad.set
+          cp -f factory/resultant/ad.rule-set factory/resultant/ad.set ../release/factory/resultant/
+          test -s ../release/factory/resultant/ad.rule-set
+          test -s ../release/factory/resultant/ad.set
+          cp LICENSE ../release/
+          cp readme.md ../release/
+          cp -r .github ../release/
+
+      - name: Update lazy rules
+        run: |
+          cd release || exit 1
+          rm -f lazy.conf lazy_group.conf
+          cp ../build/factory/lazy/lazy.conf ../build/factory/lazy/lazy_group.conf .
+
+      - name: Remove commits
+        run: |
+          set -euo pipefail
+          cd release || exit 1
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          test -f factory/resultant/ad.rule-set
+          test -s factory/resultant/ad.rule-set
+          test -f factory/resultant/ad.set
+          git checkout --orphan latest_branch
+          git add -A
+          git status --short
+          test -f factory/resultant/ad.rule-set || (echo 'FATAL: ad.rule-set missing before commit' && exit 1)
+          git commit -m "Nightly build"
+          git branch -D release
+          git branch -m release
+          git push -f origin release
