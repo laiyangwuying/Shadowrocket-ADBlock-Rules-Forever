@@ -1,4 +1,4 @@
-# Cats-Team AdRules @ 2026-11-23 23:10:44
+# Cats-Team AdRules @ 2026-11-24 07:59:35
 # source: https://raw.githubusercontent.com/Cats-Team/AdRules/main/adblock.txt
 ^https:\/\/[0-9a-f]{10}\.[0-9a-f]{10}\.com\/[a-f0-9]+\/\d+\?version_name=\w&domain= reject
 ^https:\/\/[a-z0-9]+\.[a-z0-9]+\.[a-z]{2,3}:\d{1,6}\/[a-z]{1,3}\/\d+\?is_not= reject
@@ -36,6 +36,7 @@
 ^https?:\/\/([\w-]+\.)*027dir\.com reject
 ^https?:\/\/([\w-]+\.)*027pbj\.net reject
 ^https?:\/\/([\w-]+\.)*029519cbdc\.com reject
+^https?:\/\/([\w-]+\.)*029d52f978\.com reject
 ^https?:\/\/([\w-]+\.)*02asdf\.com reject
 ^https?:\/\/([\w-]+\.)*02e8dff099\.com reject
 ^https?:\/\/([\w-]+\.)*02exl1ql2l\.com reject
@@ -5045,6 +5046,7 @@
 ^https?:\/\/([\w-]+\.)*a655a74bbc\.c5d180e3c3\.com reject
 ^https?:\/\/([\w-]+\.)*a65vocvbfe\.com reject
 ^https?:\/\/([\w-]+\.)*a6cfvavw1\.xyz reject
+^https?:\/\/([\w-]+\.)*a6j9wqsyq6\.com reject
 ^https?:\/\/([\w-]+\.)*a6o69f9ky0\.com reject
 ^https?:\/\/([\w-]+\.)*a789ed2b7a\.5a6b8cfaaf\.com reject
 ^https?:\/\/([\w-]+\.)*a78lx5fbd\.com reject
@@ -8849,6 +8851,7 @@
 ^https?:\/\/([\w-]+\.)*afp\.chinanews\.com reject
 ^https?:\/\/([\w-]+\.)*afpd\.groundwidgets\.com reject
 ^https?:\/\/([\w-]+\.)*afqgqg4e\.com reject
+^https?:\/\/([\w-]+\.)*afqxmyankob\.in reject
 ^https?:\/\/([\w-]+\.)*afraidlanguage\.com reject
 ^https?:\/\/([\w-]+\.)*afrdtech\.com reject
 ^https?:\/\/([\w-]+\.)*africa\.edm\.globalsources\.com reject
@@ -10521,6 +10524,7 @@
 ^https?:\/\/([\w-]+\.)*andthoughmy\.org reject
 ^https?:\/\/([\w-]+\.)*andyhoppe\.com\/count/ reject
 ^https?:\/\/([\w-]+\.)*anedvzkjfgrw\.com reject
+^https?:\/\/([\w-]+\.)*anelingteflon\.cfd reject
 ^https?:\/\/([\w-]+\.)*anemiachoky\.com reject
 ^https?:\/\/([\w-]+\.)*anemonytahua\.com reject
 ^https?:\/\/([\w-]+\.)*anenstdecodenear\.com reject
@@ -10544,6 +10548,7 @@
 ^https?:\/\/([\w-]+\.)*angularpoppyrobbing\.com reject
 ^https?:\/\/([\w-]+\.)*anhuinews\.com\/include/ reject
 ^https?:\/\/([\w-]+\.)*anhuinews\.com\/zhuyeguanli/[\w-]+ad/ reject
+^https?:\/\/([\w-]+\.)*anhwdbb\.com reject
 ^https?:\/\/([\w-]+\.)*anihazels\.com reject
 ^https?:\/\/([\w-]+\.)*anijjm\.winkelstraat\.nl reject
 ^https?:\/\/([\w-]+\.)*anileheman\.cyou reject
@@ -12187,6 +12192,7 @@
 ^https?:\/\/([\w-]+\.)*artisticcoast\.info reject
 ^https?:\/\/([\w-]+\.)*artisticcoast\.pro reject
 ^https?:\/\/([\w-]+\.)*artjnley\.com reject
+^https?:\/\/([\w-]+\.)*artoumemo\.cyou reject
 ^https?:\/\/([\w-]+\.)*arts-cloud\.net reject
 ^https?:\/\/([\w-]+\.)*arttrk\.com\/pixel/ reject
 ^https?:\/\/([\w-]+\.)*aruba\.it\/servlet/counterserver\? reject
@@ -12482,6 +12488,7 @@
 ^https?:\/\/([\w-]+\.)*asumi\.shinobi\.jp reject
 ^https?:\/\/([\w-]+\.)*asunderfacilitydealt\.com reject
 ^https?:\/\/([\w-]+\.)*asuracomic\.net\/api/ads/ reject
+^https?:\/\/([\w-]+\.)*asvsvwswbxirk\.online reject
 ^https?:\/\/([\w-]+\.)*asvysvxr\.com reject
 ^https?:\/\/([\w-]+\.)*aswpsdkus\.com reject
 ^https?:\/\/([\w-]+\.)*asxxlo\.interflora\.es reject
@@ -12575,6 +12582,7 @@
 ^https?:\/\/([\w-]+\.)*atmangenros\.cfd reject
 ^https?:\/\/([\w-]+\.)*atmtd\.com reject
 ^https?:\/\/([\w-]+\.)*atnnf\.xyz reject
+^https?:\/\/([\w-]+\.)*atnzgchtjbers\.online reject
 ^https?:\/\/([\w-]+\.)*ato\.tooopen\.com reject
 ^https?:\/\/([\w-]+\.)*atofsegchckii\.space reject
 ^https?:\/\/([\w-]+\.)*atom-log\.3\.cn reject
@@ -12589,7 +12597,9 @@
 ^https?:\/\/([\w-]+\.)*atraff\.com reject
 ^https?:\/\/([\w-]+\.)*atrailshriftsarridge\.cyou reject
 ^https?:\/\/([\w-]+\.)*atrepsykayasth\.com reject
+^https?:\/\/([\w-]+\.)*atresiaworker\.click reject
 ^https?:\/\/([\w-]+\.)*atrgprhdzfhfb\.online reject
+^https?:\/\/([\w-]+\.)*atriumsomegoid\.click reject
 ^https?:\/\/([\w-]+\.)*atroblxac\.in reject
 ^https?:\/\/([\w-]+\.)*atrophychumpreentry\.com reject
 ^https?:\/\/([\w-]+\.)*ats\.alot\.com reject
@@ -12640,6 +12650,7 @@
 ^https?:\/\/([\w-]+\.)*au\.mywd\.com reject
 ^https?:\/\/([\w-]+\.)*auavaxrfgyyrv\.online reject
 ^https?:\/\/([\w-]+\.)*aubainebrowny\.cfd reject
+^https?:\/\/([\w-]+\.)*aubghm\.com reject
 ^https?:\/\/([\w-]+\.)*auburn9819\.com reject
 ^https?:\/\/([\w-]+\.)*aucdn\.net reject
 ^https?:\/\/([\w-]+\.)*aucqdk\.autodoc\.es reject
@@ -14027,6 +14038,7 @@
 ^https?:\/\/([\w-]+\.)*beaumontenterprise\.com\/413gkwMT/init\.js reject
 ^https?:\/\/([\w-]+\.)*beautiful45\.com reject
 ^https?:\/\/([\w-]+\.)*beavertron\.com reject
+^https?:\/\/([\w-]+\.)*beayrzcpfqwqr\.website reject
 ^https?:\/\/([\w-]+\.)*bebangcaromel\.com reject
 ^https?:\/\/([\w-]+\.)*bebi\.com reject
 ^https?:\/\/([\w-]+\.)*beblearnovelet\.rest reject
@@ -14112,6 +14124,7 @@
 ^https?:\/\/([\w-]+\.)*believemefly\.com reject
 ^https?:\/\/([\w-]+\.)*belindanbd\.com reject
 ^https?:\/\/([\w-]+\.)*belk\.com\/0iiey9LM/init\.js reject
+^https?:\/\/([\w-]+\.)*belkzeqkauwsl\.website reject
 ^https?:\/\/([\w-]+\.)*bellamylavatory\.com reject
 ^https?:\/\/([\w-]+\.)*bellboymataco\.qpon reject
 ^https?:\/\/([\w-]+\.)*bellelin752\.goaserv\.com reject
@@ -14370,6 +14383,7 @@
 ^https?:\/\/([\w-]+\.)*bhishtispail\.com reject
 ^https?:\/\/([\w-]+\.)*bhjkpnfsgejvo\.com reject
 ^https?:\/\/([\w-]+\.)*bhjuy10\.com reject
+^https?:\/\/([\w-]+\.)*bhmnnpzrokbrj\.online reject
 ^https?:\/\/([\w-]+\.)*bhmzab\.totes\.com reject
 ^https?:\/\/([\w-]+\.)*bhol\.co\.il\/system/js/analytics\.js reject
 ^https?:\/\/([\w-]+\.)*bhphotovideo\.com\/3D8mkYG1/init\.js reject
@@ -14936,6 +14950,7 @@
 ^https?:\/\/([\w-]+\.)*blutrk\.click reject
 ^https?:\/\/([\w-]+\.)*bluvue\.actonservice\.com reject
 ^https?:\/\/([\w-]+\.)*blvhq\.com reject
+^https?:\/\/([\w-]+\.)*blyiwafrgbnfd\.site reject
 ^https?:\/\/([\w-]+\.)*blyrcarsysnux\.site reject
 ^https?:\/\/([\w-]+\.)*blytheco\.actonservice\.com reject
 ^https?:\/\/([\w-]+\.)*blzayw\.ticketsmarter\.com reject
@@ -15017,6 +15032,7 @@
 ^https?:\/\/([\w-]+\.)*bnds6\.site reject
 ^https?:\/\/([\w-]+\.)*bnds7\.site reject
 ^https?:\/\/([\w-]+\.)*bnds8\.site reject
+^https?:\/\/([\w-]+\.)*bnexegykbnmjw\.site reject
 ^https?:\/\/([\w-]+\.)*bnextmedia\.com\.tw\/feed/fetch\.js reject
 ^https?:\/\/([\w-]+\.)*bnextmedia\.s3\.hicloud\.net\.tw\/dp_cp/cp_prebid reject
 ^https?:\/\/([\w-]+\.)*bnextmedia\.s3\.hicloud\.net\.tw\/dp_cp/mt_programmatic_ad\.js reject
@@ -15039,6 +15055,7 @@
 ^https?:\/\/([\w-]+\.)*bnobmgl\.icu reject
 ^https?:\/\/([\w-]+\.)*bnpparibas\.fr\/JavascriptInsert\.js reject
 ^https?:\/\/([\w-]+\.)*bnqektutom\.com reject
+^https?:\/\/([\w-]+\.)*bnqwba\.com reject
 ^https?:\/\/([\w-]+\.)*bnr\.sys\.lv reject
 ^https?:\/\/([\w-]+\.)*bnrdnx\.xyz reject
 ^https?:\/\/([\w-]+\.)*bnrdom\.com reject
@@ -15457,6 +15474,7 @@
 ^https?:\/\/([\w-]+\.)*br\.sprbl\.st reject
 ^https?:\/\/([\w-]+\.)*br\.uk\.beformance\.com reject
 ^https?:\/\/([\w-]+\.)*braagniddp\.com reject
+^https?:\/\/([\w-]+\.)*braamdsbatlfj\.online reject
 ^https?:\/\/([\w-]+\.)*bracehow\.com reject
 ^https?:\/\/([\w-]+\.)*braceripe\.com reject
 ^https?:\/\/([\w-]+\.)*bracesstot\.cfd reject
@@ -16614,6 +16632,7 @@
 ^https?:\/\/([\w-]+\.)*calculatingtoothbrush\.com reject
 ^https?:\/\/([\w-]+\.)*calculation94\.top reject
 ^https?:\/\/([\w-]+\.)*calculatorstatement\.com reject
+^https?:\/\/([\w-]+\.)*calderaoutwell\.com reject
 ^https?:\/\/([\w-]+\.)*calendly\.com\/telemetry\.js reject
 ^https?:\/\/([\w-]+\.)*calgary-content\.cresa\.com reject
 ^https?:\/\/([\w-]+\.)*caliberco\.actonservice\.com reject
@@ -17500,6 +17519,7 @@
 ^https?:\/\/([\w-]+\.)*cei-internship\.go-static\.info reject
 ^https?:\/\/([\w-]+\.)*cei\.go-static\.info reject
 ^https?:\/\/([\w-]+\.)*ceice\.goaserv\.com reject
+^https?:\/\/([\w-]+\.)*ceilingknockup\.com reject
 ^https?:\/\/([\w-]+\.)*ceiqox\.com reject
 ^https?:\/\/([\w-]+\.)*ceisip\.com\/static/js/plugin\.js reject
 ^https?:\/\/([\w-]+\.)*ceit\.goasrv\.com reject
@@ -17748,6 +17768,7 @@
 ^https?:\/\/([\w-]+\.)*charkshiite\.qpon reject
 ^https?:\/\/([\w-]+\.)*charlotte-content\.cresa\.com reject
 ^https?:\/\/([\w-]+\.)*charlottemice\.com reject
+^https?:\/\/([\w-]+\.)*charmedoyster\.com reject
 ^https?:\/\/([\w-]+\.)*charmedwater\.com reject
 ^https?:\/\/([\w-]+\.)*charmingarea\.com reject
 ^https?:\/\/([\w-]+\.)*charmingkite\.com reject
@@ -17868,6 +17889,7 @@
 ^https?:\/\/([\w-]+\.)*chfpgcbe\.com reject
 ^https?:\/\/([\w-]+\.)*chgwwj\.klimate\.nl reject
 ^https?:\/\/([\w-]+\.)*chhencmmgwogk\.space reject
+^https?:\/\/([\w-]+\.)*chhuahtjiedcf\.site reject
 ^https?:\/\/([\w-]+\.)*chiackpeckage\.cfd reject
 ^https?:\/\/([\w-]+\.)*chiamfxz\.com reject
 ^https?:\/\/([\w-]+\.)*chibanippo\.co\.jp\/api/page-tracker reject
@@ -18221,6 +18243,7 @@
 ^https?:\/\/([\w-]+\.)*cjvoe42li\.mf7ptepmopk39h1\.cyou reject
 ^https?:\/\/([\w-]+\.)*cjw123\.com\/jx/static/picture/ reject
 ^https?:\/\/([\w-]+\.)*cjx111\.com\/ads/ reject
+^https?:\/\/([\w-]+\.)*cjyartrhgwcks\.space reject
 ^https?:\/\/([\w-]+\.)*cjyaudpjmp\.com reject
 ^https?:\/\/([\w-]+\.)*cjyun\.org\/assets/js/analytics\.js reject
 ^https?:\/\/([\w-]+\.)*ck-ie\.com reject
@@ -18254,6 +18277,7 @@
 ^https?:\/\/([\w-]+\.)*cl\.t3n\.de reject
 ^https?:\/\/([\w-]+\.)*clacksgrudges\.qpon reject
 ^https?:\/\/([\w-]+\.)*cladupius\.com reject
+^https?:\/\/([\w-]+\.)*clagsazidosnagger\.cfd reject
 ^https?:\/\/([\w-]+\.)*claimbits\.net\/trans3\.png reject
 ^https?:\/\/([\w-]+\.)*clairesopilia\.shop reject
 ^https?:\/\/([\w-]+\.)*clambakefreenessunclasp\.com reject
@@ -19239,6 +19263,7 @@
 ^https?:\/\/([\w-]+\.)*comefromchina\.com\/images/128bestbuy reject
 ^https?:\/\/([\w-]+\.)*comeon\.com\/tracking\.php reject
 ^https?:\/\/([\w-]+\.)*comerhurlentertain\.com reject
+^https?:\/\/([\w-]+\.)*cometaster\.com reject
 ^https?:\/\/([\w-]+\.)*cometquote\.com reject
 ^https?:\/\/([\w-]+\.)*cometslourdy\.cfd reject
 ^https?:\/\/([\w-]+\.)*comfortable-atsushi\.goaserv\.com reject
@@ -20032,6 +20057,7 @@
 ^https?:\/\/([\w-]+\.)*costwinner\.com reject
 ^https?:\/\/([\w-]+\.)*cotemaison\.np6\.com reject
 ^https?:\/\/([\w-]+\.)*coterekey\.cfd reject
+^https?:\/\/([\w-]+\.)*cotorocarnate\.cyou reject
 ^https?:\/\/([\w-]+\.)*cotrck\.com reject
 ^https?:\/\/([\w-]+\.)*cotttortor\.cyou reject
 ^https?:\/\/([\w-]+\.)*coucalhidated\.com reject
@@ -20988,7 +21014,9 @@
 ^https?:\/\/([\w-]+\.)*cvt1\.sibnet\.ru reject
 ^https?:\/\/([\w-]+\.)*cvtspo\.moebel24\.de reject
 ^https?:\/\/([\w-]+\.)*cvttzhopzmukwu\.com reject
+^https?:\/\/([\w-]+\.)*cvtuxajndlyym\.site reject
 ^https?:\/\/([\w-]+\.)*cvwgltvuviniv\.space reject
+^https?:\/\/([\w-]+\.)*cvwrvpmsjlmhw\.space reject
 ^https?:\/\/([\w-]+\.)*cvxokrrytbgis\.space reject
 ^https?:\/\/([\w-]+\.)*cvzvun\.vidaxl\.de reject
 ^https?:\/\/([\w-]+\.)*cvzysdsrgupor\.website reject
@@ -22972,6 +23000,7 @@
 ^https?:\/\/([\w-]+\.)*deccaeycnc\.com reject
 ^https?:\/\/([\w-]+\.)*deceivedaisle\.com reject
 ^https?:\/\/([\w-]+\.)*decencytopmost\.com reject
+^https?:\/\/([\w-]+\.)*decerndatsuns\.click reject
 ^https?:\/\/([\w-]+\.)*decide\.dev reject
 ^https?:\/\/([\w-]+\.)*decidedrum\.com reject
 ^https?:\/\/([\w-]+\.)*decidesqueak\.com reject
@@ -23500,6 +23529,7 @@
 ^https?:\/\/([\w-]+\.)*dhrbpvqqoovnxm\.com reject
 ^https?:\/\/([\w-]+\.)*dhrhzii89gpwo\.cloudfront\.net reject
 ^https?:\/\/([\w-]+\.)*dhsjpz\.bugaboo\.com reject
+^https?:\/\/([\w-]+\.)*dhspxyczkwgrb\.site reject
 ^https?:\/\/([\w-]+\.)*dhunchifidia\.com reject
 ^https?:\/\/([\w-]+\.)*dhwmtx\.stylewe\.com reject
 ^https?:\/\/([\w-]+\.)*dhxrop\.com reject
@@ -24133,6 +24163,7 @@
 ^https?:\/\/([\w-]+\.)*dkre4lyk6a9bt\.cloudfront\.net reject
 ^https?:\/\/([\w-]+\.)*dkrlnbfvypglb\.site reject
 ^https?:\/\/([\w-]+\.)*dkskbu\.demae-can\.com reject
+^https?:\/\/([\w-]+\.)*dkuoxtdptdmupt\.com reject
 ^https?:\/\/([\w-]+\.)*dkupaw9ae63a8\.cloudfront\.net reject
 ^https?:\/\/([\w-]+\.)*dkvvwq\.aosom\.ca reject
 ^https?:\/\/([\w-]+\.)*dkweuy\.com reject
@@ -25128,6 +25159,7 @@
 ^https?:\/\/([\w-]+\.)*dvczvm\.cyfrowe\.pl reject
 ^https?:\/\/([\w-]+\.)*dvdpruaspvbho\.website reject
 ^https?:\/\/([\w-]+\.)*dvenkbn\.icu reject
+^https?:\/\/([\w-]+\.)*dvgoehfjbdwyz\.space reject
 ^https?:\/\/([\w-]+\.)*dvh66m0o7et0z\.cloudfront\.net reject
 ^https?:\/\/([\w-]+\.)*dvhcob\.jtrip\.co\.jp reject
 ^https?:\/\/([\w-]+\.)*dvhintgubzivus\.com reject
@@ -25144,6 +25176,7 @@
 ^https?:\/\/([\w-]+\.)*dvtednm\.cn reject
 ^https?:\/\/([\w-]+\.)*dvtkppqczzfhpk\.com reject
 ^https?:\/\/([\w-]+\.)*dvv9dkv\.site reject
+^https?:\/\/([\w-]+\.)*dvvjmkuxpjrlc\.site reject
 ^https?:\/\/([\w-]+\.)*dvvkov\.agrieuro\.de reject
 ^https?:\/\/([\w-]+\.)*dvvv9ld5b0\.com reject
 ^https?:\/\/([\w-]+\.)*dvwowtnmyluv4\.cloudfront\.net reject
@@ -25210,6 +25243,7 @@
 ^https?:\/\/([\w-]+\.)*dxwsty\.cn reject
 ^https?:\/\/([\w-]+\.)*dxxfhszhmacqm\.online reject
 ^https?:\/\/([\w-]+\.)*dxynbmrkwrvbj\.space reject
+^https?:\/\/([\w-]+\.)*dxyxyrailduzp\.space reject
 ^https?:\/\/([\w-]+\.)*dxzgwti\.com reject
 ^https?:\/\/([\w-]+\.)*dxzky\.love reject
 ^https?:\/\/([\w-]+\.)*dy2018\.com\/js/tj\.js reject
@@ -25275,6 +25309,7 @@
 ^https?:\/\/([\w-]+\.)*dytt\.com\^\/.*yb\.js.* reject
 ^https?:\/\/([\w-]+\.)*dytuj6zs26\.com reject
 ^https?:\/\/([\w-]+\.)*dyv1bugovvq1g\.cloudfront\.net reject
+^https?:\/\/([\w-]+\.)*dyv86qq19o\.com reject
 ^https?:\/\/([\w-]+\.)*dyxpzildxdxkr\.site reject
 ^https?:\/\/([\w-]+\.)*dyxz[\w-]+\.com\/static/gdw\.js reject
 ^https?:\/\/([\w-]+\.)*dyxz[\w-]+\.com\/static/jquery\.js\? reject
@@ -25992,6 +26027,7 @@
 ^https?:\/\/([\w-]+\.)*eekknightsoon\.com reject
 ^https?:\/\/([\w-]+\.)*eekpiaqf\.com reject
 ^https?:\/\/([\w-]+\.)*eel\.transistor\.fm reject
+^https?:\/\/([\w-]+\.)*eelfxnnyjuatb\.website reject
 ^https?:\/\/([\w-]+\.)*eelpoutseptime\.cfd reject
 ^https?:\/\/([\w-]+\.)*eennme\.vidaxl\.sk reject
 ^https?:\/\/([\w-]+\.)*eeptoabs\.com reject
@@ -26118,6 +26154,7 @@
 ^https?:\/\/([\w-]+\.)*ehedwd\.sikayetvar\.com reject
 ^https?:\/\/([\w-]+\.)*eheuaugen\.cyou reject
 ^https?:\/\/([\w-]+\.)*ehfjup\.xyz reject
+^https?:\/\/([\w-]+\.)*ehgwulgzpjkfe\.site reject
 ^https?:\/\/([\w-]+\.)*ehh91kb6ic\.com reject
 ^https?:\/\/([\w-]+\.)*ehiakjopnzwcc\.online reject
 ^https?:\/\/([\w-]+\.)*ehiyxlnuujkps\.store reject
@@ -27183,6 +27220,7 @@
 ^https?:\/\/([\w-]+\.)*enthusiastictemper\.com reject
 ^https?:\/\/([\w-]+\.)*entifyclime\.cfd reject
 ^https?:\/\/([\w-]+\.)*entjgcr\.com reject
+^https?:\/\/([\w-]+\.)*entombcarcass\.com reject
 ^https?:\/\/([\w-]+\.)*entomhefteroverfee\.cyou reject
 ^https?:\/\/([\w-]+\.)*entoneeyeholebowls\.cyou reject
 ^https?:\/\/([\w-]+\.)*entoticunaflowretape\.qpon reject
@@ -27203,6 +27241,7 @@
 ^https?:\/\/([\w-]+\.)*envision75\.com reject
 ^https?:\/\/([\w-]+\.)*envoymusicianpaid\.com reject
 ^https?:\/\/([\w-]+\.)*envvxffzamteq\.space reject
+^https?:\/\/([\w-]+\.)*enwsztvggihng\.online reject
 ^https?:\/\/([\w-]+\.)*enwwlcrxi\.com reject
 ^https?:\/\/([\w-]+\.)*enylukombwf\.com reject
 ^https?:\/\/([\w-]+\.)*enzymesairthed\.qpon reject
@@ -27388,6 +27427,7 @@
 ^https?:\/\/([\w-]+\.)*erjiyouhuiquan\.com reject
 ^https?:\/\/([\w-]+\.)*erjw7px373983fgovelfjpnnnu6\.cfd reject
 ^https?:\/\/([\w-]+\.)*erkebopmeaner\.cyou reject
+^https?:\/\/([\w-]+\.)*erlclick\.com reject
 ^https?:\/\/([\w-]+\.)*erlirscid\.com reject
 ^https?:\/\/([\w-]+\.)*ermanibuddie\.com reject
 ^https?:\/\/([\w-]+\.)*ermiph\.petermanningnyc\.com reject
@@ -28782,6 +28822,7 @@
 ^https?:\/\/([\w-]+\.)*fenxiangdashi\.com\/Res/js/detail_ reject
 ^https?:\/\/([\w-]+\.)*fenxiangdashi\.com\/img/banner/ reject
 ^https?:\/\/([\w-]+\.)*feppiu\.systemaction\.es reject
+^https?:\/\/([\w-]+\.)*fepzcgbdreazc\.site reject
 ^https?:\/\/([\w-]+\.)*feq853\.com reject
 ^https?:\/\/([\w-]+\.)*feqbqn\.rent\.com reject
 ^https?:\/\/([\w-]+\.)*feree\.fwqsaaqqqfsdaw\.shop reject
@@ -28875,6 +28916,7 @@
 ^https?:\/\/([\w-]+\.)*fgfecw\.rebelle\.com reject
 ^https?:\/\/([\w-]+\.)*fgfhgvtj\.com reject
 ^https?:\/\/([\w-]+\.)*fgfukd\.sakazen\.co\.jp reject
+^https?:\/\/([\w-]+\.)*fggfm5tq3hyu3e1o8g\.rest reject
 ^https?:\/\/([\w-]+\.)*fghrnjvmoav\.com reject
 ^https?:\/\/([\w-]+\.)*fgip\.rosehosting\.com reject
 ^https?:\/\/([\w-]+\.)*fglrgt\.ruggable\.com reject
@@ -28896,6 +28938,7 @@
 ^https?:\/\/([\w-]+\.)*fhdclgbdcofxt\.com reject
 ^https?:\/\/([\w-]+\.)*fhddnh\.xyz reject
 ^https?:\/\/([\w-]+\.)*fhdnds\.mrmarvis\.com reject
+^https?:\/\/([\w-]+\.)*fhdsuqjm\.com reject
 ^https?:\/\/([\w-]+\.)*fhfgg\.com reject
 ^https?:\/\/([\w-]+\.)*fhgaikrolq\.com reject
 ^https?:\/\/([\w-]+\.)*fhgh9sd\.com reject
@@ -28982,6 +29025,7 @@
 ^https?:\/\/([\w-]+\.)*filetarget\.net reject
 ^https?:\/\/([\w-]+\.)*filetransfer\.exasrv\.com reject
 ^https?:\/\/([\w-]+\.)*filext\.com\/pageview reject
+^https?:\/\/([\w-]+\.)*filidillis\.cyou reject
 ^https?:\/\/([\w-]+\.)*fillesculet\.cfd reject
 ^https?:\/\/([\w-]+\.)*filletfiguredconstrain\.com reject
 ^https?:\/\/([\w-]+\.)*fillhr\.xyz reject
@@ -29203,6 +29247,7 @@
 ^https?:\/\/([\w-]+\.)*fjuccm\.uktsc\.com reject
 ^https?:\/\/([\w-]+\.)*fjuga\.top reject
 ^https?:\/\/([\w-]+\.)*fjzimaoqu\.cn reject
+^https?:\/\/([\w-]+\.)*fjznbiytdwazp\.site reject
 ^https?:\/\/([\w-]+\.)*fk0hwmdoh\.com reject
 ^https?:\/\/([\w-]+\.)*fk8k4t55e\.com reject
 ^https?:\/\/([\w-]+\.)*fkbwtoopwg\.com reject
@@ -29769,6 +29814,7 @@
 ^https?:\/\/([\w-]+\.)*fpiojnqa\.in reject
 ^https?:\/\/([\w-]+\.)*fpiynavemjkhb\.site reject
 ^https?:\/\/([\w-]+\.)*fpjscdn\.net reject
+^https?:\/\/([\w-]+\.)*fpjsfkktueiwt\.online reject
 ^https?:\/\/([\w-]+\.)*fpkph\.cdnpk\.net reject
 ^https?:\/\/([\w-]+\.)*fplxwidbwpfd\.com reject
 ^https?:\/\/([\w-]+\.)*fpnpmcdn\.net reject
@@ -29779,6 +29825,7 @@
 ^https?:\/\/([\w-]+\.)*fpptmv\.mrmarvis\.co\.uk reject
 ^https?:\/\/([\w-]+\.)*fprpdlurhlwde\.website reject
 ^https?:\/\/([\w-]+\.)*fprrpv\.icu reject
+^https?:\/\/([\w-]+\.)*fpsdjuoyvfkao\.site reject
 ^https?:\/\/([\w-]+\.)*fpssl-monitor-dal\.omniture\.com reject
 ^https?:\/\/([\w-]+\.)*fpt\.inxinternational\.com reject
 ^https?:\/\/([\w-]+\.)*fpt\.microsoft\.com reject
@@ -29802,6 +29849,7 @@
 ^https?:\/\/([\w-]+\.)*fqk6e78c80\.com reject
 ^https?:\/\/([\w-]+\.)*fqkbodkrmldxs\.online reject
 ^https?:\/\/([\w-]+\.)*fqlaljixidmdm\.site reject
+^https?:\/\/([\w-]+\.)*fqnmegffvlejy\.online reject
 ^https?:\/\/([\w-]+\.)*fqppgv\.cheapoair\.com reject
 ^https?:\/\/([\w-]+\.)*fqpxzr\.xyz reject
 ^https?:\/\/([\w-]+\.)*fqquzqd\.top reject
@@ -31302,6 +31350,7 @@
 ^https?:\/\/([\w-]+\.)*ghecriedhereisnot\.org reject
 ^https?:\/\/([\w-]+\.)*gheddaenzyms\.com reject
 ^https?:\/\/([\w-]+\.)*ghepxcvmadltj\.space reject
+^https?:\/\/([\w-]+\.)*ghesscopsy\.com reject
 ^https?:\/\/([\w-]+\.)*ghghgf\.51dongshi\.com reject
 ^https?:\/\/([\w-]+\.)*ghghgf\.xuexiwa\.com reject
 ^https?:\/\/([\w-]+\.)*ghifrc\.baldai1\.lt reject
@@ -31341,6 +31390,7 @@
 ^https?:\/\/([\w-]+\.)*giaoji\.com\/Runtime/Js/ reject
 ^https?:\/\/([\w-]+\.)*giaumusnsj\.com reject
 ^https?:\/\/([\w-]+\.)*gibbusdauber\.qpon reject
+^https?:\/\/([\w-]+\.)*gibres\.xyz reject
 ^https?:\/\/([\w-]+\.)*gicuvndqhbalh\.online reject
 ^https?:\/\/([\w-]+\.)*giddycoat\.com reject
 ^https?:\/\/([\w-]+\.)*giddyreport\.com reject
@@ -32594,6 +32644,7 @@
 ^https?:\/\/([\w-]+\.)*gqcrgyufg\.com reject
 ^https?:\/\/([\w-]+\.)*gqcyumr\.com reject
 ^https?:\/\/([\w-]+\.)*gqdfgyz\.cn reject
+^https?:\/\/([\w-]+\.)*gqdnvupzqvnmz\.site reject
 ^https?:\/\/([\w-]+\.)*gqfpqtbdok\.com reject
 ^https?:\/\/([\w-]+\.)*gqhfjr\.sizeofficial\.es reject
 ^https?:\/\/([\w-]+\.)*gqhkkcqfnxuiu\.site reject
@@ -34095,7 +34146,9 @@
 ^https?:\/\/([\w-]+\.)*hhkld\.com reject
 ^https?:\/\/([\w-]+\.)*hhoimnhzekcdb\.site reject
 ^https?:\/\/([\w-]+\.)*hhplayer\.com\/cdn/fb\.js reject
+^https?:\/\/([\w-]+\.)*hhqcqdaausfjw\.online reject
 ^https?:\/\/([\w-]+\.)*hhqiglbfabbdf\.space reject
+^https?:\/\/([\w-]+\.)*hhsdjpmmyqwwo\.online reject
 ^https?:\/\/([\w-]+\.)*hht8m6w8mnug\.quine\.sh reject
 ^https?:\/\/([\w-]+\.)*hhtizkpobmaoo\.website reject
 ^https?:\/\/([\w-]+\.)*hhttm\.top reject
@@ -34315,6 +34368,7 @@
 ^https?:\/\/([\w-]+\.)*hiyksu\.karllagerfeldparis\.com reject
 ^https?:\/\/([\w-]+\.)*hiyoho2001\.go-static\.info reject
 ^https?:\/\/([\w-]+\.)*hiyokkoikka\.goasrv\.com reject
+^https?:\/\/([\w-]+\.)*hizcy912wbwpicuoi\.rest reject
 ^https?:\/\/([\w-]+\.)*hizechizr\.com reject
 ^https?:\/\/([\w-]+\.)*hjapi\.com\/v1/pageSoftText\? reject
 ^https?:\/\/([\w-]+\.)*hjbgdc\.fracora\.com reject
@@ -34391,6 +34445,7 @@
 ^https?:\/\/([\w-]+\.)*hloodhvkobjsn\.com reject
 ^https?:\/\/([\w-]+\.)*hlooytbdgfmvl\.site reject
 ^https?:\/\/([\w-]+\.)*hlq07cj71c\.com reject
+^https?:\/\/([\w-]+\.)*hlqbpuenoslyj\.online reject
 ^https?:\/\/([\w-]+\.)*hlqnfundi\.cyou reject
 ^https?:\/\/([\w-]+\.)*hlqpie\.waves\.com reject
 ^https?:\/\/([\w-]+\.)*hlreoc\.gonuldensevenler\.com reject
@@ -34909,6 +34964,7 @@
 ^https?:\/\/([\w-]+\.)*httr\.redskins\.com reject
 ^https?:\/\/([\w-]+\.)*htttkhcaclhsg\.space reject
 ^https?:\/\/([\w-]+\.)*htvixv\.xyz reject
+^https?:\/\/([\w-]+\.)*htvrhfnjawzer\.website reject
 ^https?:\/\/([\w-]+\.)*hu-business\.vodafone\.com reject
 ^https?:\/\/([\w-]+\.)*hu-topgal\.m-shop\.me reject
 ^https?:\/\/([\w-]+\.)*hu\.sharpmarketing\.eu reject
@@ -35001,6 +35057,7 @@
 ^https?:\/\/([\w-]+\.)*hugrenapi\.com reject
 ^https?:\/\/([\w-]+\.)*hugupq\.selency\.fr reject
 ^https?:\/\/([\w-]+\.)*huhccdiporzzp\.online reject
+^https?:\/\/([\w-]+\.)*huhcluster\.cyou reject
 ^https?:\/\/([\w-]+\.)*huhtoric\.com reject
 ^https?:\/\/([\w-]+\.)*huhumh\.com\/js/ reject
 ^https?:\/\/([\w-]+\.)*huibaihe\.net\/js/dddd\.js reject
@@ -35605,6 +35662,7 @@
 ^https?:\/\/([\w-]+\.)*iemwbu\.cn reject
 ^https?:\/\/([\w-]+\.)*iepfcy\.farmandfleet\.com reject
 ^https?:\/\/([\w-]+\.)*iephrenhq\.com reject
+^https?:\/\/([\w-]+\.)*iepoztleksfwz\.online reject
 ^https?:\/\/([\w-]+\.)*iesbpm\.novasol\.dk reject
 ^https?:\/\/([\w-]+\.)*ievdpg\.humanscale\.com reject
 ^https?:\/\/([\w-]+\.)*ievyixavnjwsf\.website reject
@@ -37670,6 +37728,7 @@
 ^https?:\/\/([\w-]+\.)*inputicicle\.com reject
 ^https?:\/\/([\w-]+\.)*inq\.com\/tagserver/logging/logline reject
 ^https?:\/\/([\w-]+\.)*inq\.com\^[\w-]+\/onEvent\?_ reject
+^https?:\/\/([\w-]+\.)*inqdkv\.com reject
 ^https?:\/\/([\w-]+\.)*inqjal\.dickssportinggoods\.com reject
 ^https?:\/\/([\w-]+\.)*inqueritos-qa\.cp\.pt reject
 ^https?:\/\/([\w-]+\.)*inqueritos\.cp\.pt reject
@@ -38503,6 +38562,7 @@
 ^https?:\/\/([\w-]+\.)*iyzipay\.com\/buyer-protection/assets/js/analytics\.js reject
 ^https?:\/\/([\w-]+\.)*izblcyhxdvzkk\.com reject
 ^https?:\/\/([\w-]+\.)*izbwce\.secretoutlet\.com\.br reject
+^https?:\/\/([\w-]+\.)*izeczulkfstho\.site reject
 ^https?:\/\/([\w-]+\.)*izeeto\.com reject
 ^https?:\/\/([\w-]+\.)*izegag\.shop24direct\.de reject
 ^https?:\/\/([\w-]+\.)*izhenvejbgnqc\.online reject
@@ -38532,6 +38592,7 @@
 ^https?:\/\/([\w-]+\.)*j2\.res\.24o\.it\/js/2022/chkablock[\w-]+\.min\.js reject
 ^https?:\/\/([\w-]+\.)*j2fu64j4e\.com reject
 ^https?:\/\/([\w-]+\.)*j2i0\.mathon\.fr reject
+^https?:\/\/([\w-]+\.)*j31pozck4v\.com reject
 ^https?:\/\/([\w-]+\.)*j33xvvanl\.com reject
 ^https?:\/\/([\w-]+\.)*j3fvhzit0\.com reject
 ^https?:\/\/([\w-]+\.)*j3gkwzt7o\.com reject
@@ -38828,6 +38889,7 @@
 ^https?:\/\/([\w-]+\.)*jefigdunsfsyi\.online reject
 ^https?:\/\/([\w-]+\.)*jegjuitgvavuz\.space reject
 ^https?:\/\/([\w-]+\.)*jeiosljpivujj\.site reject
+^https?:\/\/([\w-]+\.)*jeixjhusqnwhe\.website reject
 ^https?:\/\/([\w-]+\.)*jej\.r1n3b9g39344iw2u\.cyou reject
 ^https?:\/\/([\w-]+\.)*jellyfinstream\.com reject
 ^https?:\/\/([\w-]+\.)*jelndb\.truereligion\.com reject
@@ -39706,6 +39768,7 @@
 ^https?:\/\/([\w-]+\.)*junshizhanlue\.com reject
 ^https?:\/\/([\w-]+\.)*juntol\.xyz reject
 ^https?:\/\/([\w-]+\.)*juntospassirwindill\.cfd reject
+^https?:\/\/([\w-]+\.)*junweemjxevvi\.website reject
 ^https?:\/\/([\w-]+\.)*juo4y146j\.o8e2vntnneokn8\.cyou reject
 ^https?:\/\/([\w-]+\.)*juoanvouymacf\.site reject
 ^https?:\/\/([\w-]+\.)*jup9\.com reject
@@ -39838,6 +39901,7 @@
 ^https?:\/\/([\w-]+\.)*jygiizv\.icu reject
 ^https?:\/\/([\w-]+\.)*jygotubvpyguak\.com reject
 ^https?:\/\/([\w-]+\.)*jyhlo0\.com reject
+^https?:\/\/([\w-]+\.)*jyhrkuolyeoqb\.space reject
 ^https?:\/\/([\w-]+\.)*jyhwlxpir7tevqxeuyh3vyfwptv2bjk\.cfd reject
 ^https?:\/\/([\w-]+\.)*jyiwnb82b\.com reject
 ^https?:\/\/([\w-]+\.)*jyjauzdktmosl\.online reject
@@ -39872,6 +39936,7 @@
 ^https?:\/\/([\w-]+\.)*jzfciiwgqwzxx\.online reject
 ^https?:\/\/([\w-]+\.)*jzgfhr\.nordicnest\.com reject
 ^https?:\/\/([\w-]+\.)*jzhbethwfhnlq\.space reject
+^https?:\/\/([\w-]+\.)*jzhmyuoynx\.com reject
 ^https?:\/\/([\w-]+\.)*jzixypd\.icu reject
 ^https?:\/\/([\w-]+\.)*jzjxmj\.com reject
 ^https?:\/\/([\w-]+\.)*jzkdrpijw30voy0\.club reject
@@ -39943,6 +40008,7 @@
 ^https?:\/\/([\w-]+\.)*k98033ewp\.com reject
 ^https?:\/\/([\w-]+\.)*k99\.cc reject
 ^https?:\/\/([\w-]+\.)*k9egtgh8v\.com reject
+^https?:\/\/([\w-]+\.)*k9ixrkp46fncvh\.rest reject
 ^https?:\/\/([\w-]+\.)*k9nmr4ii6w4gm3f\.bqceuxtnnzw29yygimx\.cyou reject
 ^https?:\/\/([\w-]+\.)*k9w4m\.xyz reject
 ^https?:\/\/([\w-]+\.)*k9x1d1uuj0\.com reject
@@ -40121,6 +40187,7 @@
 ^https?:\/\/([\w-]+\.)*kavanga\.ru reject
 ^https?:\/\/([\w-]+\.)*kavblcvs\.com reject
 ^https?:\/\/([\w-]+\.)*kavxx\.com reject
+^https?:\/\/([\w-]+\.)*kawakaukuleleistrian\.cfd reject
 ^https?:\/\/([\w-]+\.)*kayak\.[\w-]+\/vestigo/measure reject
 ^https?:\/\/([\w-]+\.)*kayak\.com\/[\w-]+/afterclick/ reject
 ^https?:\/\/([\w-]+\.)*kayanwashery\.cyou reject
@@ -41811,6 +41878,7 @@
 ^https?:\/\/([\w-]+\.)*lepetitdiary\.com reject
 ^https?:\/\/([\w-]+\.)*lepetitjournal\.com\/monitoring\? reject
 ^https?:\/\/([\w-]+\.)*lepidpomps\.com reject
+^https?:\/\/([\w-]+\.)*lepomislahore\.com reject
 ^https?:\/\/([\w-]+\.)*leprosyderipia\.com reject
 ^https?:\/\/([\w-]+\.)*lepxtxsbucqzl\.space reject
 ^https?:\/\/([\w-]+\.)*leroymerlin\.co\.za\/fokt/ reject
@@ -43212,6 +43280,7 @@
 ^https?:\/\/([\w-]+\.)*llbtqlrqrfhjc\.space reject
 ^https?:\/\/([\w-]+\.)*lle6t62id\.com reject
 ^https?:\/\/([\w-]+\.)*lliefkzyf\.com reject
+^https?:\/\/([\w-]+\.)*lliyhsjtyrzwa\.online reject
 ^https?:\/\/([\w-]+\.)*llkdiu\.chacos\.com reject
 ^https?:\/\/([\w-]+\.)*llksja\.com reject
 ^https?:\/\/([\w-]+\.)*lllencim\.com reject
@@ -46483,6 +46552,7 @@
 ^https?:\/\/([\w-]+\.)*maxesads\.com reject
 ^https?:\/\/([\w-]+\.)*maximpetus\.com reject
 ^https?:\/\/([\w-]+\.)*maximumboggles\.click reject
+^https?:\/\/([\w-]+\.)*maxjsbndgiznc\.site reject
 ^https?:\/\/([\w-]+\.)*maxmind\.com\/js/country\.js reject
 ^https?:\/\/([\w-]+\.)*maxmind\.com\^[\w-]+\/geoip2\.js reject
 ^https?:\/\/([\w-]+\.)*maxmind\.com\^[\w-]+\/geoip\.js reject
@@ -47053,6 +47123,7 @@
 ^https?:\/\/([\w-]+\.)*mentionideablit\.com reject
 ^https?:\/\/([\w-]+\.)*mentorsframerkhu\.cyou reject
 ^https?:\/\/([\w-]+\.)*mentorsticks\.com reject
+^https?:\/\/([\w-]+\.)*mepmvgkuxpwhi\.space reject
 ^https?:\/\/([\w-]+\.)*meqanhm\.icu reject
 ^https?:\/\/([\w-]+\.)*mequyvgfqzj\.com reject
 ^https?:\/\/([\w-]+\.)*mer\.stdout\.cz reject
@@ -49130,6 +49201,7 @@
 ^https?:\/\/([\w-]+\.)*mktg\.xeniumhr\.com reject
 ^https?:\/\/([\w-]+\.)*mkwntx\.pinkpanda\.de reject
 ^https?:\/\/([\w-]+\.)*mkyc81u6je\.com reject
+^https?:\/\/([\w-]+\.)*mkzjimniofuak\.online reject
 ^https?:\/\/([\w-]+\.)*mkzpqu\.sungboon\.com reject
 ^https?:\/\/([\w-]+\.)*mkztpjfyppqpi\.space reject
 ^https?:\/\/([\w-]+\.)*mkztpk\.invictastores\.com reject
@@ -49500,6 +49572,7 @@
 ^https?:\/\/([\w-]+\.)*morgnondeep\.com reject
 ^https?:\/\/([\w-]+\.)*moriorilimbs\.com reject
 ^https?:\/\/([\w-]+\.)*mormont\.gamer-network\.net reject
+^https?:\/\/([\w-]+\.)*mornaytarpan\.com reject
 ^https?:\/\/([\w-]+\.)*morningstar\.com\/api/v1/analytics reject
 ^https?:\/\/([\w-]+\.)*morseytv3\.goaserv\.com reject
 ^https?:\/\/([\w-]+\.)*mortemmoca\.com reject
@@ -49908,6 +49981,7 @@
 ^https?:\/\/([\w-]+\.)*musikkenanganmp3\.goasrv\.com reject
 ^https?:\/\/([\w-]+\.)*musilylithol\.com reject
 ^https?:\/\/([\w-]+\.)*musitaorunokouka\.blog54\.go-static\.info reject
+^https?:\/\/([\w-]+\.)*muskievisaedcaker\.cyou reject
 ^https?:\/\/([\w-]+\.)*muslimin40porf\.goaserv\.com reject
 ^https?:\/\/([\w-]+\.)*musquawchoky\.click reject
 ^https?:\/\/([\w-]+\.)*mussedcraal\.com reject
@@ -49922,6 +49996,7 @@
 ^https?:\/\/([\w-]+\.)*mutvez6qg329vmoqk\.cfd reject
 ^https?:\/\/([\w-]+\.)*muwwkgocljod\.com reject
 ^https?:\/\/([\w-]+\.)*muwyib\.lettuce\.co\.jp reject
+^https?:\/\/([\w-]+\.)*muxaxclatoqb\.in reject
 ^https?:\/\/([\w-]+\.)*muxc8wxhv\.com reject
 ^https?:\/\/([\w-]+\.)*muxing\.city reject
 ^https?:\/\/([\w-]+\.)*muyuge\.com\/fw\.html/ reject
@@ -49971,6 +50046,7 @@
 ^https?:\/\/([\w-]+\.)*mwrf\.net\/images/mrf/ reject
 ^https?:\/\/([\w-]+\.)*mws\.verisk\.com reject
 ^https?:\/\/([\w-]+\.)*mwsgvnkhfrlah\.space reject
+^https?:\/\/([\w-]+\.)*mwsmtyhvbdsbg\.space reject
 ^https?:\/\/([\w-]+\.)*mwulwdmrqwvtz\.com reject
 ^https?:\/\/([\w-]+\.)*mwxema\.galerieslafayette\.com reject
 ^https?:\/\/([\w-]+\.)*mwxigqjdsawol\.website reject
@@ -50898,6 +50974,7 @@
 ^https?:\/\/([\w-]+\.)*nfudeh\.jadebag\.co\.kr reject
 ^https?:\/\/([\w-]+\.)*nfuwow\.com\/static/nfuwow/source/front/new/images/ reject
 ^https?:\/\/([\w-]+\.)*nfvhaykwspcus\.website reject
+^https?:\/\/([\w-]+\.)*nfvlaoizfiucd\.site reject
 ^https?:\/\/([\w-]+\.)*nfydd\.com\/template/wap1/js/dd\.js reject
 ^https?:\/\/([\w-]+\.)*ng2y405w3y\.com reject
 ^https?:\/\/([\w-]+\.)*ng8f\.top reject
@@ -51182,6 +51259,7 @@
 ^https?:\/\/([\w-]+\.)*nmgplatform\.com reject
 ^https?:\/\/([\w-]+\.)*nmgyllh\.cn reject
 ^https?:\/\/([\w-]+\.)*nmhieupdp\.goasrv\.com reject
+^https?:\/\/([\w-]+\.)*nmilyzrhb\.com reject
 ^https?:\/\/([\w-]+\.)*nmiodk\.promiflash\.de reject
 ^https?:\/\/([\w-]+\.)*nmkghh\.com reject
 ^https?:\/\/([\w-]+\.)*nmlmmyerik\.com reject
@@ -51418,6 +51496,7 @@
 ^https?:\/\/([\w-]+\.)*nplaf\.com reject
 ^https?:\/\/([\w-]+\.)*nplden\.legionathletics\.com reject
 ^https?:\/\/([\w-]+\.)*nplsxlziftfbnk\.com reject
+^https?:\/\/([\w-]+\.)*npmiivlloceyf\.website reject
 ^https?:\/\/([\w-]+\.)*npo-data\.nl\/tag/v3/npotag\.js reject
 ^https?:\/\/([\w-]+\.)*npo-data\.nl\/tags/tag\.min\.js reject
 ^https?:\/\/([\w-]+\.)*npo\.nl\/tag/atinternet/ reject
@@ -51434,6 +51513,7 @@
 ^https?:\/\/([\w-]+\.)*npzc1yzag7\.com reject
 ^https?:\/\/([\w-]+\.)*npzjrlkmmjjtxe\.com reject
 ^https?:\/\/([\w-]+\.)*nq6jitu4y\.com reject
+^https?:\/\/([\w-]+\.)*nq95ihw6l9bwzuy\.cfd reject
 ^https?:\/\/([\w-]+\.)*nqacsh\.boosted\.dk reject
 ^https?:\/\/([\w-]+\.)*nqbcf\.cn\/html/top reject
 ^https?:\/\/([\w-]+\.)*nqcbgz\.cocopanda\.se reject
@@ -51714,6 +51794,7 @@
 ^https?:\/\/([\w-]+\.)*nwwucx\.palemoba\.com reject
 ^https?:\/\/([\w-]+\.)*nwywjbgjlcvut\.space reject
 ^https?:\/\/([\w-]+\.)*nxakpj4ac8gkd53\.info reject
+^https?:\/\/([\w-]+\.)*nxbjqyjoaryoj\.site reject
 ^https?:\/\/([\w-]+\.)*nxbpcvwdqczff\.site reject
 ^https?:\/\/([\w-]+\.)*nxccvtjahznqg\.site reject
 ^https?:\/\/([\w-]+\.)*nxduuvltfxghs\.com reject
@@ -51975,6 +52056,7 @@
 ^https?:\/\/([\w-]+\.)*obtuserunaxledkassite\.cyou reject
 ^https?:\/\/([\w-]+\.)*obuntoibafqlz\.site reject
 ^https?:\/\/([\w-]+\.)*obv3epx22d\.com reject
+^https?:\/\/([\w-]+\.)*obviousqueen\.pro reject
 ^https?:\/\/([\w-]+\.)*obvioussecretive\.com reject
 ^https?:\/\/([\w-]+\.)*obviouswait\.com reject
 ^https?:\/\/([\w-]+\.)*obykgswpqwccn\.site reject
@@ -52169,6 +52251,7 @@
 ^https?:\/\/([\w-]+\.)*ogfkpyvpe\.in reject
 ^https?:\/\/([\w-]+\.)*ogfna\.net reject
 ^https?:\/\/([\w-]+\.)*oghqvffmnt\.com reject
+^https?:\/\/([\w-]+\.)*oghxipocwoqx\.in reject
 ^https?:\/\/([\w-]+\.)*ogledcatchup\.com reject
 ^https?:\/\/([\w-]+\.)*oglvbcuqfkame\.space reject
 ^https?:\/\/([\w-]+\.)*oglyjoclekony\.website reject
@@ -52917,6 +53000,7 @@
 ^https?:\/\/([\w-]+\.)*oph1y9nvizeucbw\.cfd reject
 ^https?:\/\/([\w-]+\.)*oph7o\.montecarlosbm-corporate\.com reject
 ^https?:\/\/([\w-]+\.)*ophan\.theguardian\.com reject
+^https?:\/\/([\w-]+\.)*opheliadrysne\.cyou reject
 ^https?:\/\/([\w-]+\.)*ophimdoxrnedh\.website reject
 ^https?:\/\/([\w-]+\.)*ophwrh\.cn reject
 ^https?:\/\/([\w-]+\.)*opi-nion\.com reject
@@ -53276,6 +53360,7 @@
 ^https?:\/\/([\w-]+\.)*otwaahn\.com reject
 ^https?:\/\/([\w-]+\.)*otx23nu6rzon\.prep\.toppers\.com reject
 ^https?:\/\/([\w-]+\.)*otyjvmssiphai\.online reject
+^https?:\/\/([\w-]+\.)*otzotceatbyrq\.website reject
 ^https?:\/\/([\w-]+\.)*otzqkansmjoik\.site reject
 ^https?:\/\/([\w-]+\.)*ou8tv5hcqkhel9cp31jmqj5hy7c18wcix\.cfd reject
 ^https?:\/\/([\w-]+\.)*ou\.shutterfly\.com reject
@@ -53482,6 +53567,7 @@
 ^https?:\/\/([\w-]+\.)*oxyacidalogia\.com reject
 ^https?:\/\/([\w-]+\.)*oxygenfuse\.com reject
 ^https?:\/\/([\w-]+\.)*oxystc\.com reject
+^https?:\/\/([\w-]+\.)*oyanascroggy\.rest reject
 ^https?:\/\/([\w-]+\.)*oyaswl\.manor\.ch reject
 ^https?:\/\/([\w-]+\.)*oyb2ev9lqn\.com reject
 ^https?:\/\/([\w-]+\.)*oyfnkle\.cn reject
@@ -54268,6 +54354,7 @@
 ^https?:\/\/([\w-]+\.)*pdzutf\.sftworks\.jp reject
 ^https?:\/\/([\w-]+\.)*pdzzjz\.icu reject
 ^https?:\/\/([\w-]+\.)*pe-intelesul-tuturor\.go-static\.info reject
+^https?:\/\/([\w-]+\.)*pe78vqq3bcgtny\.cfd reject
 ^https?:\/\/([\w-]+\.)*pe\.txbe\.at reject
 ^https?:\/\/([\w-]+\.)*pe\.video\.search\.goasrv\.com reject
 ^https?:\/\/([\w-]+\.)*peacbsdjtncux\.space reject
@@ -54379,6 +54466,7 @@
 ^https?:\/\/([\w-]+\.)*penshipgrobian\.com reject
 ^https?:\/\/([\w-]+\.)*penton\.com\/analytics/ reject
 ^https?:\/\/([\w-]+\.)*pentyneyoga\.com reject
+^https?:\/\/([\w-]+\.)*penupcodeinekipsey\.cyou reject
 ^https?:\/\/([\w-]+\.)*penxiangge\.com reject
 ^https?:\/\/([\w-]+\.)*penza-online\.ru\^[\w-]+\/userstats\.pl\? reject
 ^https?:\/\/([\w-]+\.)*peonspulsers\.com reject
@@ -54623,6 +54711,7 @@
 ^https?:\/\/([\w-]+\.)*phruk\.org reject
 ^https?:\/\/([\w-]+\.)*phsism\.com reject
 ^https?:\/\/([\w-]+\.)*phsmobile\.actonservice\.com reject
+^https?:\/\/([\w-]+\.)*phspywijwvjc\.com reject
 ^https?:\/\/([\w-]+\.)*phstjhaswpoea\.site reject
 ^https?:\/\/([\w-]+\.)*phts\.io reject
 ^https?:\/\/([\w-]+\.)*phudsumipakr\.net reject
@@ -55275,6 +55364,7 @@
 ^https?:\/\/([\w-]+\.)*pleasanttulip\.com reject
 ^https?:\/\/([\w-]+\.)*pleasedmad\.com reject
 ^https?:\/\/([\w-]+\.)*pleaterkelehbushing\.cyou reject
+^https?:\/\/([\w-]+\.)*plebesloimic\.cyou reject
 ^https?:\/\/([\w-]+\.)*plectrum53\.top reject
 ^https?:\/\/([\w-]+\.)*pleisechimys\.qpon reject
 ^https?:\/\/([\w-]+\.)*plenarypicrylveinage\.cyou reject
@@ -55384,6 +55474,7 @@
 ^https?:\/\/([\w-]+\.)*pnaagn\.haekplanter-heijnen\.dk reject
 ^https?:\/\/([\w-]+\.)*pnbglewqjxmab\.space reject
 ^https?:\/\/([\w-]+\.)*pnbmoezxtewgv\.site reject
+^https?:\/\/([\w-]+\.)*pnbnjcqgtxujk\.online reject
 ^https?:\/\/([\w-]+\.)*pncloudfl\.com reject
 ^https?:\/\/([\w-]+\.)*pnd\.gs reject
 ^https?:\/\/([\w-]+\.)*pndhlndiswrxg\.online reject
@@ -55515,6 +55606,7 @@
 ^https?:\/\/([\w-]+\.)*polypak\.actonservice\.com reject
 ^https?:\/\/([\w-]+\.)*pomeysaedessonlike\.cfd reject
 ^https?:\/\/([\w-]+\.)*pomponshedersmark\.cyou reject
+^https?:\/\/([\w-]+\.)*poncesuncoyly\.cyou reject
 ^https?:\/\/([\w-]+\.)*ponesjaw\.cyou reject
 ^https?:\/\/([\w-]+\.)*poneytinosa\.rest reject
 ^https?:\/\/([\w-]+\.)*ponjaurania\.cfd reject
@@ -55755,6 +55847,7 @@
 ^https?:\/\/([\w-]+\.)*pqlmae\.lamaisonduchocolat\.co\.jp reject
 ^https?:\/\/([\w-]+\.)*pqn7\.cheque-dejeuner\.fr reject
 ^https?:\/\/([\w-]+\.)*pqomnfbg\.com reject
+^https?:\/\/([\w-]+\.)*pqorwwnymucaj\.online reject
 ^https?:\/\/([\w-]+\.)*pqpauhtkbh\.icu reject
 ^https?:\/\/([\w-]+\.)*pqptuwdqvzzpp\.online reject
 ^https?:\/\/([\w-]+\.)*pqrede\.fiatprofessional\.com reject
@@ -56342,6 +56435,7 @@
 ^https?:\/\/([\w-]+\.)*ptga\.cn reject
 ^https?:\/\/([\w-]+\.)*ptgdb\.cn reject
 ^https?:\/\/([\w-]+\.)*pthaktierl\.com reject
+^https?:\/\/([\w-]+\.)*pthnfbvdwmwod\.space reject
 ^https?:\/\/([\w-]+\.)*pthrumeath\.com reject
 ^https?:\/\/([\w-]+\.)*ptichoolsougn\.net reject
 ^https?:\/\/([\w-]+\.)*ptikdxdestq\.com reject
@@ -56375,6 +56469,7 @@
 ^https?:\/\/([\w-]+\.)*ptzxed507\.com reject
 ^https?:\/\/([\w-]+\.)*pu3xxlqjr\.com reject
 ^https?:\/\/([\w-]+\.)*pu\.pretunique\.fr reject
+^https?:\/\/([\w-]+\.)*puadyhgguqrhd\.website reject
 ^https?:\/\/([\w-]+\.)*puamwfdfltwzp\.space reject
 ^https?:\/\/([\w-]+\.)*puata\.info reject
 ^https?:\/\/([\w-]+\.)*pub-referral-widget\.current\.us reject
@@ -56442,6 +56537,7 @@
 ^https?:\/\/([\w-]+\.)*pucaanova\.com reject
 ^https?:\/\/([\w-]+\.)*puceronplouky\.com reject
 ^https?:\/\/([\w-]+\.)*puckrietalioz\.website reject
+^https?:\/\/([\w-]+\.)*puddlesgeyser\.cfd reject
 ^https?:\/\/([\w-]+\.)*pudgeruffian\.goasrv\.com reject
 ^https?:\/\/([\w-]+\.)*pudppkqcs\.icu reject
 ^https?:\/\/([\w-]+\.)*pudseyheimdal\.com reject
@@ -56725,6 +56821,7 @@
 ^https?:\/\/([\w-]+\.)*pxsg\.pandora\.com reject
 ^https?:\/\/([\w-]+\.)*pxvlcc\.crocs\.fr reject
 ^https?:\/\/([\w-]+\.)*pxvoyuez\.com reject
+^https?:\/\/([\w-]+\.)*pxwcfmrrqcybi\.online reject
 ^https?:\/\/([\w-]+\.)*pxx\.tnklrs\.cn reject
 ^https?:\/\/([\w-]+\.)*pxxhbz\.apamanshop\.com reject
 ^https?:\/\/([\w-]+\.)*py\.cn\/src/img/pyy/ reject
@@ -56871,6 +56968,7 @@
 ^https?:\/\/([\w-]+\.)*qbwkux\.home24\.at reject
 ^https?:\/\/([\w-]+\.)*qbxxi23a2\.com reject
 ^https?:\/\/([\w-]+\.)*qbyngdjq8g\.com reject
+^https?:\/\/([\w-]+\.)*qbzaqdjkriqth\.site reject
 ^https?:\/\/([\w-]+\.)*qbzdmkvtfjnkh\.online reject
 ^https?:\/\/([\w-]+\.)*qc1\.cheshipin\.com reject
 ^https?:\/\/([\w-]+\.)*qc\.arstechnica\.com reject
@@ -56880,6 +56978,7 @@
 ^https?:\/\/([\w-]+\.)*qc\.vanityfair\.com reject
 ^https?:\/\/([\w-]+\.)*qc\.vogue\.com reject
 ^https?:\/\/([\w-]+\.)*qc\.wired\.com reject
+^https?:\/\/([\w-]+\.)*qcawoxvqikyhk\.online reject
 ^https?:\/\/([\w-]+\.)*qcb2xeg\.icu reject
 ^https?:\/\/([\w-]+\.)*qcblzn\.pinkpanda\.it reject
 ^https?:\/\/([\w-]+\.)*qccxvtfbk\.com reject
@@ -57385,6 +57484,7 @@
 ^https?:\/\/([\w-]+\.)*qsearch-a\.akamaihd\.net reject
 ^https?:\/\/([\w-]+\.)*qselic\.top reject
 ^https?:\/\/([\w-]+\.)*qservz\.com reject
+^https?:\/\/([\w-]+\.)*qshwirfgvfkfg\.website reject
 ^https?:\/\/([\w-]+\.)*qsixcaxkudcdk\.online reject
 ^https?:\/\/([\w-]+\.)*qsj8fd\.com reject
 ^https?:\/\/([\w-]+\.)*qsjdi1vyq\.com reject
@@ -57625,6 +57725,7 @@
 ^https?:\/\/([\w-]+\.)*qwant\.com\/impression/ reject
 ^https?:\/\/([\w-]+\.)*qwant\.com\/maps/events reject
 ^https?:\/\/([\w-]+\.)*qwant\.com\/v2/api/ux/surveys\? reject
+^https?:\/\/([\w-]+\.)*qwbeznyeyonyr\.space reject
 ^https?:\/\/([\w-]+\.)*qwblog\.cn\/localfile/20200612230036\.gif reject
 ^https?:\/\/([\w-]+\.)*qwcwnjk\.com reject
 ^https?:\/\/([\w-]+\.)*qwdbsjnql\.com reject
@@ -58016,6 +58117,7 @@
 ^https?:\/\/([\w-]+\.)*raurread\.com reject
 ^https?:\/\/([\w-]+\.)*raven\.adeptmind\.ai reject
 ^https?:\/\/([\w-]+\.)*ravenfarm\.tech reject
+^https?:\/\/([\w-]+\.)*ravenwaterfall\.com reject
 ^https?:\/\/([\w-]+\.)*ravktufmpgula\.site reject
 ^https?:\/\/([\w-]+\.)*ravm\.tv reject
 ^https?:\/\/([\w-]+\.)*raw-co\.com reject
@@ -58235,6 +58337,7 @@
 ^https?:\/\/([\w-]+\.)*reaveorganum\.com reject
 ^https?:\/\/([\w-]+\.)*reaveryreplan\.com reject
 ^https?:\/\/([\w-]+\.)*reawaitinsoleapodan\.cyou reject
+^https?:\/\/([\w-]+\.)*rebecsunbarb\.com reject
 ^https?:\/\/([\w-]+\.)*rebelclover\.com reject
 ^https?:\/\/([\w-]+\.)*rebelhen\.com reject
 ^https?:\/\/([\w-]+\.)*rebellyimmix\.cyou reject
@@ -58524,6 +58627,7 @@
 ^https?:\/\/([\w-]+\.)*reliable\.elgas\.com\.au reject
 ^https?:\/\/([\w-]+\.)*reliableceaseswat\.com reject
 ^https?:\/\/([\w-]+\.)*reliableguardianindifference\.com reject
+^https?:\/\/([\w-]+\.)*reliablelinen\.com reject
 ^https?:\/\/([\w-]+\.)*reliablepapaya\.com reject
 ^https?:\/\/([\w-]+\.)*reliableparrot\.biz reject
 ^https?:\/\/([\w-]+\.)*reliableparrot\.tech reject
@@ -58536,12 +58640,14 @@
 ^https?:\/\/([\w-]+\.)*religtimucua\.cyou reject
 ^https?:\/\/([\w-]+\.)*relishsubsequentlytank\.com reject
 ^https?:\/\/([\w-]+\.)*rellsagesamerence\.com reject
+^https?:\/\/([\w-]+\.)*rellyancandlerviands\.cfd reject
 ^https?:\/\/([\w-]+\.)*relocationsydney\.goaserv\.com reject
 ^https?:\/\/([\w-]+\.)*reltrd\.peteralexander\.com\.au reject
 ^https?:\/\/([\w-]+\.)*reluctance58\.com reject
 ^https?:\/\/([\w-]+\.)*reluctancefleck\.com reject
 ^https?:\/\/([\w-]+\.)*relumesarchgod\.com reject
 ^https?:\/\/([\w-]+\.)*relyonit\.americanexpress\.co\.uk reject
+^https?:\/\/([\w-]+\.)*remainder22\.com reject
 ^https?:\/\/([\w-]+\.)*remainder38\.com reject
 ^https?:\/\/([\w-]+\.)*remainslagend\.com reject
 ^https?:\/\/([\w-]+\.)*remanpurflertawneys\.cyou reject
@@ -58581,6 +58687,7 @@
 ^https?:\/\/([\w-]+\.)*renewerrimerskyathoi\.cyou reject
 ^https?:\/\/([\w-]+\.)*rengbali\.fun reject
 ^https?:\/\/([\w-]+\.)*renhadmasandbab\.info reject
+^https?:\/\/([\w-]+\.)*renintamises\.com reject
 ^https?:\/\/([\w-]+\.)*renrenkanpian\.com reject
 ^https?:\/\/([\w-]+\.)*rent\.mgrc\.com reject
 ^https?:\/\/([\w-]+\.)*rentalcars\.com\/partners/ reject
@@ -59243,6 +59350,7 @@
 ^https?:\/\/([\w-]+\.)*rlgsfmogis\.com reject
 ^https?:\/\/([\w-]+\.)*rlhhlp\.icu reject
 ^https?:\/\/([\w-]+\.)*rljjt\.cn reject
+^https?:\/\/([\w-]+\.)*rlmhmnoprgzsp\.online reject
 ^https?:\/\/([\w-]+\.)*rlog\.popin\.cc reject
 ^https?:\/\/([\w-]+\.)*rlovoa\.duckcamp\.com reject
 ^https?:\/\/([\w-]+\.)*rlqoyht\.icu reject
@@ -59507,6 +59615,7 @@
 ^https?:\/\/([\w-]+\.)*rq6jn\.i5n7j18plvvgkw4fg4ukbmzxhb9fz\.cfd reject
 ^https?:\/\/([\w-]+\.)*rqbdyk\.evo\.com reject
 ^https?:\/\/([\w-]+\.)*rqbvgm\.aleupominek\.pl reject
+^https?:\/\/([\w-]+\.)*rqhknoywabunz\.space reject
 ^https?:\/\/([\w-]+\.)*rqhsfmwwy\.com reject
 ^https?:\/\/([\w-]+\.)*rqhtgf\.pierrecardin\.com\.tr reject
 ^https?:\/\/([\w-]+\.)*rqilioakof\.icu reject
@@ -60018,6 +60127,7 @@
 ^https?:\/\/([\w-]+\.)*rxzfhfmoegfvts\.com reject
 ^https?:\/\/([\w-]+\.)*ry0\.rythmefm\.com reject
 ^https?:\/\/([\w-]+\.)*ry7icaih0p\.com reject
+^https?:\/\/([\w-]+\.)*ryajoacyyymej\.site reject
 ^https?:\/\/([\w-]+\.)*rybatquick\.com reject
 ^https?:\/\/([\w-]+\.)*rybbit-analytics\.livecounts\.io reject
 ^https?:\/\/([\w-]+\.)*rybbit\.sg-app\.com reject
@@ -67424,6 +67534,7 @@
 ^https?:\/\/([\w-]+\.)*sonnerie\.net reject
 ^https?:\/\/([\w-]+\.)*sonnetmimsey\.com reject
 ^https?:\/\/([\w-]+\.)*sonobi\.com reject
+^https?:\/\/([\w-]+\.)*sonsiecozing\.rest reject
 ^https?:\/\/([\w-]+\.)*soob00avn4\.com reject
 ^https?:\/\/([\w-]+\.)*soojeeattaboy\.com reject
 ^https?:\/\/([\w-]+\.)*soonpubplatform\.online reject
@@ -70407,6 +70518,7 @@
 ^https?:\/\/([\w-]+\.)*studious-make\.com reject
 ^https?:\/\/([\w-]+\.)*studocu\.com\/27m703Hm/init\.js reject
 ^https?:\/\/([\w-]+\.)*studsbaniva\.cfd reject
+^https?:\/\/([\w-]+\.)*studssecohm\.rest reject
 ^https?:\/\/([\w-]+\.)*study\.jcu\.edu\.au reject
 ^https?:\/\/([\w-]+\.)*study\.vu\.edu\.au reject
 ^https?:\/\/([\w-]+\.)*studycooking\.com reject
@@ -70577,6 +70689,7 @@
 ^https?:\/\/([\w-]+\.)*suitedeatercrutch\.com reject
 ^https?:\/\/([\w-]+\.)*suiyishop\.cn\/zhuangxiu_ reject
 ^https?:\/\/([\w-]+\.)*sukbrljztfujz\.online reject
+^https?:\/\/([\w-]+\.)*sukccufhrdbfu\.online reject
 ^https?:\/\/([\w-]+\.)*sukunukyazhrn\.website reject
 ^https?:\/\/([\w-]+\.)*sulafatmortals\.com reject
 ^https?:\/\/([\w-]+\.)*sulfatesoluble\.com reject
@@ -70972,6 +71085,7 @@
 ^https?:\/\/([\w-]+\.)*swovtny444\.com reject
 ^https?:\/\/([\w-]+\.)*swqerog\.com reject
 ^https?:\/\/([\w-]+\.)*swqleb\.adidas\.ru reject
+^https?:\/\/([\w-]+\.)*swqsmxpjmtupv\.space reject
 ^https?:\/\/([\w-]+\.)*swwcyk\.ahaber\.com\.tr reject
 ^https?:\/\/([\w-]+\.)*swwcyk\.atv\.com\.tr reject
 ^https?:\/\/([\w-]+\.)*swwcyk\.takvim\.com\.tr reject
@@ -73124,6 +73238,7 @@
 ^https?:\/\/([\w-]+\.)*tif\.ionos\.com reject
 ^https?:\/\/([\w-]+\.)*tiffanysatchel\.cyou reject
 ^https?:\/\/([\w-]+\.)*tiffieskeif\.qpon reject
+^https?:\/\/([\w-]+\.)*tiffinawalt\.com reject
 ^https?:\/\/([\w-]+\.)*tiffysangei\.com reject
 ^https?:\/\/([\w-]+\.)*tifyeldi\.top reject
 ^https?:\/\/([\w-]+\.)*tiger080227\.shop reject
@@ -73668,6 +73783,7 @@
 ^https?:\/\/([\w-]+\.)*todaytvseries1\.com\/ads/ reject
 ^https?:\/\/([\w-]+\.)*todditehexarch\.com reject
 ^https?:\/\/([\w-]+\.)*toddlecausebeeper\.com reject
+^https?:\/\/([\w-]+\.)*todiesknacks\.com reject
 ^https?:\/\/([\w-]+\.)*todomercadoweb\.es\/pixel reject
 ^https?:\/\/([\w-]+\.)*todsquia\.com reject
 ^https?:\/\/([\w-]+\.)*toeopa\.doutornature\.com reject
@@ -77264,6 +77380,7 @@
 ^https?:\/\/([\w-]+\.)*tvkfms\.nta\.co\.jp reject
 ^https?:\/\/([\w-]+\.)*tvlmzx\.icu reject
 ^https?:\/\/([\w-]+\.)*tvnacqljeskcc\.website reject
+^https?:\/\/([\w-]+\.)*tvnaesiqhbkod\.online reject
 ^https?:\/\/([\w-]+\.)*tvnnumvfmrshrn\.com reject
 ^https?:\/\/([\w-]+\.)*tvnwoj7ji9f5qe8v3bcl\.cfd reject
 ^https?:\/\/([\w-]+\.)*tvpage\.com\/tvpa\.min\.js reject
@@ -77557,6 +77674,7 @@
 ^https?:\/\/([\w-]+\.)*uaa\.com\/js/dxj\. reject
 ^https?:\/\/([\w-]+\.)*uaaooa\.stansberryresearch\.com reject
 ^https?:\/\/([\w-]+\.)*uaas\.yandex\.ru reject
+^https?:\/\/([\w-]+\.)*uabrbzcvkxvax\.website reject
 ^https?:\/\/([\w-]+\.)*uadforum\.com\/community/images/ua_ads/ reject
 ^https?:\/\/([\w-]+\.)*uadllyad\.com reject
 ^https?:\/\/([\w-]+\.)*uads\.cc reject
@@ -77581,6 +77699,7 @@
 ^https?:\/\/([\w-]+\.)*uatrewards-sg\.greateasternlife\.com reject
 ^https?:\/\/([\w-]+\.)*uatshare\.entertainment\.com reject
 ^https?:\/\/([\w-]+\.)*uatwechiwfeef\.space reject
+^https?:\/\/([\w-]+\.)*uauhllwvfwcgi\.site reject
 ^https?:\/\/([\w-]+\.)*uawdbluyply\.com reject
 ^https?:\/\/([\w-]+\.)*uawefo\.guylook\.co\.kr reject
 ^https?:\/\/([\w-]+\.)*uaxzqwagnvfoz\.website reject
@@ -77863,6 +77982,7 @@
 ^https?:\/\/([\w-]+\.)*ujgf120\.com reject
 ^https?:\/\/([\w-]+\.)*ujhmjrfifsxmw\.website reject
 ^https?:\/\/([\w-]+\.)*ujhu\.cn reject
+^https?:\/\/([\w-]+\.)*ujiuagtxbazry\.site reject
 ^https?:\/\/([\w-]+\.)*ujj1ndg5i\.com reject
 ^https?:\/\/([\w-]+\.)*ujjdfoepgzaju\.website reject
 ^https?:\/\/([\w-]+\.)*ujlolbxhbczbh\.online reject
@@ -77944,6 +78064,7 @@
 ^https?:\/\/([\w-]+\.)*ultund\.misterspex\.nl reject
 ^https?:\/\/([\w-]+\.)*uluhitailge\.cfd reject
 ^https?:\/\/([\w-]+\.)*ulutlv\.esprit\.fr reject
+^https?:\/\/([\w-]+\.)*ulwvfhknqocnm\.online reject
 ^https?:\/\/([\w-]+\.)*ulx1cpf68\.com reject
 ^https?:\/\/([\w-]+\.)*ulxmuuyqupmde\.online reject
 ^https?:\/\/([\w-]+\.)*ulyuom\.xyz reject
@@ -77988,6 +78109,7 @@
 ^https?:\/\/([\w-]+\.)*umrd62a7zy\.com reject
 ^https?:\/\/([\w-]+\.)*umrvmb\.net\.anwalt\.de reject
 ^https?:\/\/([\w-]+\.)*umschool\.net\/_jts/api/s/track reject
+^https?:\/\/([\w-]+\.)*umtcfwrbhfzss\.space reject
 ^https?:\/\/([\w-]+\.)*umtnpbqxhwuqr\.online reject
 ^https?:\/\/([\w-]+\.)*umtudo\.com reject
 ^https?:\/\/([\w-]+\.)*umtzwr\.adidas\.co\.kr reject
@@ -78206,6 +78328,7 @@
 ^https?:\/\/([\w-]+\.)*unrotedsatan\.cfd reject
 ^https?:\/\/([\w-]+\.)*unrulymedia\.com reject
 ^https?:\/\/([\w-]+\.)*unrulypause\.com reject
+^https?:\/\/([\w-]+\.)*unsafertulipschintz\.cfd reject
 ^https?:\/\/([\w-]+\.)*unscarbgroper\.com reject
 ^https?:\/\/([\w-]+\.)*unseenreport\.com reject
 ^https?:\/\/([\w-]+\.)*unselfisheducation\.com reject
@@ -78266,6 +78389,7 @@
 ^https?:\/\/([\w-]+\.)*uoblij\.farmaline\.be reject
 ^https?:\/\/([\w-]+\.)*uofcdl\.lagos\.com reject
 ^https?:\/\/([\w-]+\.)*uogqym\.christopherandbanks\.com reject
+^https?:\/\/([\w-]+\.)*uohjuatpvtmhy\.website reject
 ^https?:\/\/([\w-]+\.)*uojpjo\.miin-cosmetics\.com reject
 ^https?:\/\/([\w-]+\.)*uojybigasgycc\.site reject
 ^https?:\/\/([\w-]+\.)*uol\.com\.br\/stats\? reject
@@ -78373,6 +78497,7 @@
 ^https?:\/\/([\w-]+\.)*ur\.gwl9bov9fn1hvpyrbio9ii\.cfd reject
 ^https?:\/\/([\w-]+\.)*uraeusanisol\.com reject
 ^https?:\/\/([\w-]+\.)*uramylypcuzwt\.online reject
+^https?:\/\/([\w-]+\.)*uranylsroovedsaughs\.cyou reject
 ^https?:\/\/([\w-]+\.)*uraseszincy\.com reject
 ^https?:\/\/([\w-]+\.)*uratomamaltedsmizen\.qpon reject
 ^https?:\/\/([\w-]+\.)*urbanairship\.com reject
@@ -78532,10 +78657,12 @@
 ^https?:\/\/([\w-]+\.)*usnorbert\.com reject
 ^https?:\/\/([\w-]+\.)*usnvuj\.skillfactory\.ru reject
 ^https?:\/\/([\w-]+\.)*usnyxdhmjycsy\.space reject
+^https?:\/\/([\w-]+\.)*usovivvowakqp\.site reject
 ^https?:\/\/([\w-]+\.)*usoxsak\.icu reject
 ^https?:\/\/([\w-]+\.)*uspauline\.com reject
 ^https?:\/\/([\w-]+\.)*uspe4j25v6\.com reject
 ^https?:\/\/([\w-]+\.)*usphfiona\.com reject
+^https?:\/\/([\w-]+\.)*uspiix\.com reject
 ^https?:\/\/([\w-]+\.)*usqbvlkguegev\.online reject
 ^https?:\/\/([\w-]+\.)*usqok\.cn reject
 ^https?:\/\/([\w-]+\.)*usr\.interactiveone\.com reject
@@ -79114,6 +79241,7 @@
 ^https?:\/\/([\w-]+\.)*uzitkove-vozy\.go-static\.info reject
 ^https?:\/\/([\w-]+\.)*uzjzdtaiijqhy\.online reject
 ^https?:\/\/([\w-]+\.)*uzlycrnh\.com reject
+^https?:\/\/([\w-]+\.)*uznelnuamjsxb\.website reject
 ^https?:\/\/([\w-]+\.)*uzpkre\.connor\.com\.au reject
 ^https?:\/\/([\w-]+\.)*uzrtgekpw\.com reject
 ^https?:\/\/([\w-]+\.)*uzt7ud70j1\.com reject
@@ -79228,6 +79356,7 @@
 ^https?:\/\/([\w-]+\.)*vancuongthinh\.com reject
 ^https?:\/\/([\w-]+\.)*vandalcuculla\.click reject
 ^https?:\/\/([\w-]+\.)*vanderlisten\.pro reject
+^https?:\/\/([\w-]+\.)*vanelawzyliftmen\.cfd reject
 ^https?:\/\/([\w-]+\.)*vanesfounte\.click reject
 ^https?:\/\/([\w-]+\.)*vanfireworks\.com reject
 ^https?:\/\/([\w-]+\.)*vangloeducat\.com reject
@@ -79335,6 +79464,7 @@
 ^https?:\/\/([\w-]+\.)*vchllvizn\.com reject
 ^https?:\/\/([\w-]+\.)*vcita\.com\/tr_ reject
 ^https?:\/\/([\w-]+\.)*vckgrmcikcze\.com reject
+^https?:\/\/([\w-]+\.)*vckvzpsacgfne\.site reject
 ^https?:\/\/([\w-]+\.)*vclunl\.icu reject
 ^https?:\/\/([\w-]+\.)*vcmedia\.com reject
 ^https?:\/\/([\w-]+\.)*vcmgodxrmxidh\.site reject
@@ -79573,6 +79703,7 @@
 ^https?:\/\/([\w-]+\.)*vgfyzxruvnjfr\.site reject
 ^https?:\/\/([\w-]+\.)*vghnnh\.xyz reject
 ^https?:\/\/([\w-]+\.)*vgijoh\.com reject
+^https?:\/\/([\w-]+\.)*vgilpmasmlcc\.com reject
 ^https?:\/\/([\w-]+\.)*vgj4rlp9kbqw42\.cfd reject
 ^https?:\/\/([\w-]+\.)*vglkx9lick\.com reject
 ^https?:\/\/([\w-]+\.)*vglosh\.courierpress\.com reject
@@ -79725,6 +79856,7 @@
 ^https?:\/\/([\w-]+\.)*vidsgs4x4\.com reject
 ^https?:\/\/([\w-]+\.)*vidsrc\.icu\/js/script-custom\.js reject
 ^https?:\/\/([\w-]+\.)*vidsrcme\.ru\/sbx\.js reject
+^https?:\/\/([\w-]+\.)*vidssmvhmgome\.online reject
 ^https?:\/\/([\w-]+\.)*vidstats\.top reject
 ^https?:\/\/([\w-]+\.)*vidstream\.pro\/log/ reject
 ^https?:\/\/([\w-]+\.)*vidstream\.pro\/ping/ reject
@@ -80121,6 +80253,7 @@
 ^https?:\/\/([\w-]+\.)*vophiptv\.com reject
 ^https?:\/\/([\w-]+\.)*voqysr\.afr-web\.co\.jp reject
 ^https?:\/\/([\w-]+\.)*voraciousgrip\.com reject
+^https?:\/\/([\w-]+\.)*voragobuzziesvicars\.cyou reject
 ^https?:\/\/([\w-]+\.)*vordeki\.xyz reject
 ^https?:\/\/([\w-]+\.)*vorluic\.cn reject
 ^https?:\/\/([\w-]+\.)*voroud\.wine\.com\.br reject
@@ -80322,6 +80455,7 @@
 ^https?:\/\/([\w-]+\.)*vuwjv7sjvg7\.zedporn\.com reject
 ^https?:\/\/([\w-]+\.)*vuyibsm\.icu reject
 ^https?:\/\/([\w-]+\.)*vuypew\.ikks\.com reject
+^https?:\/\/([\w-]+\.)*vuzbtzhchzlfa\.site reject
 ^https?:\/\/([\w-]+\.)*vuzfmaofzw\.in reject
 ^https?:\/\/([\w-]+\.)*vv1\.pyhfxdm\.cn reject
 ^https?:\/\/([\w-]+\.)*vv\.nettierbrakier\.com reject
@@ -80581,6 +80715,7 @@
 ^https?:\/\/([\w-]+\.)*wabbersedgy\.com reject
 ^https?:\/\/([\w-]+\.)*wabgqrrsvdqza\.space reject
 ^https?:\/\/([\w-]+\.)*wabsgz\.studocu\.com reject
+^https?:\/\/([\w-]+\.)*waceggtwvsqoz\.online reject
 ^https?:\/\/([\w-]+\.)*wackercuir\.cyou reject
 ^https?:\/\/([\w-]+\.)*wackstoun\.cyou reject
 ^https?:\/\/([\w-]+\.)*wacowla\.com\/wp-content/plugins/popover/js/ reject
@@ -81306,6 +81441,7 @@
 ^https?:\/\/([\w-]+\.)*weidianyuedu\.com reject
 ^https?:\/\/([\w-]+\.)*weiekbrbolvvk\.online reject
 ^https?:\/\/([\w-]+\.)*weifengtianxia\.com reject
+^https?:\/\/([\w-]+\.)*weighedlourie\.com reject
 ^https?:\/\/([\w-]+\.)*weighty-strength\.com reject
 ^https?:\/\/([\w-]+\.)*weihaojiaju\.com\/tu888/ reject
 ^https?:\/\/([\w-]+\.)*weikeys\.com\/js/zt\.js reject
@@ -81390,6 +81526,7 @@
 ^https?:\/\/([\w-]+\.)*weqpnxhywvtfd\.com reject
 ^https?:\/\/([\w-]+\.)*werefilledwit\.org reject
 ^https?:\/\/([\w-]+\.)*werewolf0001\.goasrv\.com reject
+^https?:\/\/([\w-]+\.)*wergildshortie\.cyou reject
 ^https?:\/\/([\w-]+\.)*werkenntdenbesten\.de\/js/tracking\. reject
 ^https?:\/\/([\w-]+\.)*werkenntdenbesten\.de\/pd\.js reject
 ^https?:\/\/([\w-]+\.)*wernerelectric\.actonservice\.com reject
@@ -81596,6 +81733,7 @@
 ^https?:\/\/([\w-]+\.)*wickedsetup\.com reject
 ^https?:\/\/([\w-]+\.)*wicktilled\.cyou reject
 ^https?:\/\/([\w-]+\.)*wicmdokqlpdso\.space reject
+^https?:\/\/([\w-]+\.)*wicquokgawd\.com reject
 ^https?:\/\/([\w-]+\.)*wiczcu\.xyz reject
 ^https?:\/\/([\w-]+\.)*widdermixtec\.com reject
 ^https?:\/\/([\w-]+\.)*widgeo\.net\/compteur\.php\? reject
@@ -81640,6 +81778,7 @@
 ^https?:\/\/([\w-]+\.)*wigtuxopb\.in reject
 ^https?:\/\/([\w-]+\.)*wih5mo0586\.top reject
 ^https?:\/\/([\w-]+\.)*wihwzfypz\.com reject
+^https?:\/\/([\w-]+\.)*wii446mffph6bonmcw\.cfd reject
 ^https?:\/\/([\w-]+\.)*wiki-where\.goaserv\.com reject
 ^https?:\/\/([\w-]+\.)*wiki\.de\.goaserv\.com reject
 ^https?:\/\/([\w-]+\.)*wikihow\.com\/x/collect\? reject
@@ -82342,6 +82481,7 @@
 ^https?:\/\/([\w-]+\.)*wwkh9ku\.xyz reject
 ^https?:\/\/([\w-]+\.)*wwnscv\.myspringfield\.com reject
 ^https?:\/\/([\w-]+\.)*wwokkf\.laredoute\.ru reject
+^https?:\/\/([\w-]+\.)*wwpffqglsdcwq\.site reject
 ^https?:\/\/([\w-]+\.)*wwpiptrvhxuil\.online reject
 ^https?:\/\/([\w-]+\.)*wwpon365\.ru reject
 ^https?:\/\/([\w-]+\.)*wwpvpbktgoets\.space reject
@@ -83739,6 +83879,7 @@
 ^https?:\/\/([\w-]+\.)*xhvideo\.saawsedge\.com reject
 ^https?:\/\/([\w-]+\.)*xhxmhs\.ounass\.ae reject
 ^https?:\/\/([\w-]+\.)*xhxtdjx\.com reject
+^https?:\/\/([\w-]+\.)*xhydzoav\.in reject
 ^https?:\/\/([\w-]+\.)*xhymsq\.com\/data/attachment/portal/ reject
 ^https?:\/\/([\w-]+\.)*xhzmjs\.com reject
 ^https?:\/\/([\w-]+\.)*xiacaidd\.com\/xiacai/ad/ reject
@@ -84978,6 +85119,7 @@
 ^https?:\/\/([\w-]+\.)*ygecho\.wenz\.de reject
 ^https?:\/\/([\w-]+\.)*ygernechalcis\.cyou reject
 ^https?:\/\/([\w-]+\.)*ygernejoky\.com reject
+^https?:\/\/([\w-]+\.)*ygflrufteydpx\.space reject
 ^https?:\/\/([\w-]+\.)*ygg1e0gmc\.com reject
 ^https?:\/\/([\w-]+\.)*yghonola\.com reject
 ^https?:\/\/([\w-]+\.)*ygljimnilvubc\.com reject
@@ -85569,6 +85711,7 @@
 ^https?:\/\/([\w-]+\.)*yvuxqclhsmaoy\.site reject
 ^https?:\/\/([\w-]+\.)*ywayoh\.ecipo\.hu reject
 ^https?:\/\/([\w-]+\.)*ywcqef\.lyst\.com\.nl reject
+^https?:\/\/([\w-]+\.)*ywcqropdg\.com reject
 ^https?:\/\/([\w-]+\.)*ywdxitjjvljdj\.site reject
 ^https?:\/\/([\w-]+\.)*ywhikg\.surplex\.com reject
 ^https?:\/\/([\w-]+\.)*ywkiyt\.candere\.com reject
@@ -85810,6 +85953,7 @@
 ^https?:\/\/([\w-]+\.)*zalo\.me\/v3/w/_zaf\.gif reject
 ^https?:\/\/([\w-]+\.)*zalwlz\.icu reject
 ^https?:\/\/([\w-]+\.)*zambiandagesh\.qpon reject
+^https?:\/\/([\w-]+\.)*zamhwtyfwemsg\.com reject
 ^https?:\/\/([\w-]+\.)*zamiaboort\.com reject
 ^https?:\/\/([\w-]+\.)*zamioculcas2\.org reject
 ^https?:\/\/([\w-]+\.)*zanderschouser\.cfd reject
@@ -86346,6 +86490,7 @@
 ^https?:\/\/([\w-]+\.)*zlatobryuga\.link reject
 ^https?:\/\/([\w-]+\.)*zlbcxr\.xyz reject
 ^https?:\/\/([\w-]+\.)*zlbnjb\.icu reject
+^https?:\/\/([\w-]+\.)*zlclerizmeifa\.space reject
 ^https?:\/\/([\w-]+\.)*zlclgzs\.cn reject
 ^https?:\/\/([\w-]+\.)*zldqcc\.dodenhof\.de reject
 ^https?:\/\/([\w-]+\.)*zlfiiacommoaq\.website reject
@@ -86673,6 +86818,7 @@
 ^https?:\/\/([\w-]+\.)*zwjkuzrtngjhc\.space reject
 ^https?:\/\/([\w-]+\.)*zwjnfbtqwjdei\.com reject
 ^https?:\/\/([\w-]+\.)*zwkchtvqdhixo\.site reject
+^https?:\/\/([\w-]+\.)*zwkpevnhhfjpt\.online reject
 ^https?:\/\/([\w-]+\.)*zwlhfjh4h\.com reject
 ^https?:\/\/([\w-]+\.)*zwlikv\.cn reject
 ^https?:\/\/([\w-]+\.)*zwlpdo\.cn reject
